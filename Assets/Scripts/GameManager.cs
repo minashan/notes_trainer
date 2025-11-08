@@ -12,13 +12,19 @@ public class NotePosition
     public float noteSpriteX;
     public float[] ledgerLinesY;
     public float[] ledgerLinesX;
+
+    // НОВЫЕ ПОЛЯ ДЛЯ ЗНАКОВ АЛЬТЕРАЦИИ
+    public float accidentalX;
+    public float accidentalY;
+    public bool showAccidental;
+    public bool isSharp;
 }
 
 public class GameManager : MonoBehaviour
 {
     public string[] notes = { 
         "F1", "G1", "A1", "B1",   
-        "C", "D", "E", "F", "G", "A", "B",
+        "C", "C#", "D", "E", "F", "G", "A", "B",
         "C2", "D2", "E2", "F2", "G2", "A2", "B2",
         "C3", "D3", "E3"
     };
@@ -34,6 +40,9 @@ public class GameManager : MonoBehaviour
         { "G1", new NotePosition() { containerY = -2f, noteSpriteY = 144f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "A1", new NotePosition() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+
+        // добавляем до диез
+        { "C#", new NotePosition() { containerY = -2f, noteSpriteY = 178f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -25f,accidentalY = 0f,showAccidental = true,isSharp = true} },
         
         // ПЕРВАЯ ОКТАВА (до A - штиль вверх)
         { "C", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -49,7 +58,7 @@ public class GameManager : MonoBehaviour
         { "D2", new NotePosition() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "E2", new NotePosition() { containerY = -49.6f, noteSpriteY = 315f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "F2", new NotePosition() { containerY = -48.5f, noteSpriteY = 334f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
-        { "G2", new NotePosition() { containerY = -51.9f, noteSpriteY = 360f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "G2", new NotePosition() { containerY = -51.9f, noteSpriteY = 352f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "A2", new NotePosition() { containerY = 264.1f, noteSpriteY = 52f, noteSpriteX = 1.1f, ledgerLinesY = new float[] { 0f, 0f, 89.1f }, ledgerLinesX = new float[] { 0f, 0f, 9f } } },
         { "B2", new NotePosition() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 86.8f }, ledgerLinesX = new float[] { 0f, 0f, 4f } } },
         { "C3", new NotePosition() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = -10f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -82,28 +91,57 @@ public class GameManager : MonoBehaviour
     }
 
     private void ApplySavedPosition(string noteName)
+{
+    if (noteSettings.ContainsKey(noteName) && noteContainer != null)
     {
-        if (noteSettings.ContainsKey(noteName) && noteContainer != null)
+        NotePosition pos = noteSettings[noteName];
+        
+        // Существующий код для ноты и линеек
+        noteContainer.transform.localPosition = new Vector3(0, pos.containerY, 0);
+        noteContainer.noteSprite.transform.localPosition = new Vector3(pos.noteSpriteX, pos.noteSpriteY, 0);
+        
+        for (int i = 0; i < 3; i++)
         {
-            NotePosition pos = noteSettings[noteName];
-            
-            noteContainer.transform.localPosition = new Vector3(0, pos.containerY, 0);
-            noteContainer.noteSprite.transform.localPosition = new Vector3(pos.noteSpriteX, pos.noteSpriteY, 0);
-            
-            for (int i = 0; i < 3; i++)
+            bool shouldShow = pos.ledgerLinesY[i] != 0f;
+            noteContainer.ledgerLines[i].gameObject.SetActive(shouldShow);
+            if (shouldShow)
             {
-                bool shouldShow = pos.ledgerLinesY[i] != 0f;
-                noteContainer.ledgerLines[i].gameObject.SetActive(shouldShow);
-                if (shouldShow)
+                noteContainer.ledgerLines[i].transform.localPosition = new Vector3(pos.ledgerLinesX[i], pos.ledgerLinesY[i], 0);
+            }
+        }
+        
+        // НОВЫЙ КОД ДЛЯ ЗНАКОВ АЛЬТЕРАЦИИ
+        if (noteContainer.accidentalSprite != null)
+        {
+            if (pos.showAccidental)
+            {
+                // Показываем знак
+                noteContainer.accidentalSprite.gameObject.SetActive(true);
+                noteContainer.accidentalSprite.transform.localPosition = 
+                    new Vector3(pos.accidentalX, pos.accidentalY, 0);
+                
+                // Выбираем диез или бемоль
+                if (pos.isSharp && noteContainer.sharpSprite != null)
                 {
-                    noteContainer.ledgerLines[i].transform.localPosition = new Vector3(pos.ledgerLinesX[i], pos.ledgerLinesY[i], 0);
+                    noteContainer.accidentalSprite.sprite = noteContainer.sharpSprite;
+                }
+                else if (!pos.isSharp && noteContainer.flatSprite != null)
+                {
+                    noteContainer.accidentalSprite.sprite = noteContainer.flatSprite;
                 }
             }
-            
-            bool stemUp = ShouldStemUp(noteName);
-            noteContainer.noteSprite.sprite = stemUp ? noteContainer.normalUpSprite : noteContainer.normalDownSprite;
+            else
+            {
+                // Скрываем знак для белых нот
+                noteContainer.accidentalSprite.gameObject.SetActive(false);
+            }
         }
+        
+        // Существующий код для штиля
+        bool stemUp = ShouldStemUp(noteName);
+        noteContainer.noteSprite.sprite = stemUp ? noteContainer.normalUpSprite : noteContainer.normalDownSprite;
     }
+}
 
     private bool ShouldStemUp(string noteName)
     {
