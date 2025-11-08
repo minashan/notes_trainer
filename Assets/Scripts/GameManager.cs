@@ -42,7 +42,7 @@ public class GameManager : MonoBehaviour
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
 
         // добавляем до диез
-        { "C#", new NotePosition() { containerY = -2f, noteSpriteY = 178f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -25f,accidentalY = 0f,showAccidental = true,isSharp = true} },
+        { "C#", new NotePosition() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 6f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -54f,accidentalY = 151f,showAccidental = true,isSharp = true} },
         
         // ПЕРВАЯ ОКТАВА (до A - штиль вверх)
         { "C", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -75,20 +75,20 @@ public class GameManager : MonoBehaviour
     }
 
     public void GenerateRandomNote()
-    {
-        string newNote;
-        int attempts = 0;
-        
-        do {
-            newNote = notes[Random.Range(0, notes.Length)];
-            attempts++;
-        } while (newNote == previousNote && attempts < 10);
-        
-        previousNote = newNote;
-        currentNote = newNote;
-        
-        ApplySavedPosition(currentNote);
-    }
+{
+    string newNote;
+    int attempts = 0;
+    
+    do {
+        newNote = notes[Random.Range(0, notes.Length)]; // обычная случайность
+        attempts++;
+    } while (newNote == previousNote && attempts < 10);
+    
+    previousNote = newNote;
+    currentNote = newNote;
+    
+    ApplySavedPosition(currentNote);
+}
 
     private void ApplySavedPosition(string noteName)
 {
@@ -145,7 +145,7 @@ public class GameManager : MonoBehaviour
 
     private bool ShouldStemUp(string noteName)
     {
-        string[] upStemNotes = { "F1", "G1", "A1", "B1", "C", "D", "E", "F", "G", "A" };
+        string[] upStemNotes = { "F1", "G1", "A1", "B1", "C", "C#", "D", "E", "F", "G", "A" };
         return upStemNotes.Contains(noteName);
     }
 
