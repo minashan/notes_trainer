@@ -11,7 +11,7 @@ public class PianoKey : MonoBehaviour
     void Start()
     {
         // Находим GameManager на сцене
-        gameManager = FindObjectOfType<GameManager>();
+        gameManager = FindFirstObjectByType<GameManager>();
         audioSource = GetComponent<AudioSource>();
         keyImage = GetComponent<Image>();
         
