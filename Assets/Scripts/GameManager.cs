@@ -22,12 +22,9 @@ public class NotePosition
 
 public class GameManager : MonoBehaviour
 {
-    public string[] notes = { 
-        "F1", "G1", "A1", "B1",   
-        "C", "C#", "D", "E", "F", "G", "A", "B",
-        "C2", "D2", "E2", "F2", "G2", "A2", "B2",
-        "C3", "D3", "E3"
-    };
+
+public string[] notes;
+    
     
     public TextMeshProUGUI feedbackText;
     public NoteController noteContainer;
@@ -42,7 +39,7 @@ public class GameManager : MonoBehaviour
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
 
         // добавляем до диез
-        { "C#", new NotePosition() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 6f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -54f,accidentalY = 151f,showAccidental = true,isSharp = true} },
+        { "Csharp", new NotePosition() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 6f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -54f,accidentalY = 151f,showAccidental = true,isSharp = true} },
         
         // ПЕРВАЯ ОКТАВА (до A - штиль вверх)
         { "C", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -70,9 +67,17 @@ public class GameManager : MonoBehaviour
     private string previousNote = "";
 
     void Start()
-    {
-        GenerateRandomNote();
-    }
+{
+    // Инициализируем массив в Start()
+    notes = new string[] { 
+        "F1", "G1", "A1", "B1",   
+        "C", "Csharp", "D", "E", "F", "G", "A", "B",
+        "C2", "D2", "E2", "F2", "G2", "A2", "B2",
+        "C3", "D3", "E3"
+    };
+    
+    GenerateRandomNote();
+}
 
     public void GenerateRandomNote()
 {
@@ -145,7 +150,7 @@ public class GameManager : MonoBehaviour
 
     private bool ShouldStemUp(string noteName)
     {
-        string[] upStemNotes = { "F1", "G1", "A1", "B1", "C", "C#", "D", "E", "F", "G", "A" };
+        string[] upStemNotes = { "F1", "G1", "A1", "B1", "C", "Csharp", "D", "E", "F", "G", "A" };
         return upStemNotes.Contains(noteName);
     }
 
