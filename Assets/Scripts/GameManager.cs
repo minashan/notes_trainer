@@ -34,7 +34,9 @@ public string[] notes;
     {
         // МАЛАЯ ОКТАВА (штиль вверх)
         { "F1", new NotePosition() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "F1sharp", new NotePosition() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -60f, accidentalY = 90f,showAccidental = true,isSharp = true} },
         { "G1", new NotePosition() { containerY = -2f, noteSpriteY = 144f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "G1sharp", new NotePosition() { containerY = -2f, noteSpriteY = 144f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -67f,accidentalY = 103f,showAccidental = true,isSharp = true} },
         { "A1", new NotePosition() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 8.4f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
 
@@ -60,8 +62,7 @@ public string[] notes;
         { "B2", new NotePosition() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 86.8f }, ledgerLinesX = new float[] { 0f, 0f, 4f } } },
         { "C3", new NotePosition() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = -10f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "D3", new NotePosition() { containerY = 264.1f, noteSpriteY = 101f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 7.3f, 7.3f } } },
-        { "E3", new NotePosition() { containerY = 264.1f, noteSpriteY = 111f, noteSpriteX = 0f, ledgerLinesY = new float[] { 146.9f, 116.9f, 86.6f }, ledgerLinesX = new float[] { 8.7f, 8.7f, 8.7f } } }
-    };
+        { "E3", new NotePosition() { containerY = 264.1f, noteSpriteY = 111f, noteSpriteX = 0f, ledgerLinesY = new float[] { 146.9f, 116.9f, 86.6f }, ledgerLinesX = new float[] { 8.7f, 8.7f, 8.7f } } } };
     
     private string currentNote;
     private string previousNote = "";
@@ -70,7 +71,7 @@ public string[] notes;
 {
     // Инициализируем массив в Start()
     notes = new string[] { 
-        "F1", "G1", "A1", "B1",   
+        "F1", "F1sharp", "G1", "G1sharp", "A1", "B1",   
         "C", "Csharp", "D", "E", "F", "G", "A", "B",
         "C2", "D2", "E2", "F2", "G2", "A2", "B2",
         "C3", "D3", "E3"
@@ -150,7 +151,7 @@ public string[] notes;
 
     private bool ShouldStemUp(string noteName)
     {
-        string[] upStemNotes = { "F1", "G1", "A1", "B1", "C", "Csharp", "D", "E", "F", "G", "A" };
+        string[] upStemNotes = { "F1", "F1sharp", "G1", "G1sharp", "A1", "B1", "C", "Csharp", "D", "E", "F", "G", "A" };
         return upStemNotes.Contains(noteName);
     }
 
