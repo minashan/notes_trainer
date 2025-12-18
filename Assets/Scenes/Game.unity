@@ -5396,7 +5396,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: A#
+  noteName: Asharp
 --- !u!1 &1227904927
 GameObject:
   m_ObjectHideFlags: 0
@@ -5860,7 +5860,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: G#
+  noteName: Gsharp
 --- !u!1 &1250264260
 GameObject:
   m_ObjectHideFlags: 0
@@ -7700,7 +7700,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: F#
+  noteName: Fsharp
 --- !u!1 &1511602214
 GameObject:
   m_ObjectHideFlags: 0
