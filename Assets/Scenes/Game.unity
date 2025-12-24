@@ -1533,7 +1533,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: C#2
+  noteName: C2sharp
 --- !u!1 &191192608
 GameObject:
   m_ObjectHideFlags: 0
@@ -2869,7 +2869,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: A#2
+  noteName: A2sharp
 --- !u!1 &621097424
 GameObject:
   m_ObjectHideFlags: 0
@@ -5164,7 +5164,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: G#2
+  noteName: G2sharp
 --- !u!1 &1205432456
 GameObject:
   m_ObjectHideFlags: 0
@@ -9109,7 +9109,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: F#2
+  noteName: F2sharp
 --- !u!1 &1815219547
 GameObject:
   m_ObjectHideFlags: 0
@@ -10471,7 +10471,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: D#2
+  noteName: D2sharp
 --- !u!1 &1974549094
 GameObject:
   m_ObjectHideFlags: 0
@@ -11042,7 +11042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: C#3
+  noteName: C3sharp
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
