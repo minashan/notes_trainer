@@ -4932,7 +4932,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: D#3
+  noteName: D3sharp
 --- !u!1 &1204898949
 GameObject:
   m_ObjectHideFlags: 0
