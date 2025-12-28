@@ -2537,7 +2537,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
   m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 700, y: 100}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &554721216
 MonoBehaviour:
@@ -7229,6 +7229,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedbackText: {fileID: 554721216}
   noteContainer: {fileID: 621097426}
+  correctFeedbackDuration: 1.5
+  incorrectFeedbackDuration: 1.5
+  correctColor: {r: 0, g: 0.5, b: 0, a: 1}
+  incorrectColor: {r: 1, g: 0, b: 0, a: 1}
+  whiteColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1422987995
 GameObject:
   m_ObjectHideFlags: 0
@@ -8597,8 +8602,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 80, y: 50}
-  m_SizeDelta: {x: 700, y: 100}
+  m_AnchoredPosition: {x: 135, y: 50}
+  m_SizeDelta: {x: 800, y: 100}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1636000787
 MonoBehaviour:

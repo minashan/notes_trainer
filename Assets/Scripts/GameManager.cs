@@ -6,26 +6,28 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Основные элементы")]
     public TextMeshProUGUI feedbackText;
     public NoteController noteContainer;
+    
+    [Header("Настройки времени")]
+    public float noteDisplayDelay = 0.5f; // ← ДОБАВЛЕНО: задержка перед новой нотой
+    public float correctFeedbackDuration = 1.5f;
+    public float incorrectFeedbackDuration = 1.5f;
+    
+    [Header("Цвета")]
+    public Color correctColor = new Color(0f, 0.5f, 0f, 1f);
+    public Color incorrectColor = Color.red;
+    public Color whiteColor = Color.white;
     
     private NoteGenerator noteGenerator;
     private string currentNote;
     private Image keyImage;
-    
-    private float correctFeedbackDuration = 1.5f;
-    private float incorrectFeedbackDuration = 1.5f;
-    
-    private Color darkGreenColor = new Color(0f, 0.5f, 0f, 1f);
-    private Color redColor = Color.red;
-    private Color whiteColor = Color.white;
+    private bool isWaitingForNextNote = false; // ← ДОБАВЛЕНО: флаг ожидания
 
     void Start()
     {
-        if (NoteData.Instance == null)
-        {
-            return;
-        }
+        if (NoteData.Instance == null) return;
         
         noteGenerator = GetComponent<NoteGenerator>();
         if (noteGenerator == null)
@@ -41,10 +43,7 @@ public class GameManager : MonoBehaviour
         {
             noteGenerator.OnNoteGenerated += HandleNewNoteGenerated;
         }
-        else
-        {
-            return;
-        }
+        else return;
         
         string[] allNotes = new string[] { 
             "F1", "F1sharp", "G1", "G1sharp", "A1", "A1sharp", "B1",
@@ -70,10 +69,7 @@ public class GameManager : MonoBehaviour
 
     private void ApplySavedPosition(string noteName)
     {
-        if (noteContainer == null)
-        {
-            return;
-        }
+        if (noteContainer == null) return;
         
         if (NoteData.Instance.GetNotePosition(noteName) != null)
         {
@@ -175,12 +171,16 @@ public class GameManager : MonoBehaviour
             feedbackText.text = "";
     }
 
+    // ← НОВЫЙ МЕТОД: Показать следующую ноту с задержкой
+    void ShowNextNoteWithDelay()
+    {
+        isWaitingForNextNote = false;
+        noteGenerator.GenerateRandomNote();
+    }
+
     public void OnPianoKeyPressed(string keyNote, GameObject pressedKey)
     {
-        if (noteGenerator == null)
-        {
-            return;
-        }
+        if (noteGenerator == null || isWaitingForNextNote) return;
         
         if (pressedKey != null)
         {
@@ -195,10 +195,7 @@ public class GameManager : MonoBehaviour
         if (audioSource != null) audioSource.Play();
 
         string currentEnglishNote = noteGenerator.GetCurrentNote();
-        if (string.IsNullOrEmpty(currentEnglishNote))
-        {
-            return;
-        }
+        if (string.IsNullOrEmpty(currentEnglishNote)) return;
         
         bool isCorrect = false;
         
@@ -217,27 +214,33 @@ public class GameManager : MonoBehaviour
             if (feedbackText != null)
             {
                 feedbackText.text = russianNote;
-                feedbackText.color = darkGreenColor;
+                feedbackText.color = correctColor;
             }
             
             if (keyImage != null) 
                 keyImage.color = Color.green;
             
+            // Ставим флаг ожидания
+            isWaitingForNextNote = true;
+            
             Invoke("ClearFeedbackText", correctFeedbackDuration);
             Invoke("ResetKeyColorWithoutText", correctFeedbackDuration);
             
-            noteGenerator.GenerateRandomNote();
+            // ← ИЗМЕНЕНО: Показываем следующую ноту с задержкой
+            Invoke("ShowNextNoteWithDelay", noteDisplayDelay);
         }
         else
         {
+            string pressedRussian = NoteData.Instance.GetTranslatedNoteName(keyNote);
+            
             if (feedbackText != null)
             {
-                feedbackText.text = $"Неправильно";
-                feedbackText.color = redColor;
+                feedbackText.text = pressedRussian;
+                feedbackText.color = incorrectColor;
             }
             
             if (keyImage != null) 
-                keyImage.color = redColor;
+                keyImage.color = incorrectColor;
                 
             Invoke("ResetKeyColor", incorrectFeedbackDuration);
         }
