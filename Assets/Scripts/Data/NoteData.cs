@@ -1,4 +1,4 @@
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -12,7 +12,7 @@ public class NotePosition
     public float[] ledgerLinesY;
     public float[] ledgerLinesX;
 
-    // ����� ���� ��� ������ ����������
+    // НОВЫЕ ПОЛЯ ДЛЯ ЗНАКОВ АЛЬТЕРАЦИИ
     public float accidentalX;
     public float accidentalY;
     public bool showAccidental;
@@ -25,6 +25,9 @@ public class NoteData : MonoBehaviour
     public static NoteData Instance { get; private set; }
     public Dictionary<string, NotePosition> NoteSettings { get; private set; }
     public Dictionary<string, string[]> EnharmonicEquivalents { get; private set; }
+
+    // Словарь переводов Английский → Русский
+    public Dictionary<string, string> NoteTranslations { get; private set; }
     
     void Awake()
     {
@@ -44,8 +47,88 @@ public class NoteData : MonoBehaviour
     {
         InitializeNoteSettings();
         InitializeEnharmonicEquivalents();
+        InitializeTranslations();
     }
-    
+
+
+     private void InitializeTranslations()
+    {
+        NoteTranslations = new Dictionary<string, string>()
+        {
+            // МАЛАЯ ОКТАВА
+            { "F1", "Фа малой" },
+            { "F1sharp", "Фа ♯ малой" },
+            { "G1flat", "Соль ♭ малой" },
+            { "G1", "Соль малой" },
+            { "G1sharp", "Соль ♯ малой" },
+            { "A1flat", "Ля ♭ малой" },
+            { "A1", "Ля малой" },
+            { "A1sharp", "Ля ♯ малой" },
+            { "B1flat", "Си ♭ малой" },
+            { "B1", "Си малой" },
+            
+            // ПЕРВАЯ ОКТАВА
+            { "C", "До первой" },
+            { "Csharp", "До ♯ первой" },
+            { "D", "Ре первой" },
+            { "Dflat", "Ре ♭ первой" },
+            { "Dsharp", "Ре ♯ первой" },
+            { "Eflat", "Ми ♭ первой" },
+            { "E", "Ми первой" },
+            { "F", "Фа первой" },
+            { "Fsharp", "Фа ♯ первой" },
+            { "Gflat", "Соль ♭ первой" },
+            { "G", "Соль первой" },
+            { "Gsharp", "Соль ♯ первой" },
+            { "Aflat", "Ля ♭ первой" },
+            { "A", "Ля первой" },
+            { "Asharp", "Ля ♯ первой" },
+            { "Bflat", "Си ♭ первой" },
+            { "B", "Си первой" },
+            
+            // ВТОРАЯ ОКТАВА
+            { "C2", "До второй" },
+            { "C2sharp", "До ♯ второй" },
+            { "D2flat", "Ре ♭ второй" },
+            { "D2", "Ре второй" },
+            { "D2sharp", "Ре ♯ второй" },
+            { "E2flat", "Ми ♭ второй" },
+            { "E2", "Ми второй" },
+            { "F2", "Фа второй" },
+            { "F2sharp", "Фа ♯ второй" },
+            { "G2flat", "Соль♭ второй" },
+            { "G2", "Соль второй" },
+            { "G2sharp", "Соль ♯ второй" },
+            { "A2flat", "Ля ♭ второй" },
+            { "A2", "Ля второй" },
+            { "A2sharp", "Ля ♯ второй" },
+            { "B2flat", "Си ♭ второй" },
+            { "B2", "Си второй" },
+            
+            // ТРЕТЬЯ ОКТАВА
+            { "C3", "До третей" },
+            { "C3sharp", "До ♯ третей" },
+            { "D3flat", "Ре ♭ третей" },
+            { "D3", "Ре третей" },
+            { "D3sharp", "Ре ♯ третей" },
+            { "E3flat", "Ми ♭ третей" },
+            { "E3", "Ми третей" }
+        };
+    }
+
+    // Получение перевода
+    public string GetTranslatedNoteName(string englishName)
+    {
+        if (NoteTranslations.ContainsKey(englishName))
+            return NoteTranslations[englishName];
+        else
+        {
+            Debug.LogWarning($"Перевод для ноты '{englishName}' не найден!");
+            return englishName; // Возвращаем оригинал, если перевода нет
+        }
+    }
+
+
     private void InitializeNoteSettings()
     {
         NoteSettings = new Dictionary<string, NotePosition>()
@@ -62,7 +145,7 @@ public class NoteData : MonoBehaviour
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
 
         
-        // ������ ������ (�� A - ����� �����)
+        // ПЕРВАЯ ОКТАВА (до A - штиль вверх)
         { "C", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 5f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "Csharp", new NotePosition() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -67f,accidentalY = 151f,showAccidental = true,isSharp = true } },
         { "D", new NotePosition() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -79,7 +162,7 @@ public class NoteData : MonoBehaviour
         { "A", new NotePosition() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "Asharp", new NotePosition() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 234f,showAccidental = true,isSharp = true } },
         
-        // ����������� ���� �� ������ ����:
+        // ОБНОВЛЕННЫЕ НОТЫ СО ШТИЛЕМ ВНИЗ:
         { "Bflat", new NotePosition() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 320f, showAccidental = true, isSharp = false } },
         { "B", new NotePosition() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "C2", new NotePosition() { containerY = -50.8f, noteSpriteY = 281f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -123,18 +206,18 @@ public class NoteData : MonoBehaviour
             { "Gsharp",  new string[] { "Aflat" } },
             { "Asharp",  new string[] { "Bflat" } },
 
-            // ������ ������
+            // ВТОРАЯ ОКТАВА
             { "C2sharp", new string[] { "D2flat" } },
             { "D2sharp", new string[] { "E2flat" } },
             { "F2sharp", new string[] { "G2flat" } },
             { "G2sharp", new string[] { "A2flat" } },
             { "A2sharp", new string[] { "B2flat" } },
 
-            // ������ ������ (���� ���� �����)
+            // ТРЕТЬЯ ОКТАВА (если есть диезы)
             { "C3sharp", new string[] { "D3flat" } },
             { "D3sharp", new string[] { "E3flat" } },
 
-            // �������� ����� (����� �������� � ��� �������
+            // ОБРАТНЫЕ СВЯЗИ (чтобы работало в обе стороны
             { "G1flat", new string[] { "F1sharp" } },
             { "A1flat", new string[] { "G1sharp" } },
             { "B1flat", new string[] { "A1sharp" } },

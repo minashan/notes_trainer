@@ -4,160 +4,163 @@ using UnityEngine.UI;
 using System.Collections.Generic;
 using System.Linq;
 
-
-
 public class GameManager : MonoBehaviour
 {
-
-public string[] notes;
-    
-    
     public TextMeshProUGUI feedbackText;
     public NoteController noteContainer;
-
-            
+    
+    private NoteGenerator noteGenerator;
     private string currentNote;
-    private string previousNote = "";
-
+    private Image keyImage;
+    
+    private float correctFeedbackDuration = 1.5f;
+    private float incorrectFeedbackDuration = 1.5f;
+    
+    private Color darkGreenColor = new Color(0f, 0.5f, 0f, 1f);
+    private Color redColor = Color.red;
+    private Color whiteColor = Color.white;
 
     void Start()
-{
-    // Проверка NoteData
-    if (NoteData.Instance == null)
     {
-        Debug.LogError("NoteData не инициализирован!");
-        return;
+        if (NoteData.Instance == null)
+        {
+            return;
+        }
+        
+        noteGenerator = GetComponent<NoteGenerator>();
+        if (noteGenerator == null)
+        {
+            noteGenerator = FindAnyObjectByType<NoteGenerator>();
+            if (noteGenerator == null)
+            {
+                noteGenerator = gameObject.AddComponent<NoteGenerator>();
+            }
+        }
+        
+        if (noteGenerator != null)
+        {
+            noteGenerator.OnNoteGenerated += HandleNewNoteGenerated;
+        }
+        else
+        {
+            return;
+        }
+        
+        string[] allNotes = new string[] { 
+            "F1", "F1sharp", "G1", "G1sharp", "A1", "A1sharp", "B1",
+            "C", "Csharp", "D", "Dsharp", "E", "F", "Fsharp", "G", "Gsharp", "A", "Asharp", "B",
+            "C2", "C2sharp", "D2", "D2sharp", "E2", "F2", "F2sharp", "G2", "G2sharp", "A2", "A2sharp", "B2",
+            "C3", "C3sharp", "D3", "D3sharp", "E3"
+        };
+        
+        noteGenerator.Initialize(allNotes);
+        noteGenerator.GenerateRandomNote();
+        
+        if (noteGenerator.GetCurrentNote() != null)
+        {
+            ApplySavedPosition(noteGenerator.GetCurrentNote());
+        }
     }
 
-    // Инициализируем массив в Start()
-    notes = new string[] { 
-        "F1", "F1sharp", "G1flat", "G1", "G1sharp", "A1flat", "A1", "A1sharp", "B1flat", "B1",   
-        "C", "Csharp", "D", "Dflat", "Dsharp", "Eflat", "E", "F", "Fsharp", "Gflat", "G", "Gsharp", "Aflat", "A", "Asharp", "Bflat", "B",
-        "C2", "C2sharp", "D2flat", "D2", "D2sharp", "E2flat", "E2", "F2", "F2sharp", "G2flat", "G2", "G2sharp", "A2flat", "A2", "A2sharp", "B2flat", "B2",
-        "C3", "C3sharp", "D3flat", "D3", "D3sharp", "E3flat", "E3"
-    };
-    
-    GenerateRandomNote();
-}
-
-
-    public void GenerateRandomNote()
-{
-    string newNote;
-    int attempts = 0;
-    
-    do {
-        newNote = notes[Random.Range(0, notes.Length)]; // обычная случайность
-        attempts++;
-    } while (newNote == previousNote && attempts < 10);
-    
-    previousNote = newNote;
-    currentNote = newNote;
-    
-    ApplySavedPosition(currentNote);
-}
-
+    private void HandleNewNoteGenerated(string newNote)
+    {
+        currentNote = newNote;
+        ApplySavedPosition(newNote);
+    }
 
     private void ApplySavedPosition(string noteName)
-{
-    if (NoteData.Instance.GetNotePosition(noteName) != null && noteContainer != null)
     {
-        NotePosition pos = NoteData.Instance.GetNotePosition(noteName);
-        
-        // Существующий код для ноты и линеек
-        noteContainer.transform.localPosition = new Vector3(0, pos.containerY, 0);
-        noteContainer.noteSprite.transform.localPosition = new Vector3(pos.noteSpriteX, pos.noteSpriteY, 0);
-        
-        for (int i = 0; i < 3; i++)
+        if (noteContainer == null)
         {
-            bool shouldShow = pos.ledgerLinesY[i] != 0f;
-            noteContainer.ledgerLines[i].gameObject.SetActive(shouldShow);
-            if (shouldShow)
-            {
-                noteContainer.ledgerLines[i].transform.localPosition = new Vector3(pos.ledgerLinesX[i], pos.ledgerLinesY[i], 0);
-            }
+            return;
         }
         
-        // НОВЫЙ КОД ДЛЯ ЗНАКОВ АЛЬТЕРАЦИИ
-        if (noteContainer.accidentalSprite != null)
+        if (NoteData.Instance.GetNotePosition(noteName) != null)
         {
-            if (pos.showAccidental)
+            NotePosition pos = NoteData.Instance.GetNotePosition(noteName);
+            
+            noteContainer.transform.localPosition = new Vector3(0, pos.containerY, 0);
+            
+            if (noteContainer.noteSprite != null)
             {
-                // Показываем знак
-                noteContainer.accidentalSprite.gameObject.SetActive(true);
-                noteContainer.accidentalSprite.transform.localPosition = 
-                    new Vector3(pos.accidentalX, pos.accidentalY, 0);
-                
-                // Выбираем диез или бемоль
-                if (pos.isSharp && noteContainer.sharpSprite != null)
+                noteContainer.noteSprite.transform.localPosition = new Vector3(pos.noteSpriteX, pos.noteSpriteY, 0);
+            }
+            
+            if (noteContainer.ledgerLines != null && noteContainer.ledgerLines.Length >= 3)
+            {
+                for (int i = 0; i < 3; i++)
                 {
-                    noteContainer.accidentalSprite.sprite = noteContainer.sharpSprite;
-                }
-                else if (!pos.isSharp && noteContainer.flatSprite != null)
-                {
-                    noteContainer.accidentalSprite.sprite = noteContainer.flatSprite;
+                    bool shouldShow = pos.ledgerLinesY[i] != 0f;
+                    if (noteContainer.ledgerLines[i] != null)
+                    {
+                        noteContainer.ledgerLines[i].gameObject.SetActive(shouldShow);
+                        if (shouldShow)
+                        {
+                            noteContainer.ledgerLines[i].transform.localPosition = new Vector3(pos.ledgerLinesX[i], pos.ledgerLinesY[i], 0);
+                        }
+                    }
                 }
             }
-            else
+            
+            if (noteContainer.accidentalSprite != null)
             {
-                // Скрываем знак для белых нот
-                noteContainer.accidentalSprite.gameObject.SetActive(false);
+                if (pos.showAccidental)
+                {
+                    noteContainer.accidentalSprite.gameObject.SetActive(true);
+                    noteContainer.accidentalSprite.transform.localPosition = 
+                        new Vector3(pos.accidentalX, pos.accidentalY, 0);
+                    
+                    if (pos.isSharp && noteContainer.sharpSprite != null)
+                    {
+                        noteContainer.accidentalSprite.sprite = noteContainer.sharpSprite;
+                    }
+                    else if (!pos.isSharp && noteContainer.flatSprite != null)
+                    {
+                        noteContainer.accidentalSprite.sprite = noteContainer.flatSprite;
+                    }
+                }
+                else
+                {
+                    noteContainer.accidentalSprite.gameObject.SetActive(false);
+                }
+            }
+            
+            if (noteContainer.noteSprite != null)
+            {
+                bool stemUp = ShouldStemUp(noteName);
+                if (noteContainer.normalUpSprite != null && noteContainer.normalDownSprite != null)
+                {
+                    noteContainer.noteSprite.sprite = stemUp ? noteContainer.normalUpSprite : noteContainer.normalDownSprite;
+                }
             }
         }
-        
-        // Существующий код для штиля
-        bool stemUp = ShouldStemUp(noteName);
-        noteContainer.noteSprite.sprite = stemUp ? noteContainer.normalUpSprite : noteContainer.normalDownSprite;
     }
-}
-
 
     private bool ShouldStemUp(string noteName)
     {
-        string[] upStemNotes = { "F1", "F1sharp", "G1flat", "G1", "G1sharp", "A1flat", "A1", "A1sharp", "B1flat", "B1", "C", "Csharp", "D", "Dflat", "Dsharp", "Eflat", "E", "F", "Fsharp", "Gflat", "G", "Gsharp", "Aflat", "A", "Asharp" };
+        string[] upStemNotes = { 
+            "F1", "F1sharp", "G1", "G1sharp", "A1", "A1sharp", "B1",
+            "C", "Csharp", "D", "Dsharp", "E", "F", "Fsharp", 
+            "G", "Gsharp", "A", "Asharp" 
+        };
         return upStemNotes.Contains(noteName);
     }
 
-
-    public void OnPianoKeyPressed(string keyNote, GameObject pressedKey)
-{
-    // 1. Воспроизведение звука (без изменений)
-    AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-    if (audioSource != null) audioSource.Play();
-
-    // 2. Проверка правильности с учётом энгармонизма
-    bool isCorrect = false;
-    
-    // Прямое совпадение
-    if (keyNote == currentNote)
+    void ClearFeedbackText()
     {
-        isCorrect = true;
-    }
-    // Энгармоническое совпадение (используем NoteData)
-    else if (NoteData.Instance.AreNotesEnharmonic(keyNote, currentNote))
-    {
-        isCorrect = true;
+        if (feedbackText != null)
+            feedbackText.text = "";
     }
 
-    // 3. Визуальная обратная связь
-    feedbackText.text = keyNote;
-    Image keyImage = pressedKey.GetComponent<Image>();
-    
-    if (isCorrect)
+    void ResetKeyColorWithoutText()
     {
-        feedbackText.color = Color.green;
-        keyImage.color = Color.green;
-        GenerateRandomNote(); // Генерируем новую ноту только при правильном ответе
+        GameObject[] keys = GameObject.FindGameObjectsWithTag("PianoKey");
+        foreach (GameObject key in keys)
+        {
+            Image keyImage = key.GetComponent<Image>();
+            if (keyImage != null) keyImage.color = whiteColor;
+        }
     }
-    else
-    {
-        feedbackText.color = Color.red;
-        keyImage.color = Color.red;
-    }
-
-    // 4. Сброс цвета (без изменений)
-    Invoke("ResetKeyColor", 0.5f);
-}
 
     void ResetKeyColor()
     {
@@ -165,8 +168,78 @@ public string[] notes;
         foreach (GameObject key in keys)
         {
             Image keyImage = key.GetComponent<Image>();
-            if (keyImage != null) keyImage.color = Color.white;
+            if (keyImage != null) keyImage.color = whiteColor;
         }
-        feedbackText.text = "";
+        
+        if (feedbackText != null)
+            feedbackText.text = "";
+    }
+
+    public void OnPianoKeyPressed(string keyNote, GameObject pressedKey)
+    {
+        if (noteGenerator == null)
+        {
+            return;
+        }
+        
+        if (pressedKey != null)
+        {
+            Image pressedKeyImage = pressedKey.GetComponent<Image>();
+            if (pressedKeyImage != null)
+            {
+                keyImage = pressedKeyImage;
+            }
+        }
+        
+        AudioSource audioSource = pressedKey?.GetComponent<AudioSource>();
+        if (audioSource != null) audioSource.Play();
+
+        string currentEnglishNote = noteGenerator.GetCurrentNote();
+        if (string.IsNullOrEmpty(currentEnglishNote))
+        {
+            return;
+        }
+        
+        bool isCorrect = false;
+        
+        if (keyNote == currentEnglishNote)
+        {
+            isCorrect = true;
+        }
+        else if (NoteData.Instance.AreNotesEnharmonic(keyNote, currentEnglishNote))
+        {
+            isCorrect = true;
+        }
+
+        if (isCorrect)
+        {
+            string russianNote = NoteData.Instance.GetTranslatedNoteName(currentEnglishNote);
+            if (feedbackText != null)
+            {
+                feedbackText.text = russianNote;
+                feedbackText.color = darkGreenColor;
+            }
+            
+            if (keyImage != null) 
+                keyImage.color = Color.green;
+            
+            Invoke("ClearFeedbackText", correctFeedbackDuration);
+            Invoke("ResetKeyColorWithoutText", correctFeedbackDuration);
+            
+            noteGenerator.GenerateRandomNote();
+        }
+        else
+        {
+            if (feedbackText != null)
+            {
+                feedbackText.text = $"Неправильно";
+                feedbackText.color = redColor;
+            }
+            
+            if (keyImage != null) 
+                keyImage.color = redColor;
+                
+            Invoke("ResetKeyColor", incorrectFeedbackDuration);
+        }
     }
 }
