@@ -3,23 +3,6 @@ using UnityEngine;
 using System.Linq;
 
 
-[System.Serializable]
-public class NotePosition
-{
-    public float containerY;
-    public float noteSpriteY;
-    public float noteSpriteX;
-    public float[] ledgerLinesY;
-    public float[] ledgerLinesX;
-
-    // НОВЫЕ ПОЛЯ ДЛЯ ЗНАКОВ АЛЬТЕРАЦИИ
-    public float accidentalX;
-    public float accidentalY;
-    public bool showAccidental;
-    public bool isSharp;
-}
-
-
 public class NoteData : MonoBehaviour
 {
     public static NoteData Instance { get; private set; }

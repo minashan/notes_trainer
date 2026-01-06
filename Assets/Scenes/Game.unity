@@ -7229,6 +7229,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   feedbackText: {fileID: 554721216}
   noteContainer: {fileID: 621097426}
+  noteDisplayDelay: 1.5
   correctFeedbackDuration: 1.5
   incorrectFeedbackDuration: 1.5
   correctColor: {r: 0, g: 0.5, b: 0, a: 1}
