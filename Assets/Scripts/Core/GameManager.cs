@@ -6,6 +6,10 @@ using System.Linq;
 
 public class GameManager : MonoBehaviour
 {
+    [Header("Input Handler")]
+    public PianoInputHandler pianoInputHandler;
+    private Image _lastPressedKeyImage; // Для хранения ссылки на Image
+
     [Header("Основные элементы")]
     public TextMeshProUGUI feedbackText;
     public NoteController noteContainer;
@@ -149,6 +153,12 @@ public class GameManager : MonoBehaviour
     }
 
     void ResetKeyColorWithoutText()
+{
+    if (pianoInputHandler != null)
+    {
+        pianoInputHandler.ResetAllKeyColors(whiteColor);
+    }
+    else
     {
         GameObject[] keys = GameObject.FindGameObjectsWithTag("PianoKey");
         foreach (GameObject key in keys)
@@ -157,19 +167,13 @@ public class GameManager : MonoBehaviour
             if (keyImage != null) keyImage.color = whiteColor;
         }
     }
+}
 
     void ResetKeyColor()
-    {
-        GameObject[] keys = GameObject.FindGameObjectsWithTag("PianoKey");
-        foreach (GameObject key in keys)
-        {
-            Image keyImage = key.GetComponent<Image>();
-            if (keyImage != null) keyImage.color = whiteColor;
-        }
-        
-        if (feedbackText != null)
-            feedbackText.text = "";
-    }
+{
+    ResetKeyColorWithoutText();
+    if (feedbackText != null) feedbackText.text = "";
+}
 
     // ← НОВЫЙ МЕТОД: Показать следующую ноту с задержкой
     void ShowNextNoteWithDelay()
@@ -179,70 +183,87 @@ public class GameManager : MonoBehaviour
     }
 
     public void OnPianoKeyPressed(string keyNote, GameObject pressedKey)
+{
+    if (noteGenerator == null || isWaitingForNextNote) return;
+    
+    // 1. Если есть InputHandler - используем его для звука
+    if (pianoInputHandler != null)
     {
-        if (noteGenerator == null || isWaitingForNextNote) return;
+        var result = pianoInputHandler.ProcessKeyPress(keyNote, pressedKey, noteGenerator);
+        if (!result.shouldProceed) return;
         
-        if (pressedKey != null)
-        {
-            Image pressedKeyImage = pressedKey.GetComponent<Image>();
-            if (pressedKeyImage != null)
-            {
-                keyImage = pressedKeyImage;
-            }
-        }
-        
+        // Сохраняем ссылку на Image для последующего изменения цвета
+        _lastPressedKeyImage = pressedKey.GetComponent<Image>();
+    }
+    else
+    {
+        // Старая логика звука
         AudioSource audioSource = pressedKey?.GetComponent<AudioSource>();
         if (audioSource != null) audioSource.Play();
-
-        string currentEnglishNote = noteGenerator.GetCurrentNote();
-        if (string.IsNullOrEmpty(currentEnglishNote)) return;
         
-        bool isCorrect = false;
-        
-        if (keyNote == currentEnglishNote)
-        {
-            isCorrect = true;
-        }
-        else if (NoteData.Instance.AreNotesEnharmonic(keyNote, currentEnglishNote))
-        {
-            isCorrect = true;
-        }
-
-        if (isCorrect)
-        {
-            string russianNote = NoteData.Instance.GetTranslatedNoteName(currentEnglishNote);
-            if (feedbackText != null)
-            {
-                feedbackText.text = russianNote;
-                feedbackText.color = correctColor;
-            }
-            
-            if (keyImage != null) 
-                keyImage.color = Color.green;
-            
-            // Ставим флаг ожидания
-            isWaitingForNextNote = true;
-            
-            Invoke("ClearFeedbackText", correctFeedbackDuration);
-            Invoke("ResetKeyColorWithoutText", correctFeedbackDuration);
-            
-            // ← ИЗМЕНЕНО: Показываем следующую ноту с задержкой
-            Invoke("ShowNextNoteWithDelay", noteDisplayDelay);
-        }
-        else
-        {
-            string pressedRussian = NoteData.Instance.GetTranslatedNoteName(keyNote);
-            
-            if (feedbackText != null)
-            {
-                feedbackText.text = pressedRussian;
-                feedbackText.color = incorrectColor;
-            }
-            
-            if (keyImage != null) 
-                keyImage.color = incorrectColor;
-                
-            Invoke("ResetKeyColor", incorrectFeedbackDuration);
-        }
+        _lastPressedKeyImage = pressedKey?.GetComponent<Image>();
     }
+    
+    string currentEnglishNote = noteGenerator.GetCurrentNote();
+    if (string.IsNullOrEmpty(currentEnglishNote)) return;
+    
+    bool isCorrect = false;
+    
+    if (keyNote == currentEnglishNote)
+    {
+        isCorrect = true;
+    }
+    else if (NoteData.Instance.AreNotesEnharmonic(keyNote, currentEnglishNote))
+    {
+        isCorrect = true;
+    }
+
+    if (isCorrect)
+    {
+        // 2. Если есть InputHandler - устанавливаем цвет через него
+        if (pianoInputHandler != null && _lastPressedKeyImage != null)
+        {
+            pianoInputHandler.SetKeyFinalColor(pressedKey, true);
+        }
+        else if (_lastPressedKeyImage != null)
+        {
+            _lastPressedKeyImage.color = Color.green;
+        }
+        
+        // ... остальной код без изменений
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(currentEnglishNote);
+        if (feedbackText != null)
+        {
+            feedbackText.text = russianNote;
+            feedbackText.color = correctColor;
+        }
+        
+        isWaitingForNextNote = true;
+        Invoke("ClearFeedbackText", correctFeedbackDuration);
+        Invoke("ResetKeyColorWithoutText", correctFeedbackDuration);
+        Invoke("ShowNextNoteWithDelay", noteDisplayDelay);
+    }
+    else
+    {
+        // Аналогично для неправильного ответа
+        if (pianoInputHandler != null && _lastPressedKeyImage != null)
+        {
+            pianoInputHandler.SetKeyFinalColor(pressedKey, false);
+        }
+        else if (_lastPressedKeyImage != null)
+        {
+            _lastPressedKeyImage.color = incorrectColor;
+        }
+        
+        // ... остальной код без изменений
+        string pressedRussian = NoteData.Instance.GetTranslatedNoteName(keyNote);
+        if (feedbackText != null)
+        {
+            feedbackText.text = pressedRussian;
+            feedbackText.color = incorrectColor;
+        }
+            
+        Invoke("ResetKeyColor", incorrectFeedbackDuration);
+    }
+}
 }

@@ -1,33 +1,30 @@
 using UnityEngine;
-using UnityEngine.UI;
+using UnityEngine.EventSystems;
 
-public class PianoKey : MonoBehaviour
+public class PianoKey : MonoBehaviour, IPointerDownHandler
 {
-    public string noteName; // Название ноты (C, D, E...)
-    private GameManager gameManager;
-    private AudioSource audioSource;
-    private Image keyImage;
-
+    public string noteName;
+    
+    private PianoInputHandler _inputHandler;
+    private GameManager _gameManager;
+    
     void Start()
     {
-        // Находим GameManager на сцене
-        gameManager = FindFirstObjectByType<GameManager>();
-        audioSource = GetComponent<AudioSource>();
-        keyImage = GetComponent<Image>();
-        
-        // Настраиваем кнопку
-        Button button = GetComponent<Button>();
-        button.onClick.AddListener(OnKeyPressed);
+        // Используем новые методы вместо устаревших
+        _inputHandler = FindAnyObjectByType<PianoInputHandler>();
+        _gameManager = FindAnyObjectByType<GameManager>();
     }
-
-    public void OnKeyPressed()
+    
+    public void OnPointerDown(PointerEventData eventData)
     {
-        // Проигрываем звук
-        if (audioSource != null)
-            audioSource.Play();
-            
-        // Сообщаем GameManager о нажатии
-        if (gameManager != null)
-            gameManager.OnPianoKeyPressed(noteName, gameObject);
+        PressKey();
+    }
+    
+    public void PressKey()
+    {
+        if (_gameManager != null)
+        {
+            _gameManager.OnPianoKeyPressed(noteName, gameObject);
+        }
     }
 }
