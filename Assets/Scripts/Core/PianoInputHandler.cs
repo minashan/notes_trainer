@@ -1,79 +1,122 @@
 using UnityEngine;
 using UnityEngine.UI;
-using System;
+using System.Collections;
 
-public class PianoInputHandler : MonoBehaviour
-{
-    [Header("Настройки звука")]
-    public bool enableSound = true;
-    public float volume = 1.0f;
-    
-    [Header("Цвета клавиш")]
-    public Color correctKeyColor = Color.green;     // Из GameManager строка 175
-    public Color incorrectKeyColor = Color.red;     // Из GameManager строка 195
-    
-    // Метод обработки нажатия (ЗВУК + ЦВЕТ)
-    public (bool shouldProceed, string currentNote) ProcessKeyPress(
-        string pressedNote, 
-        GameObject pressedKey, 
-        NoteGenerator noteGenerator)
+
+
+    public class PianoInputHandler : MonoBehaviour
     {
-        // 1. ЗВУК (из GameManager строки 152-155)
-        PlayKeySound(pressedKey);
+        [Header("Настройки звука")]
+        public bool enableSound = true;
+        [Range(0f, 1f)] public float volume = 0.8f;
         
-        // 2. Получаем текущую ноту (для GameManager)
-        string currentNote = noteGenerator.GetCurrentNote();
-        if (string.IsNullOrEmpty(currentNote))
-            return (false, null);
+        [Header("Цвета клавиш")]
+        public Color pressedKeyColor = Color.yellow;
+        public Color correctKeyColor = Color.green;
+        public Color incorrectKeyColor = Color.red;
         
-        // 3. Временный цвет клавиши (окончательный цвет будет после проверки в GameManager)
-        SetKeyTemporaryColor(pressedKey, Color.yellow); // или любой промежуточный
+        [Header("Временные настройки")]
+        [SerializeField] private float keyFlashDuration = 0.2f;
+        [SerializeField] private float resultDisplayDuration = 1f;
         
-        return (true, currentNote);
-    }
-    
-    // 4. Установка финального цвета (после проверки в GameManager)
-    public void SetKeyFinalColor(GameObject keyObject, bool isCorrect)
-    {
-        Image keyImage = keyObject?.GetComponent<Image>();
-        if (keyImage != null)
+        /// <summary>
+        /// Обработка нажатия клавиши (звук + временная подсветка)
+        /// </summary>
+        public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
         {
-            keyImage.color = isCorrect ? correctKeyColor : incorrectKeyColor;
+            Debug.Log($"[InputHandler] Processing key: {pressedNote}");
+            
+            // Воспроизводим звук
+            PlayKeySound(pressedKey);
+            
+            // Запускаем мигание клавиши
+            StartCoroutine(FlashKey(pressedKey, pressedKeyColor));
         }
-    }
-    
-    // 5. Сброс цвета всех клавиш
-    public void ResetAllKeyColors(Color resetColor)
-    {
-        GameObject[] keys = GameObject.FindGameObjectsWithTag("PianoKey");
-        foreach (GameObject key in keys)
+        
+        /// <summary>
+        /// Установка финального цвета после проверки
+        /// </summary>
+        public void SetKeyFinalColor(GameObject keyObject, bool isCorrect)
         {
-            Image keyImage = key.GetComponent<Image>();
-            if (keyImage != null)
+            StartCoroutine(ShowResultAndReset(keyObject, isCorrect));
+        }
+        
+        private IEnumerator FlashKey(GameObject keyObject, Color flashColor)
+        {
+            Image keyImage = keyObject.GetComponent<Image>();
+            if (keyImage == null) yield break;
+            
+            Color originalColor = keyImage.color;
+            keyImage.color = flashColor;
+            
+            yield return new WaitForSeconds(keyFlashDuration);
+            
+            keyImage.color = originalColor;
+        }
+        
+        private IEnumerator ShowResultAndReset(GameObject keyObject, bool isCorrect)
+        {
+            // Ждем окончания первого мигания
+            yield return new WaitForSeconds(keyFlashDuration + 0.05f);
+            
+            Image keyImage = keyObject.GetComponent<Image>();
+            if (keyImage == null) yield break;
+            
+            // Устанавливаем цвет результата
+            Color resultColor = isCorrect ? correctKeyColor : incorrectKeyColor;
+            keyImage.color = resultColor;
+            
+            // Ждем перед сбросом
+            yield return new WaitForSeconds(resultDisplayDuration);
+            
+            // Возвращаем исходный цвет
+            ResetKeyColor(keyObject);
+        }
+        
+        private void ResetKeyColor(GameObject keyObject)
+        {
+            Image keyImage = keyObject.GetComponent<Image>();
+            if (keyImage == null) return;
+            
+            // Определяем исходный цвет по имени клавиши
+            bool isBlackKey = keyObject.name.Contains("#") || 
+                              keyObject.name.Contains("sharp") || 
+                              keyObject.name.Contains("flat") ||
+                              keyObject.name.Contains("b");
+            
+            keyImage.color = isBlackKey ? Color.black : Color.white;
+        }
+        
+        private void PlayKeySound(GameObject pressedKey)
+        {
+            if (!enableSound) return;
+            
+            AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
+            if (audioSource != null)
             {
-                keyImage.color = resetColor;
+                audioSource.volume = volume;
+                audioSource.Play();
+                Debug.Log($"[InputHandler] Played sound for {pressedKey.name}");
+            }
+            else
+            {
+                Debug.LogWarning($"No AudioSource found on {pressedKey.name}");
+            }
+        }
+        
+        /// <summary>
+        /// Вспомогательный метод для сброса всех клавиш
+        /// </summary>
+        public void ResetAllKeyColors(Color resetColor)
+        {
+            GameObject[] keys = GameObject.FindGameObjectsWithTag("PianoKey");
+            foreach (GameObject key in keys)
+            {
+                Image keyImage = key.GetComponent<Image>();
+                if (keyImage != null)
+                {
+                    keyImage.color = resetColor;
+                }
             }
         }
     }
-    
-    private void PlayKeySound(GameObject pressedKey)
-    {
-        if (!enableSound) return;
-        
-        AudioSource audioSource = pressedKey?.GetComponent<AudioSource>();
-        if (audioSource != null)
-        {
-            audioSource.volume = volume;
-            audioSource.Play();
-        }
-    }
-    
-    private void SetKeyTemporaryColor(GameObject keyObject, Color tempColor)
-    {
-        Image keyImage = keyObject?.GetComponent<Image>();
-        if (keyImage != null)
-        {
-            keyImage.color = tempColor;
-        }
-    }
-}
