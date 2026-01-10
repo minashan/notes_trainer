@@ -2597,6 +2597,58 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   noteName: B
+--- !u!1 &532508619
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 532508621}
+  - component: {fileID: 532508620}
+  m_Layer: 0
+  m_Name: UIManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &532508620
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532508619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 83f912aa96324f94db220288582225e7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.UI.UIManager
+  feedbackText: {fileID: 0}
+  scoreText: {fileID: 0}
+  streakText: {fileID: 0}
+  feedbackFadeDuration: 0.5
+  feedbackDisplayDuration: 1.5
+  correctColor: {r: 0, g: 0.5, b: 0, a: 1}
+  incorrectColor: {r: 1, g: 0, b: 0, a: 1}
+  defaultTextColor: {r: 1, g: 1, b: 1, a: 1}
+--- !u!4 &532508621
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 532508619}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 521.1933, y: 284.21164, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &554721214
 GameObject:
   m_ObjectHideFlags: 0
@@ -7309,6 +7361,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 86cc5cc764f5ea246ae9aec017e152eb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  uiManager: {fileID: 532508620}
   pianoInputHandler: {fileID: 256454524}
   feedbackText: {fileID: 554721216}
   noteContainer: {fileID: 621097426}
@@ -11178,3 +11231,4 @@ SceneRoots:
   - {fileID: 256454525}
   - {fileID: 306888264}
   - {fileID: 922494452}
+  - {fileID: 532508621}

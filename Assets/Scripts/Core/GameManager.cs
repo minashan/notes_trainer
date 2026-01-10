@@ -6,6 +6,10 @@ using System;
 
     public class GameManager : MonoBehaviour
     {
+
+        [Header("UI Components")]
+        [SerializeField] private UIManager uiManager;  // ← Добавляем эту строку
+
         [Header("Основные компоненты")]
         [SerializeField] private PianoInputHandler pianoInputHandler;
         [SerializeField] private TextMeshProUGUI feedbackText;
@@ -16,12 +20,8 @@ using System;
         
         [Header("Настройки времени")]
         [SerializeField] private float noteDisplayDelay = 0.5f;
-        [SerializeField] private float correctFeedbackDuration = 1.5f;
-        [SerializeField] private float incorrectFeedbackDuration = 1.5f;
         
-        [Header("Цвета UI")]
-        [SerializeField] private Color correctTextColor = new Color(0f, 0.5f, 0f, 1f);
-        [SerializeField] private Color incorrectTextColor = Color.red;
+        
         
         // Состояние игры
         private string _currentNote;
@@ -31,6 +31,7 @@ using System;
         
         void Start()
         {
+            
             // 1. Находим NoteGenerator
             FindAndInitializeNoteGenerator();
             
@@ -120,7 +121,12 @@ using System;
             
             if (feedbackText == null)
                 Debug.LogWarning("FeedbackText not assigned!");
+
+            if (uiManager == null)
+                Debug.LogWarning("UIManager not assigned. UI features may not work.");
         }
+
+        
         
         private void GenerateFirstNote()
         {
@@ -273,32 +279,41 @@ using System;
         /// <summary>
         /// Обработка правильного ответа
         /// </summary>
-        public void OnCorrectAnswer()
-        {
-            if (_isWaitingForNextNote) return;
-            
-            Debug.Log("Correct answer!");
-            _isWaitingForNextNote = true;
-            
-            // Показываем правильный ответ
-            ShowFeedback(NoteData.Instance.GetTranslatedNoteName(_currentNote), correctTextColor);
-            
-            // Очищаем через время
-            Invoke(nameof(ClearFeedback), correctFeedbackDuration);
-            
-            // Генерируем новую ноту с задержкой
-            Invoke(nameof(GenerateNextNote), noteDisplayDelay);
-        }
+       public void OnCorrectAnswer()
+{
+    if (_isWaitingForNextNote) return;
+    
+    Debug.Log("Correct answer!");
+    _isWaitingForNextNote = true;
+    
+    // СТАЛО (заменяем ShowFeedback на uiManager):
+    if (uiManager != null)
+    {
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(_currentNote);
+        uiManager.ShowFeedback(russianNote, true); // true = правильный
+    }
+    
+    // УДАЛЯЕМ эту строку (uiManager сам очистит):
+    // Invoke(nameof(ClearFeedback), correctFeedbackDuration);
+    
+    // Генерируем новую ноту с задержкой
+    Invoke(nameof(GenerateNextNote), noteDisplayDelay);
+}
         
-        /// <summary>
-        /// Обработка неправильного ответа
-        /// </summary>
-        public void OnIncorrectAnswer(string pressedNote)
-        {
-            Debug.Log($"Incorrect answer: {pressedNote}");
-            ShowFeedback(NoteData.Instance.GetTranslatedNoteName(pressedNote), incorrectTextColor);
-            Invoke(nameof(ClearFeedback), incorrectFeedbackDuration);
-        }
+       public void OnIncorrectAnswer(string pressedNote)
+{
+    Debug.Log($"Incorrect answer: {pressedNote}");
+    
+    // СТАЛО:
+    if (uiManager != null)
+    {
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
+        uiManager.ShowFeedback(russianNote, false); // false = неправильный
+    }
+    
+    // УДАЛЯЕМ эту строку (uiManager сам очистит):
+    // Invoke(nameof(ClearFeedback), incorrectFeedbackDuration);
+}
         
         #endregion
         
@@ -313,23 +328,7 @@ using System;
             }
         }
         
-        private void ShowFeedback(string message, Color color)
-        {
-            if (feedbackText != null)
-            {
-                feedbackText.text = message;
-                feedbackText.color = color;
-                Debug.Log($"Feedback: {message}");
-            }
-        }
-        
-        private void ClearFeedback()
-        {
-            if (feedbackText != null)
-            {
-                feedbackText.text = "";
-            }
-        }
+      
         
         #endregion
     }
