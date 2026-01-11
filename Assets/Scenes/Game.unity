@@ -2626,7 +2626,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 83f912aa96324f94db220288582225e7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.UI.UIManager
-  feedbackText: {fileID: 0}
+  feedbackText: {fileID: 554721216}
   scoreText: {fileID: 0}
   streakText: {fileID: 0}
   feedbackFadeDuration: 0.5
@@ -7366,10 +7366,6 @@ MonoBehaviour:
   feedbackText: {fileID: 554721216}
   noteContainer: {fileID: 621097426}
   noteDisplayDelay: 1.5
-  correctFeedbackDuration: 1.5
-  incorrectFeedbackDuration: 1.5
-  correctTextColor: {r: 0, g: 0.5, b: 0, a: 1}
-  incorrectTextColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!1 &1422987995
 GameObject:
   m_ObjectHideFlags: 0

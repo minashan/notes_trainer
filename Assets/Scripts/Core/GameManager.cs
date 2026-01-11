@@ -86,11 +86,18 @@ using System;
             }
             
             string[] allNotes = new string[] { 
-                "F1", "F1sharp", "G1", "G1sharp", "A1", "A1sharp", "B1",
-                "C", "Csharp", "D", "Dsharp", "E", "F", "Fsharp", "G", "Gsharp", "A", "Asharp", "B",
-                "C2", "C2sharp", "D2", "D2sharp", "E2", "F2", "F2sharp", "G2", "G2sharp", "A2", "A2sharp", "B2",
-                "C3", "C3sharp", "D3", "D3sharp", "E3"
-            };
+    // Малая октава (F1 - B1)
+    "F1", "F1sharp", "G1flat", "G1", "G1sharp", "A1flat", "A1", "A1sharp", "B1flat", "B1",
+    
+    // Первая октава (C - B)
+    "C", "Csharp", "Dflat", "D", "Dsharp", "Eflat", "E", "F", "Fsharp", "Gflat", "G", "Gsharp", "Aflat", "A", "Asharp", "Bflat", "B",
+    
+    // Вторая октава (C2 - B2)
+    "C2", "C2sharp", "D2flat", "D2", "D2sharp", "E2flat", "E2", "F2", "F2sharp", "G2flat", "G2", "G2sharp", "A2flat", "A2", "A2sharp", "B2flat", "B2",
+    
+    // Третья октава (C3 - E3)
+    "C3", "C3sharp", "D3flat", "D3", "D3sharp", "E3flat", "E3"
+};
             
             _noteGenerator.Initialize(allNotes);
             _noteGenerator.OnNoteGenerated += HandleNewNoteGenerated;
@@ -245,9 +252,9 @@ using System;
         private bool ShouldStemUp(string noteName)
         {
             string[] upStemNotes = { 
-                "F1", "F1sharp", "G1", "G1sharp", "A1", "A1sharp", "B1",
-                "C", "Csharp", "D", "Dsharp", "E", "F", "Fsharp", 
-                "G", "Gsharp", "A", "Asharp" 
+                "F1", "F1sharp", "G1flat", "G1", "G1sharp",  "A1flat", "A1", "A1sharp", "B1flat", "B1",
+                "C", "Csharp", "Dflat", "D", "Dsharp", "Eflat", "E", "F", "Fsharp",  "Gflat",
+                "G", "Gsharp", "Aflat", "A", "Asharp" 
             };
             return Array.Exists(upStemNotes, note => note == noteName);
         }
