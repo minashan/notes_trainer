@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
@@ -49,15 +50,19 @@ public class NoteData : MonoBehaviour
             { "A1sharp", "Ля диез" },
             { "B1flat", "Си бемоль" },
             { "B1", "Си" },
+            { "B1sharp", "Си диез"},
             
             // ПЕРВАЯ ОКТАВА
             { "C", "До" },
+            { "Cflat","До бемоль"},
             { "Csharp", "До диез" },
             { "D", "Ре" },
             { "Dflat", "Ре бемоль" },
             { "Dsharp", "Ре диез" },
             { "Eflat", "Ми бемоль" },
             { "E", "Ми" },
+            { "Esharp", "Ми диез"},
+            { "Fflat", "Фа бемоль"},
             { "F", "Фа" },
             { "Fsharp", "Фа диез" },
             { "Gflat", "Соль бемоль" },
@@ -68,8 +73,10 @@ public class NoteData : MonoBehaviour
             { "Asharp", "Ля диез" },
             { "Bflat", "Си бемоль" },
             { "B", "Си" },
+            { "Bsharp", "Си диез"},
             
             // ВТОРАЯ ОКТАВА
+            { "C2flat", "До бемоль"},
             { "C2", "До" },
             { "C2sharp", "До диез" },
             { "D2flat", "Ре бемоль" },
@@ -77,6 +84,8 @@ public class NoteData : MonoBehaviour
             { "D2sharp", "Ре диез" },
             { "E2flat", "Ми бемоль" },
             { "E2", "Ми" },
+            { "E2sharp", "Ми диез"},
+            { "F2flat", "Фа бемоль"},
             { "F2", "Фа" },
             { "F2sharp", "Фа диез" },
             { "G2flat", "Соль бемоль" },
@@ -87,8 +96,10 @@ public class NoteData : MonoBehaviour
             { "A2sharp", "Ля диез" },
             { "B2flat", "Си бемоль" },
             { "B2", "Си" },
+            { "B2sharp", "Си диез"},
             
             // ТРЕТЬЯ ОКТАВА
+            { "C3flat", "До бемоль"},
             { "C3", "До" },
             { "C3sharp", "До диез" },
             { "D3flat", "Ре бемоль" },
@@ -126,9 +137,11 @@ public class NoteData : MonoBehaviour
         { "A1sharp", new NotePosition() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 123f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 123f,showAccidental = true,isSharp = true } },
         { "B1flat", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 154f, showAccidental = true, isSharp = false } },
         { "B1", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "B1sharp", new NotePosition() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 5f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -67f,accidentalY = 137f,showAccidental = true,isSharp = true } }, 
 
         
         // ПЕРВАЯ ОКТАВА (до A - штиль вверх)
+        { "Cflat", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -67f,accidentalY = 173f,showAccidental = true,isSharp = false  } }, 
         { "C", new NotePosition() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 5f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "Csharp", new NotePosition() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 0f, ledgerLinesY = new float[] { 153f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f },accidentalX = -67f,accidentalY = 151f,showAccidental = true,isSharp = true } },
         { "D", new NotePosition() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
@@ -136,6 +149,8 @@ public class NoteData : MonoBehaviour
         { "Dsharp", new NotePosition() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 165f,showAccidental = true,isSharp = true } },
         { "Eflat", new NotePosition() { containerY = -2f, noteSpriteY = 221f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 203f, showAccidental = true, isSharp = false } },
         { "E", new NotePosition() { containerY = -2f, noteSpriteY = 221f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "Esharp", new NotePosition() { containerY = -2f, noteSpriteY = 222f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 184f, showAccidental = true, isSharp = true } }, 
+        { "Fflat", new NotePosition() { containerY = -2f, noteSpriteY = 239f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 222f,showAccidental = true,isSharp = false } }, 
         { "F", new NotePosition() { containerY = -2f, noteSpriteY = 238f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "Fsharp", new NotePosition() { containerY = -2f, noteSpriteY = 238f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 200f,showAccidental = true,isSharp = true } },
         { "Gflat", new NotePosition() { containerY = -2f, noteSpriteY = 256f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 237f, showAccidental = true, isSharp = false } },
@@ -146,15 +161,19 @@ public class NoteData : MonoBehaviour
         { "Asharp", new NotePosition() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 234f,showAccidental = true,isSharp = true } },
         
         // ОБНОВЛЕННЫЕ НОТЫ СО ШТИЛЕМ ВНИЗ:
-        { "Bflat", new NotePosition() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 320f, showAccidental = true, isSharp = false } },
+        { "Bflat", new NotePosition() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 320f, showAccidental = true, isSharp = false } }, 
         { "B", new NotePosition() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
-        { "C2", new NotePosition() { containerY = -50.8f, noteSpriteY = 281f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "Bsharp", new NotePosition() { containerY = -50.8f, noteSpriteY = 265f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 301f, showAccidental = true, isSharp = true } }, 
+        { "C2flat", new NotePosition() { containerY = -52f, noteSpriteY = 282f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 342f,showAccidental = true,isSharp = false  } }, 
+        { "C2", new NotePosition() { containerY = -50.8f, noteSpriteY = 282f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "C2sharp", new NotePosition() { containerY = -50.8f, noteSpriteY = 281f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 318f,showAccidental = true,isSharp = true } },
         { "D2flat", new NotePosition() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 357f, showAccidental = true, isSharp = false } },
         { "D2", new NotePosition() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "D2sharp", new NotePosition() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 335f,showAccidental = true,isSharp = true } },
         { "E2flat", new NotePosition() { containerY = -49.6f, noteSpriteY = 315f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 372f, showAccidental = true, isSharp = false } },
         { "E2", new NotePosition() { containerY = -49.6f, noteSpriteY = 315f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
+        { "E2sharp", new NotePosition() { containerY = -48.5f, noteSpriteY = 314f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 351f, showAccidental = true, isSharp = true } }, 
+        { "F2flat", new NotePosition() { containerY = -49.6f, noteSpriteY = 333f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 389f,showAccidental = true,isSharp = false } }, 
         { "F2", new NotePosition() { containerY = -48.5f, noteSpriteY = 334f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "F2sharp", new NotePosition() { containerY = -48.5f, noteSpriteY = 334f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 367f,showAccidental = true,isSharp = true } },
         { "G2flat", new NotePosition() { containerY = -51.9f, noteSpriteY = 352f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 0f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 411f, showAccidental = true, isSharp = false } },
@@ -165,6 +184,8 @@ public class NoteData : MonoBehaviour
         { "A2sharp", new NotePosition() { containerY = 264.1f, noteSpriteY = 52f, noteSpriteX = 1.1f, ledgerLinesY = new float[] { 0f, 0f, 89.1f }, ledgerLinesX = new float[] { 0f, 0f, 9f }, accidentalX = -67f,accidentalY = 87f,showAccidental = true,isSharp = true } },
         { "B2flat", new NotePosition() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 86.8f }, ledgerLinesX = new float[] { 0f, 0f, 4f }, accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = false } },
         { "B2", new NotePosition() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 86.8f }, ledgerLinesX = new float[] { 0f, 0f, 4f } } },
+        { "B2sharp", new NotePosition() { containerY = 264.1f, noteSpriteY = 75f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 0f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f, accidentalY = 105f, showAccidental = true, isSharp = true } }, 
+        { "C3flat", new NotePosition() { containerY = 265.3f, noteSpriteY = 87f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 4f }, accidentalX = -67f,accidentalY = 143f,showAccidental = true,isSharp = false } }, 
         { "C3", new NotePosition() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f } } },
         { "C3sharp", new NotePosition() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = -10f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 0f, 0f }, accidentalX = -67f,accidentalY = 120f,showAccidental = true,isSharp = true } },
         { "D3flat", new NotePosition() { containerY = 264.1f, noteSpriteY = 101f, noteSpriteX = 0f, ledgerLinesY = new float[] { 0f, 123f, 92.7f }, ledgerLinesX = new float[] { 0f, 7.3f, 7.3f }, accidentalX = -67f, accidentalY = 158f, showAccidental = true, isSharp = false } },
@@ -176,42 +197,85 @@ public class NoteData : MonoBehaviour
     }
     
     private void InitializeEnharmonicEquivalents()
+{
+    EnharmonicEquivalents = new Dictionary<string, string[]>()
     {
-        EnharmonicEquivalents = new Dictionary<string, string[]>()
-        {
-            { "F1sharp", new string[] { "G1flat" } },
-            { "G1sharp", new string[] { "A1flat" } },
-            { "A1sharp", new string[] { "B1flat" } },
-
-            { "Csharp",  new string[] { "Dflat" } },
-            { "Dsharp",  new string[] { "Eflat" } },
-            { "Fsharp",  new string[] { "Gflat" } },
-            { "Gsharp",  new string[] { "Aflat" } },
-            { "Asharp",  new string[] { "Bflat" } },
-
-            // ВТОРАЯ ОКТАВА
-            { "C2sharp", new string[] { "D2flat" } },
-            { "D2sharp", new string[] { "E2flat" } },
-            { "F2sharp", new string[] { "G2flat" } },
-            { "G2sharp", new string[] { "A2flat" } },
-            { "A2sharp", new string[] { "B2flat" } },
-
-            // ТРЕТЬЯ ОКТАВА (если есть диезы)
-            { "C3sharp", new string[] { "D3flat" } },
-            { "D3sharp", new string[] { "E3flat" } },
-
-            // ОБРАТНЫЕ СВЯЗИ (чтобы работало в обе стороны
-            { "G1flat", new string[] { "F1sharp" } },
-            { "A1flat", new string[] { "G1sharp" } },
-            { "B1flat", new string[] { "A1sharp" } },
-
-            { "Dflat",  new string[] { "Csharp" } },
-            { "Eflat",  new string[] { "Dsharp" } },
-            { "Gflat",  new string[] { "Fsharp" } },
-            { "Aflat",  new string[] { "Gsharp" } },
-            { "Bflat",  new string[] { "Asharp" } }
-        };
-    }
+        // МАЛАЯ ОКТАВА
+        { "F1sharp", new string[] { "G1flat" } },
+        { "G1flat",  new string[] { "F1sharp" } },
+        
+        { "G1sharp", new string[] { "A1flat" } },
+        { "A1flat",  new string[] { "G1sharp" } },
+        
+        { "A1sharp", new string[] { "B1flat" } },
+        { "B1flat",  new string[] { "A1sharp" } },
+        
+        { "B1sharp", new string[] { "C" } },
+        { "Cflat",   new string[] { "B1" } },      // Cb = B1
+        
+        // ПЕРВАЯ ОКТАВА
+        { "Csharp",  new string[] { "Dflat" } },
+        { "Dflat",   new string[] { "Csharp" } },
+        
+        { "Dsharp",  new string[] { "Eflat" } },
+        { "Eflat",   new string[] { "Dsharp" } },
+        
+        { "Esharp",  new string[] { "F" } },
+        { "Fflat",   new string[] { "E" } },       // Fb = E
+        
+        { "Fsharp",  new string[] { "Gflat" } },
+        { "Gflat",   new string[] { "Fsharp" } },
+        
+        { "Gsharp",  new string[] { "Aflat" } },
+        { "Aflat",   new string[] { "Gsharp" } },
+        
+        { "Asharp",  new string[] { "Bflat" } },
+        { "Bflat",   new string[] { "Asharp" } },
+        
+        { "Bsharp",  new string[] { "C2" } },
+        { "C2flat",  new string[] { "B" } },       // C2b = B
+        
+        // ВТОРАЯ ОКТАВА
+        { "C2sharp", new string[] { "D2flat" } },
+        { "D2flat",  new string[] { "C2sharp" } },
+        
+        { "D2sharp", new string[] { "E2flat" } },
+        { "E2flat",  new string[] { "D2sharp" } },
+        
+        { "E2sharp", new string[] { "F2" } },
+        { "F2flat",  new string[] { "E2" } },      // F2b = E2
+        
+        { "F2sharp", new string[] { "G2flat" } },
+        { "G2flat",  new string[] { "F2sharp" } },
+        
+        { "G2sharp", new string[] { "A2flat" } },
+        { "A2flat",  new string[] { "G2sharp" } },
+        
+        { "A2sharp", new string[] { "B2flat" } },
+        { "B2flat",  new string[] { "A2sharp" } },
+        
+        { "B2sharp", new string[] { "C3" } },
+        { "C3flat",  new string[] { "B2" } },      // C3b = B2
+        
+        // ТРЕТЬЯ ОКТАВА
+        { "C3sharp", new string[] { "D3flat" } },
+        { "D3flat",  new string[] { "C3sharp" } },
+        
+        { "D3sharp", new string[] { "E3flat" } },
+        { "E3flat",  new string[] { "D3sharp" } },
+        
+        // ОБРАТНЫЕ СВЯЗИ ДЛЯ БЕЛЫХ КЛАВИШ
+        { "F",       new string[] { "Esharp" } },
+        { "E",       new string[] { "Fflat" } },
+        { "C2",      new string[] { "Bsharp" } },
+        { "B",       new string[] { "C2flat" } },
+        { "F2",      new string[] { "E2sharp" } },
+        { "E2",      new string[] { "F2flat" } },
+        { "C3",      new string[] { "B2sharp" } },
+        { "B2",      new string[] { "C3flat" } },
+        { "B1",      new string[] { "Cflat" } }
+    };
+}
     
     public NotePosition GetNotePosition(string noteName)
     {
@@ -225,15 +289,47 @@ public class NoteData : MonoBehaviour
     }
     
     public bool AreNotesEnharmonic(string note1, string note2)
+{
+    // 1. Проверка на null и пустоту
+    if (string.IsNullOrEmpty(note1) || string.IsNullOrEmpty(note2))
     {
-        if (EnharmonicEquivalents.ContainsKey(note1) && 
-            EnharmonicEquivalents[note1].Contains(note2))
-            return true;
-            
-        if (EnharmonicEquivalents.ContainsKey(note2) && 
-            EnharmonicEquivalents[note2].Contains(note1))
-            return true;
-            
+        Debug.LogWarning($"AreNotesEnharmonic: Null or empty notes: '{note1}', '{note2}'");
         return false;
     }
+    
+    // 2. Прямое совпадение
+    if (note1 == note2)
+        return true;
+    
+    // 3. Проверка инициализации словаря
+    if (EnharmonicEquivalents == null)
+    {
+        Debug.LogError("EnharmonicEquivalents dictionary is null!");
+        return false;
+    }
+    
+    // 4. Попробуем найти note1 как ключ
+    if (EnharmonicEquivalents.TryGetValue(note1, out string[] equivalents))
+    {
+        if (equivalents != null && Array.Exists(equivalents, eq => eq == note2))
+        {
+            Debug.Log($"Enharmonic match: {note1} = {note2}");
+            return true;
+        }
+    }
+    
+    // 5. Попробуем найти note2 как ключ (обратная связь)
+    if (EnharmonicEquivalents.TryGetValue(note2, out equivalents))
+    {
+        if (equivalents != null && Array.Exists(equivalents, eq => eq == note1))
+        {
+            Debug.Log($"Enharmonic match (reverse): {note2} = {note1}");
+            return true;
+        }
+    }
+    
+    // 6. Если не нашли - не энгармоничны
+    Debug.Log($"No enharmonic match: {note1} ≠ {note2}");
+    return false;
+}
 }

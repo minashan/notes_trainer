@@ -1840,11 +1840,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PianoInputHandler
   enableSound: 1
   volume: 1
-  pressedKeyColor: {r: 1, g: 0.92156863, b: 0.015686275, a: 1}
   correctKeyColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectKeyColor: {r: 1, g: 0, b: 0, a: 1}
-  keyFlashDuration: 0.2
-  resultDisplayDuration: 1
 --- !u!4 &256454525
 Transform:
   m_ObjectHideFlags: 0
@@ -2740,7 +2737,7 @@ MonoBehaviour:
   m_fontSizeMin: 18
   m_fontSizeMax: 72
   m_fontStyle: 0
-  m_HorizontalAlignment: 1
+  m_HorizontalAlignment: 2
   m_VerticalAlignment: 256
   m_textAlignment: 65535
   m_characterSpacing: 0
