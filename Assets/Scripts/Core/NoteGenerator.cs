@@ -1,66 +1,61 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class NoteGenerator : MonoBehaviour
 {
-    // Событие для уведомления о новой ноте
-    public System.Action<string> OnNoteGenerated;
+    private List<string> allNotes = new List<string>();
+    private List<string> notesForCurrentLevel = new List<string>();
+    private bool allowEnharmonic = true;
+    private string lastGeneratedNote; // ← ДОБАВЬТЕ ЭТО
     
-    // Все доступные ноты (заполняется из GameManager или настройках)
-    private string[] availableNotes;
-    private string currentNote;
-    private string previousNote = "";
+    public event Action<string> OnNoteGenerated;
     
-    // Настройки генерации
-    private int maxAttemptsToAvoidRepeat = 10;
-    
-    public void Initialize(string[] notes)
+    private void Awake()
     {
-        availableNotes = notes;
+        InitializeAllNotes();
+    }
+    
+    private void InitializeAllNotes()
+    {
+        allNotes = new List<string>();
+        Debug.Log("NoteGenerator initialized with " + allNotes.Count + " notes");
     }
     
     public string GenerateRandomNote()
     {
-        if (availableNotes == null || availableNotes.Length == 0)
+        string selectedNote;
+        
+        if (notesForCurrentLevel != null && notesForCurrentLevel.Count > 0)
         {
-            return null;
+            int randomIndex = Random.Range(0, notesForCurrentLevel.Count);
+            selectedNote = notesForCurrentLevel[randomIndex];
+            Debug.Log("[NoteGenerator] Generated from LEVEL notes: " + selectedNote);
+        }
+        else
+        {
+            int randomIndex = Random.Range(0, allNotes.Count);
+            selectedNote = allNotes[randomIndex];
+            Debug.Log("[NoteGenerator] Generated from ALL notes: " + selectedNote);
         }
         
-        string newNote;
-        int attempts = 0;
+        lastGeneratedNote = selectedNote; // ← СОХРАНЯЕМ
+        OnNoteGenerated?.Invoke(selectedNote);
         
-        do {
-            newNote = availableNotes[Random.Range(0, availableNotes.Length)];
-            attempts++;
-        } while (newNote == previousNote && attempts < maxAttemptsToAvoidRepeat);
-        
-        previousNote = newNote;
-        currentNote = newNote;
-        
-        
-        OnNoteGenerated?.Invoke(currentNote);
-        
-        return currentNote;
+        return selectedNote;
     }
     
-    public string GetCurrentNote()
+    public void SetLevelNotes(List<string> notes, bool allowEnharmonicNotes)
     {
-        return currentNote;
+        notesForCurrentLevel = new List<string>(notes);
+        allowEnharmonic = allowEnharmonicNotes;
+        Debug.Log("[NoteGenerator] Set level notes: " + notes.Count + " notes");
     }
     
-    public void SetAvailableNotes(string[] notes)
+    // ДОБАВЬТЕ ЭТОТ МЕТОД:
+    public string GetLastGeneratedNote()
     {
-        availableNotes = notes;
-    }
-    
-    public void SetAvoidRepeatAttempts(int attempts)
-    {
-        maxAttemptsToAvoidRepeat = Mathf.Max(1, attempts);
-    }
-    
-    // Для будущих режимов сложности
-    public void SetNoteRange(string[] notesSubset)
-    {
-        availableNotes = notesSubset;
+        return lastGeneratedNote;
     }
 }

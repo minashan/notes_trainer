@@ -1,5 +1,6 @@
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 namespace NotesTrainer
 {
@@ -11,122 +12,152 @@ namespace NotesTrainer
         [Header("Текущее состояние")]
         [SerializeField] private int currentLevelIndex = 0;
         [SerializeField] private int currentLevelScore = 0;
-        [SerializeField] private bool isLevelCompleted = false;
         
-        // Компоненты
         private NoteGenerator noteGenerator;
         private GameManager gameManager;
         private UIManager uiManager;
         
-        // Свойства
-        public LevelData CurrentLevel => levels[currentLevelIndex];
+        public LevelData CurrentLevel => (levels != null && currentLevelIndex < levels.Length) ? levels[currentLevelIndex] : null;
         public int CurrentLevelNumber => currentLevelIndex + 1;
         public int TotalLevels => levels.Length;
-        public (int current, int required) ScoreInfo => (currentLevelScore, CurrentLevel.requiredScore);
-        public float Progress => Mathf.Clamp01((float)currentLevelScore / CurrentLevel.requiredScore);
         
-        /// <summary>
-        /// Инициализация менеджера уровней
-        /// </summary>
-        public void Initialize(NoteGenerator generator, GameManager gameMgr, UIManager uiMgr)
+        private void Start()
         {
-            noteGenerator = generator;
-            gameManager = gameMgr;
-            uiManager = uiMgr;
+            Debug.Log($"[LevelManager] === INITIALIZATION ===");
+            Debug.Log($"[LevelManager] Total levels: {levels?.Length ?? 0}");
+            
+            // Находим компоненты
+            noteGenerator = FindAnyObjectByType<NoteGenerator>();
+            gameManager = FindAnyObjectByType<GameManager>();
+            uiManager = FindAnyObjectByType<UIManager>();
+            
+            if (noteGenerator == null) Debug.LogError("NoteGenerator not found!");
+            if (gameManager == null) Debug.LogError("GameManager not found!");
+            if (uiManager == null) Debug.LogWarning("UIManager not found!");
             
             // Загружаем сохраненный прогресс
-            LoadProgress();
+            int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
+            currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
             
-            // Начинаем с текущего уровня
+            // Начинаем уровень
             StartCurrentLevel();
-            
-            Debug.Log($"[LevelManager] Initialized. Current level: {CurrentLevel.levelName}");
         }
         
-        /// <summary>
-        /// Начать текущий уровень
-        /// </summary>
         private void StartCurrentLevel()
         {
-            isLevelCompleted = false;
+            if (CurrentLevel == null) return;
+            
+            Debug.Log($"[LevelManager] Starting level {CurrentLevelNumber}: {CurrentLevel.levelName}");
             
             // Устанавливаем ноты для генератора
-            noteGenerator.SetAvailableNotes(CurrentLevel.includedNotes);
-            
-            // Генерируем первую ноту
-            noteGenerator.GenerateRandomNote();
+            if (noteGenerator != null)
+            {
+                noteGenerator.SetLevelNotes(new List<string>(CurrentLevel.includedNotes), CurrentLevel.allowEnharmonic);
+            }
             
             // Обновляем UI
-            uiManager?.UpdateLevelDisplay(CurrentLevelNumber, CurrentLevel.levelName, CurrentLevel.description);
-            uiManager?.UpdateProgress(Progress);
+            if (uiManager != null)
+            {
+                uiManager.UpdateLevelDisplay(CurrentLevelNumber, CurrentLevel.levelName, CurrentLevel.description);
+                uiManager.UpdateProgress(0);
+            }
             
-            Debug.Log($"[LevelManager] Started level {CurrentLevelNumber}: {CurrentLevel.levelName}");
-            Debug.Log($"[LevelManager] Notes in level: {string.Join(", ", CurrentLevel.includedNotes)}");
+            // Генерируем первую ноту
+            if (noteGenerator != null)
+            {
+                noteGenerator.GenerateRandomNote();
+            }
         }
         
-        /// <summary>
-        /// Добавить очки за правильный ответ
-        /// </summary>
         public void AddScore(int points)
         {
-            if (isLevelCompleted) return;
+            if (CurrentLevel == null) return;
             
             currentLevelScore += points;
-            SaveProgress();
             
-            // Обновляем прогресс в UI
-            uiManager?.UpdateProgress(Progress);
+            // Обновляем UI
+            if (uiManager != null)
+            {
+                float progress = (float)currentLevelScore / CurrentLevel.requiredScore;
+                uiManager.UpdateProgress(progress);
+            }
             
-            // Проверяем завершение уровня
+            // Проверяем, пройден ли уровень
             if (currentLevelScore >= CurrentLevel.requiredScore)
             {
-                CompleteLevel();
+                LevelComplete();
             }
-            
-            Debug.Log($"[LevelManager] +{points} points. Total: {currentLevelScore}/{CurrentLevel.requiredScore}");
         }
         
-        /// <summary>
-        /// Завершить текущий уровень
-        /// </summary>
-        private void CompleteLevel()
+        private void LevelComplete()
         {
-            isLevelCompleted = true;
-            
-            Debug.Log($"[LevelManager] Level {CurrentLevelNumber} completed!");
+            Debug.Log($"Уровень {CurrentLevelNumber} пройден!");
             
             // Сохраняем прогресс
-            PlayerPrefs.SetInt("CurrentLevel", currentLevelIndex);
+            PlayerPrefs.SetInt("LastUnlockedLevel", Mathf.Max(currentLevelIndex + 1, 
+                PlayerPrefs.GetInt("LastUnlockedLevel", 0)));
             PlayerPrefs.Save();
             
-            // Уведомляем UI
-            uiManager?.ShowLevelComplete(CurrentLevelNumber, CurrentLevel.levelName);
-            
-            // Если есть следующий уровень - разблокируем
-            if (currentLevelIndex < levels.Length - 1)
+            // Показываем окно завершения
+            if (uiManager != null)
             {
-                // Автоматически переходим или ждем нажатия кнопки
-                // Пока просто разблокируем следующий
+                uiManager.ShowLevelComplete(CurrentLevelNumber, CurrentLevel.levelName);
             }
+            
+            // Автопереход через 3 секунды
+            StartCoroutine(AutoNextLevel(3f));
         }
         
-        /// <summary>
-        /// Перейти на следующий уровень
-        /// </summary>
-        public void GoToNextLevel()
+        private IEnumerator AutoNextLevel(float delay)
         {
-            if (currentLevelIndex >= levels.Length - 1)
+            yield return new WaitForSeconds(delay);
+            
+            // Закрываем панель
+            if (uiManager != null && uiManager.levelCompletePanel != null)
             {
-                Debug.Log("[LevelManager] Это последний уровень!");
-                return;
+                uiManager.levelCompletePanel.SetActive(false);
             }
             
-            currentLevelIndex++;
-            currentLevelScore = 0;
-            StartCurrentLevel();
+            // Переходим на следующий уровень
+            int nextLevelIndex = currentLevelIndex + 1;
             
-            Debug.Log($"[LevelManager] Moved to level {CurrentLevelNumber}");
+            if (nextLevelIndex < levels.Length)
+            {
+                currentLevelIndex = nextLevelIndex;
+                currentLevelScore = 0;
+                StartCurrentLevel();
+            }
+            else
+            {
+                Debug.Log("[LevelManager] Все уровни пройдены!");
+            }
         }
+
+public void GoToNextLevel()
+{
+    int nextLevelIndex = currentLevelIndex + 1;
+    
+    if (nextLevelIndex < levels.Length)
+    {
+        Debug.Log($"[LevelManager] Going to next level: {nextLevelIndex + 1}");
+        currentLevelIndex = nextLevelIndex;
+        currentLevelScore = 0;
+        StartCurrentLevel();
+    }
+    else
+    {
+        Debug.Log("[LevelManager] Это последний уровень!");
+        
+        // Можно показать финальное сообщение
+        if (uiManager != null)
+        {
+            // Или использовать ваш метод ShowLevelComplete с другим текстом
+            uiManager.ShowLevelComplete(CurrentLevelNumber, "🎉 Все уровни пройдены!");
+        }
+    }
+}
+        
+        
         
         /// <summary>
         /// Перейти на конкретный уровень
@@ -186,22 +217,6 @@ namespace NotesTrainer
             return $"Уровень {CurrentLevelNumber}/{TotalLevels}: {currentLevelScore}/{CurrentLevel.requiredScore}";
         }
 
-        void Start()
-{
-    Debug.Log($"[LevelManager] === INITIALIZATION ===");
-    Debug.Log($"[LevelManager] Total levels: {levels?.Length ?? 0}");
-    
-    for (int i = 0; i < levels.Length; i++)
-    {
-        if (levels[i] != null)
-        {
-            Debug.Log($"[LevelManager] Level {i+1}: '{levels[i].levelName}' - {levels[i].includedNotes?.Length ?? 0} notes");
-        }
-        else
-        {
-            Debug.LogError($"[LevelManager] Level {i+1} is NULL!");
-        }
-    }
-}
+       
     }
 }
