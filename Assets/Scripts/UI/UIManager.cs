@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.UI; 
 using TMPro;
 using System.Collections;
 
@@ -18,6 +19,14 @@ using System.Collections;
         [SerializeField] private Color correctColor = new Color(0f, 0.5f, 0f, 1f); // темно-зеленый
         [SerializeField] private Color incorrectColor = Color.red;
         [SerializeField] private Color defaultTextColor = Color.white;
+
+
+        [Header("Элементы уровней")]
+        [SerializeField] private TextMeshProUGUI levelText;
+        [SerializeField] private TextMeshProUGUI levelDescriptionText;
+        [SerializeField] private Slider progressSlider;
+        [SerializeField] private GameObject levelCompletePanel;
+        [SerializeField] private TextMeshProUGUI levelCompleteText;
         
         private Coroutine _currentFeedbackCoroutine;
         
@@ -118,4 +127,62 @@ using System.Collections;
             
             Debug.Log("[UIManager] Initialized");
         }
+
+
+        /// <summary>
+    /// Обновить отображение уровня
+    /// </summary>
+    public void UpdateLevelDisplay(int levelNumber, string levelName, string description)
+    {
+        if (levelText != null)
+            levelText.text = $"Уровень {levelNumber}: {levelName}";
+        
+        if (levelDescriptionText != null)
+            levelDescriptionText.text = description;
+    }
+    
+    /// <summary>
+    /// Обновить прогресс-бар
+    /// </summary>
+    public void UpdateProgress(float progress)
+    {
+        if (progressSlider != null)
+        {
+            progressSlider.value = progress;
+            
+            // Можно добавить цвет в зависимости от прогресса
+            if (progress >= 0.8f)
+                progressSlider.fillRect.GetComponent<Image>().color = Color.green;
+            else if (progress >= 0.5f)
+                progressSlider.fillRect.GetComponent<Image>().color = Color.yellow;
+            else
+                progressSlider.fillRect.GetComponent<Image>().color = Color.red;
+        }
+    }
+    
+    /// <summary>
+    /// Показать окно завершения уровня
+    /// </summary>
+    public void ShowLevelComplete(int levelNumber, string levelName)
+    {
+        if (levelCompletePanel != null)
+        {
+            levelCompletePanel.SetActive(true);
+            
+            if (levelCompleteText != null)
+                levelCompleteText.text = $"Уровень {levelNumber} завершён!\n{levelName}";
+        }
+        
+        // Автоматически скрыть через 3 секунды
+        Invoke(nameof(HideLevelComplete), 3f);
+    }
+    
+    /// <summary>
+    /// Скрыть окно завершения уровня
+    /// </summary>
+    public void HideLevelComplete()
+    {
+        if (levelCompletePanel != null)
+            levelCompletePanel.SetActive(false);
+    }
     }

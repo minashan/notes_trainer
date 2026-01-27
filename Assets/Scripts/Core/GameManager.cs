@@ -1,12 +1,13 @@
 using UnityEngine;
 using TMPro;
 using System;
+using NotesTrainer;
 
 
 
     public class GameManager : MonoBehaviour
     {
-
+        
         [Header("UI Components")]
         [SerializeField] private UIManager uiManager;  // ← Добавляем эту строку
 
@@ -14,6 +15,8 @@ using System;
         [SerializeField] private PianoInputHandler pianoInputHandler;
         [SerializeField] private TextMeshProUGUI feedbackText;
         [SerializeField] private NoteController noteContainer;
+        [SerializeField] private LevelManager levelManager; // ← должно быть!
+   
         
         // NoteGenerator будем искать по имени GameObject
         private NoteGenerator _noteGenerator;
@@ -293,35 +296,44 @@ using System;
     Debug.Log("Correct answer!");
     _isWaitingForNextNote = true;
     
-    // СТАЛО (заменяем ShowFeedback на uiManager):
+    // Обратная связь через UI
     if (uiManager != null)
     {
         string russianNote = NoteData.Instance.GetTranslatedNoteName(_currentNote);
-        uiManager.ShowFeedback(russianNote, true); // true = правильный
+        uiManager.ShowFeedback(russianNote, true);
     }
     
-    // УДАЛЯЕМ эту строку (uiManager сам очистит):
-    // Invoke(nameof(ClearFeedback), correctFeedbackDuration);
+    // ⭐⭐⭐ ВАЖНО: ДОБАВЛЯЕМ ОЧКИ В LEVELMANAGER ⭐⭐⭐
+    if (levelManager != null)
+    {
+        levelManager.AddScore(10); // 10 очков за правильный ответ
+        Debug.Log($"[GameManager] Added 10 points via LevelManager");
+    }
+    else
+    {
+        Debug.LogWarning("[GameManager] LevelManager is null! Points not added.");
+    }
     
     // Генерируем новую ноту с задержкой
     Invoke(nameof(GenerateNextNote), noteDisplayDelay);
 }
-        
-       public void OnIncorrectAnswer(string pressedNote)
+        public void OnIncorrectAnswer(string pressedNote)
 {
     Debug.Log($"Incorrect answer: {pressedNote}");
     
-    // СТАЛО:
+    // Обратная связь через UI
     if (uiManager != null)
     {
         string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
         uiManager.ShowFeedback(russianNote, false); // false = неправильный
     }
     
-    // УДАЛЯЕМ эту строку (uiManager сам очистит):
-    // Invoke(nameof(ClearFeedback), incorrectFeedbackDuration);
+    // Можно добавить логику для LevelManager (например, сброс серии)
+    // if (levelManager != null)
+    // {
+    //     levelManager.ResetStreak();
+    // }
 }
-        
         #endregion
         
         #region Вспомогательные методы
