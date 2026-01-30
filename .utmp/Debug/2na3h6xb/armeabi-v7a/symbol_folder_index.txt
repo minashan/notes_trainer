@@ -1,0 +1,1 @@
+C:\PianoTrainer\PianoTrainerNew\Library\Bee\Android\Prj\Mono2x\Gradle\unityLibrary\build\intermediates\cxx\Debug\2na3h6xb\obj\armeabi-v7a

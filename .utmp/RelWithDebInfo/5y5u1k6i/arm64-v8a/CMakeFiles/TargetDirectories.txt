@@ -1,0 +1,5 @@
+C:/PianoTrainer/PianoTrainerNew/.utmp/RelWithDebInfo/5y5u1k6i/arm64-v8a/CMakeFiles/edit_cache.dir
+C:/PianoTrainer/PianoTrainerNew/.utmp/RelWithDebInfo/5y5u1k6i/arm64-v8a/CMakeFiles/rebuild_cache.dir
+C:/PianoTrainer/PianoTrainerNew/.utmp/RelWithDebInfo/5y5u1k6i/arm64-v8a/FramePacing/CMakeFiles/swappywrapper.dir
+C:/PianoTrainer/PianoTrainerNew/.utmp/RelWithDebInfo/5y5u1k6i/arm64-v8a/FramePacing/CMakeFiles/edit_cache.dir
+C:/PianoTrainer/PianoTrainerNew/.utmp/RelWithDebInfo/5y5u1k6i/arm64-v8a/FramePacing/CMakeFiles/rebuild_cache.dir
