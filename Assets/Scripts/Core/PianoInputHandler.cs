@@ -14,7 +14,7 @@ public class PianoInputHandler : MonoBehaviour
     
     public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
     {
-        Debug.Log($"[InputHandler] Key: {pressedNote}");
+        
         PlayKeySound(pressedKey); // только звук
     }
     

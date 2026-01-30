@@ -20,7 +20,7 @@ public class NoteGenerator : MonoBehaviour
     private void InitializeAllNotes()
     {
         allNotes = new List<string>();
-        Debug.Log("NoteGenerator initialized with " + allNotes.Count + " notes");
+        // УДАЛЕНО: Debug.Log($"Note: {allNotes}");
     }
     
     public string GenerateRandomNote()
@@ -31,13 +31,13 @@ public class NoteGenerator : MonoBehaviour
         {
             int randomIndex = Random.Range(0, notesForCurrentLevel.Count);
             selectedNote = notesForCurrentLevel[randomIndex];
-            Debug.Log("[NoteGenerator] Generated from LEVEL notes: " + selectedNote);
+            Debug.Log($"Note: {selectedNote}"); // ← УПРОЩЕНО
         }
         else
         {
             int randomIndex = Random.Range(0, allNotes.Count);
             selectedNote = allNotes[randomIndex];
-            Debug.Log("[NoteGenerator] Generated from ALL notes: " + selectedNote);
+            Debug.Log($"Note: {selectedNote}"); // ← УПРОЩЕНО
         }
         
         lastGeneratedNote = selectedNote; // ← СОХРАНЯЕМ
@@ -50,7 +50,7 @@ public class NoteGenerator : MonoBehaviour
     {
         notesForCurrentLevel = new List<string>(notes);
         allowEnharmonic = allowEnharmonicNotes;
-        Debug.Log("[NoteGenerator] Set level notes: " + notes.Count + " notes");
+        Debug.Log($"Level notes: {notes.Count}"); // ← УПРОЩЕНО
     }
     
     // ДОБАВЬТЕ ЭТОТ МЕТОД:

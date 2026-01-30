@@ -10,20 +10,13 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
-  m_Name: Level2_SecondOctave
+  m_Name: Level2
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
   levelName: "\u0412\u0442\u043E\u0440\u0430\u044F \u043E\u043A\u0442\u0430\u0432\u0430"
-  description: "\u041D\u043E\u0442\u044B \u0432\u044B\u0448\u0435 \u043D\u0430 \u043D\u043E\u0442\u043D\u043E\u043C
-    \u0441\u0442\u0430\u043D\u0435"
-  requiredScore: 40
+  description: "\u0411\u0435\u043B\u044B\u0435 \u043A\u043B\u0430\u0432\u0438\u0448\u0438
+    \u0432\u0442\u043E\u0440\u043E\u0439 \u043E\u043A\u0442\u0430\u0432\u044B"
+  requiredScore: 70
   includedNotes:
-  - C
-  - D
-  - E
-  - F
-  - G
-  - A
-  - B
   - C2
   - D2
   - E2

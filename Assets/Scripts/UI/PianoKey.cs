@@ -44,7 +44,7 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler
             return;
         }
         
-        Debug.Log($"PianoKey pressed: {noteName}");
+     
         
         // 1. Обрабатываем звук и временную подсветку
         inputHandler.ProcessKeyPress(noteName, gameObject);

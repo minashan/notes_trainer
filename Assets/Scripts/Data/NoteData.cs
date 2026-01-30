@@ -293,7 +293,7 @@ public class NoteData : MonoBehaviour
     // 1. Проверка на null и пустоту
     if (string.IsNullOrEmpty(note1) || string.IsNullOrEmpty(note2))
     {
-        Debug.LogWarning($"AreNotesEnharmonic: Null or empty notes: '{note1}', '{note2}'");
+        
         return false;
     }
     
@@ -304,7 +304,7 @@ public class NoteData : MonoBehaviour
     // 3. Проверка инициализации словаря
     if (EnharmonicEquivalents == null)
     {
-        Debug.LogError("EnharmonicEquivalents dictionary is null!");
+        
         return false;
     }
     
@@ -313,7 +313,7 @@ public class NoteData : MonoBehaviour
     {
         if (equivalents != null && Array.Exists(equivalents, eq => eq == note2))
         {
-            Debug.Log($"Enharmonic match: {note1} = {note2}");
+            
             return true;
         }
     }
@@ -323,13 +323,13 @@ public class NoteData : MonoBehaviour
     {
         if (equivalents != null && Array.Exists(equivalents, eq => eq == note1))
         {
-            Debug.Log($"Enharmonic match (reverse): {note2} = {note1}");
+            
             return true;
         }
     }
     
     // 6. Если не нашли - не энгармоничны
-    Debug.Log($"No enharmonic match: {note1} ≠ {note2}");
+   
     return false;
 }
 }

@@ -33,7 +33,7 @@ public class UIManager : MonoBehaviour
     /// </summary>
     public void ShowFeedback(string message, bool isCorrect)
     {
-        Debug.Log($"[UIManager] ShowFeedback: {message}, correct: {isCorrect}");
+        
         
         if (_currentFeedbackCoroutine != null)
         {

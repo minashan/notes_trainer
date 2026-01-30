@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using System.Collections.Generic;
 using System.Collections;
@@ -20,12 +21,11 @@ namespace NotesTrainer
         public LevelData CurrentLevel => (levels != null && currentLevelIndex < levels.Length) ? levels[currentLevelIndex] : null;
         public int CurrentLevelNumber => currentLevelIndex + 1;
         public int TotalLevels => levels.Length;
+
+        private bool _isLevelCompleting = false;
         
         private void Start()
         {
-            Debug.Log($"[LevelManager] === INITIALIZATION ===");
-            Debug.Log($"[LevelManager] Total levels: {levels?.Length ?? 0}");
-            
             // Находим компоненты
             noteGenerator = FindAnyObjectByType<NoteGenerator>();
             gameManager = FindAnyObjectByType<GameManager>();
@@ -34,6 +34,8 @@ namespace NotesTrainer
             if (noteGenerator == null) Debug.LogError("NoteGenerator not found!");
             if (gameManager == null) Debug.LogError("GameManager not found!");
             if (uiManager == null) Debug.LogWarning("UIManager not found!");
+
+            Debug.Log($"Levels: {levels?.Length ?? 0}"); // ← УПРОЩЕНО
             
             // Загружаем сохраненный прогресс
             int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
@@ -45,9 +47,10 @@ namespace NotesTrainer
         
         private void StartCurrentLevel()
         {
+            _isLevelCompleting = false;
             if (CurrentLevel == null) return;
             
-            Debug.Log($"[LevelManager] Starting level {CurrentLevelNumber}: {CurrentLevel.levelName}");
+            Debug.Log($"=== LEVEL {CurrentLevelNumber} ==="); // ← УПРОЩЕНО
             
             // Устанавливаем ноты для генератора
             if (noteGenerator != null)
@@ -70,43 +73,46 @@ namespace NotesTrainer
         }
         
         public void AddScore(int points)
-        {
-            if (CurrentLevel == null) return;
-            
-            currentLevelScore += points;
-            
-            // Обновляем UI
-            if (uiManager != null)
-            {
-                float progress = (float)currentLevelScore / CurrentLevel.requiredScore;
-                uiManager.UpdateProgress(progress);
-            }
-            
-            // Проверяем, пройден ли уровень
-            if (currentLevelScore >= CurrentLevel.requiredScore)
-            {
-                LevelComplete();
-            }
-        }
+{
+    if (CurrentLevel == null) return;
+    
+    // ОСТАВЬ ЭТУ ПРОВЕРКУ - ОНА ВАЖНА!
+    if (_isLevelCompleting) return;
+    
+    currentLevelScore += points;
+    Debug.Log($"AddScore: +{points} = {currentLevelScore}/{CurrentLevel.requiredScore}");
+    
+    if (currentLevelScore >= CurrentLevel.requiredScore)
+    {
+        LevelComplete();
+    }
+}
+        
         
         private void LevelComplete()
-        {
-            Debug.Log($"Уровень {CurrentLevelNumber} пройден!");
-            
-            // Сохраняем прогресс
-            PlayerPrefs.SetInt("LastUnlockedLevel", Mathf.Max(currentLevelIndex + 1, 
-                PlayerPrefs.GetInt("LastUnlockedLevel", 0)));
-            PlayerPrefs.Save();
-            
-            // Показываем окно завершения
-            if (uiManager != null)
-            {
-                uiManager.ShowLevelComplete(CurrentLevelNumber, CurrentLevel.levelName);
-            }
-            
-            // Автопереход через 3 секунды
-            StartCoroutine(AutoNextLevel(3f));
-        }
+{
+    if (_isLevelCompleting) return;
+    _isLevelCompleting = true;
+    
+    Debug.Log($"LEVEL {CurrentLevelNumber} COMPLETE");
+    
+    // ⭐⭐⭐ ВРЕМЕННО УБЕРИ UI КОД ⭐⭐⭐
+    /*
+    // Сохраняем прогресс
+    PlayerPrefs.SetInt("LastUnlockedLevel", Mathf.Max(currentLevelIndex + 1, 
+        PlayerPrefs.GetInt("LastUnlockedLevel", 0)));
+    PlayerPrefs.Save();
+    
+    // Показываем окно завершения
+    if (uiManager != null)
+    {
+        uiManager.ShowLevelComplete(CurrentLevelNumber, CurrentLevel.levelName);
+    }
+    */
+    
+    // Автопереход через 3 секунды
+    StartCoroutine(AutoNextLevel(3f));
+}
         
         private IEnumerator AutoNextLevel(float delay)
         {
@@ -129,35 +135,31 @@ namespace NotesTrainer
             }
             else
             {
-                Debug.Log("[LevelManager] Все уровни пройдены!");
+                Debug.Log("=== ALL LEVELS COMPLETE ==="); // ← УПРОЩЕНО
             }
         }
 
-public void GoToNextLevel()
-{
-    int nextLevelIndex = currentLevelIndex + 1;
-    
-    if (nextLevelIndex < levels.Length)
-    {
-        Debug.Log($"[LevelManager] Going to next level: {nextLevelIndex + 1}");
-        currentLevelIndex = nextLevelIndex;
-        currentLevelScore = 0;
-        StartCurrentLevel();
-    }
-    else
-    {
-        Debug.Log("[LevelManager] Это последний уровень!");
-        
-        // Можно показать финальное сообщение
-        if (uiManager != null)
+        public void GoToNextLevel()
         {
-            // Или использовать ваш метод ShowLevelComplete с другим текстом
-            uiManager.ShowLevelComplete(CurrentLevelNumber, "🎉 Все уровни пройдены!");
+            int nextLevelIndex = currentLevelIndex + 1;
+            
+            if (nextLevelIndex < levels.Length)
+            {
+                currentLevelIndex = nextLevelIndex;
+                currentLevelScore = 0;
+                StartCurrentLevel();
+            }
+            else
+            {
+                Debug.Log("=== ALL LEVELS COMPLETE ==="); // ← УПРОЩЕНО
+                
+                if (uiManager != null)
+                {
+                    // Или использовать ваш метод ShowLevelComplete с другим текстом
+                    //uiManager.ShowLevelComplete(CurrentLevelNumber, "🎉 Все уровни пройдены!");
+                }
+            }
         }
-    }
-}
-        
-        
         
         /// <summary>
         /// Перейти на конкретный уровень
@@ -166,7 +168,7 @@ public void GoToNextLevel()
         {
             if (levelIndex < 0 || levelIndex >= levels.Length)
             {
-                Debug.LogError($"[LevelManager] Invalid level index: {levelIndex}");
+                Debug.LogError($"Invalid level index: {levelIndex}");
                 return;
             }
             
@@ -186,7 +188,7 @@ public void GoToNextLevel()
             PlayerPrefs.Save();
             StartCurrentLevel();
             
-            Debug.Log("[LevelManager] Progress reset");
+            Debug.Log("Progress reset"); // ← УПРОЩЕНО
         }
         
         /// <summary>
@@ -196,8 +198,6 @@ public void GoToNextLevel()
         {
             int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
             currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
-            
-            Debug.Log($"[LevelManager] Loaded progress: level {currentLevelIndex + 1}");
         }
         
         /// <summary>
@@ -217,6 +217,12 @@ public void GoToNextLevel()
             return $"Уровень {CurrentLevelNumber}/{TotalLevels}: {currentLevelScore}/{CurrentLevel.requiredScore}";
         }
 
-       
+        public bool IsLevelCompleted()
+        {
+            if (CurrentLevel == null) return false;
+            return currentLevelScore >= CurrentLevel.requiredScore;
+        }
+
     }
+
 }
