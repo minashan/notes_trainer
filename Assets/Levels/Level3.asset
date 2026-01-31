@@ -17,7 +17,7 @@ MonoBehaviour:
   description: "\u041D\u043E\u0442\u044B: \u0424\u0430 \u043C\u0430\u043B\u043E\u0439
     - \u0421\u0438 \u043C\u0430\u043B\u043E\u0439,  \u0414\u043E 3-\u0439 - \u041C\u0438
     3-\u0439"
-  requiredScore: 70
+  requiredScore: 140
   includedNotes:
   - F1
   - G1

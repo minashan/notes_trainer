@@ -9,6 +9,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI feedbackText;
     [SerializeField] private TextMeshProUGUI scoreText;
     [SerializeField] private TextMeshProUGUI streakText;
+    public TextMeshProUGUI progressText;
     
     [Header("Настройки анимаций")]
     [SerializeField] private float feedbackFadeDuration = 0.5f;
@@ -27,6 +28,16 @@ public class UIManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI levelCompleteText;
     
     private Coroutine _currentFeedbackCoroutine;
+
+
+
+    public void UpdateProgress(int guessed, int total)
+{
+    if (progressText != null) // если есть TextMeshPro для прогресса
+    {
+        progressText.text = $"{guessed}/{total}";
+    }
+}
     
     /// <summary>
     /// Показать обратную связь (правильно/неправильно)

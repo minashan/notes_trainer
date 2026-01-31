@@ -31,7 +31,7 @@ namespace NotesTrainer
             gameManager = FindAnyObjectByType<GameManager>();
             uiManager = FindAnyObjectByType<UIManager>();
             
-            if (noteGenerator == null) Debug.LogError("NoteGenerator not found!");
+            //if (noteGenerator == null) Debug.LogError("NoteGenerator not found!");
             if (gameManager == null) Debug.LogError("GameManager not found!");
             if (uiManager == null) Debug.LogWarning("UIManager not found!");
 
@@ -42,20 +42,30 @@ namespace NotesTrainer
             currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
             
             // Начинаем уровень
-            StartCurrentLevel();
+            //StartCurrentLevel();
+            Debug.Log("LevelManager ready, waiting for GameManager...");
         }
         
-        private void StartCurrentLevel()
+        public void StartCurrentLevel()
         {
+
+        Debug.Log($"StartCurrentLevel: CurrentLevel = {CurrentLevel != null}");
+        Debug.Log($"SmartNoteGenerator = {_smartNoteGenerator != null}");
+
             _isLevelCompleting = false;
             if (CurrentLevel == null) return;
             
             Debug.Log($"=== LEVEL {CurrentLevelNumber} ==="); // ← УПРОЩЕНО
             
             // Устанавливаем ноты для генератора
-            if (noteGenerator != null)
+            //if (noteGenerator != null)
+            //{
+                //noteGenerator.SetLevelNotes(new List<string>(CurrentLevel.includedNotes), CurrentLevel.allowEnharmonic);
+            //}
+
+            if (_smartNoteGenerator != null)
             {
-                noteGenerator.SetLevelNotes(new List<string>(CurrentLevel.includedNotes), CurrentLevel.allowEnharmonic);
+                _smartNoteGenerator.SetLevel(CurrentLevel);
             }
             
             // Обновляем UI
@@ -69,6 +79,12 @@ namespace NotesTrainer
             if (noteGenerator != null)
             {
                 noteGenerator.GenerateRandomNote();
+            }
+
+            // Генерируем первую ноту из SmartGenerator
+            if (_smartNoteGenerator != null)
+            {
+                _smartNoteGenerator.GenerateNote();
             }
         }
         
@@ -222,6 +238,14 @@ namespace NotesTrainer
             if (CurrentLevel == null) return false;
             return currentLevelScore >= CurrentLevel.requiredScore;
         }
+
+         private SmartNoteGenerator _smartNoteGenerator;
+
+public void SetSmartNoteGenerator(SmartNoteGenerator generator)
+{
+    _smartNoteGenerator = generator;
+    Debug.Log("SmartNoteGenerator установлен в LevelManager");
+}
 
     }
 

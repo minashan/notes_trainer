@@ -16,6 +16,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private LevelManager levelManager;
     
     private NoteGenerator _noteGenerator;
+    private SmartNoteGenerator _smartGenerator;
     
     [Header("Настройки времени")]
     [SerializeField] private float noteDisplayDelay = 0.5f;
@@ -24,14 +25,24 @@ public class GameManager : MonoBehaviour
     private bool _isWaitingForNextNote = false;
     
     private void Start()
+{
+    Debug.Log("GameManager Started");
+    
+    // 1. Инициализируем компоненты
+    FindAndInitializeNoteGenerator();
+    ValidateComponents();
+    
+    // 2. НЕМЕДЛЕННО запускаем уровень
+    if (levelManager != null)
     {
-        // Инициализируем компоненты
-        FindAndInitializeNoteGenerator();
-        ValidateComponents();
-        
-        // Ждем LevelManager
-        StartCoroutine(WaitForLevelManager());
+        Debug.Log("Starting level from GameManager...");
+        levelManager.StartCurrentLevel();
     }
+    else
+    {
+        Debug.LogError("LevelManager not found!");
+    }
+}
 
     private IEnumerator WaitForLevelManager()
     {
@@ -62,38 +73,57 @@ public class GameManager : MonoBehaviour
     }
     
     private void FindAndInitializeNoteGenerator()
+{
+    // Старый генератор - отключаем
+    _noteGenerator = FindAnyObjectByType<NoteGenerator>();
+    if (_noteGenerator != null)
     {
-        // Способ 1: Ищем по имени GameObject
-        GameObject generatorObj = GameObject.Find("NoteGenerator");
-        if (generatorObj != null)
-        {
-            _noteGenerator = generatorObj.GetComponent<NoteGenerator>();
-        }
-        
-        // Способ 2: Ищем в сцене любой NoteGenerator
-        if (_noteGenerator == null)
-        {
-            _noteGenerator = FindAnyObjectByType<NoteGenerator>();
-        }
-        
-        // Способ 3: Создаем новый если не нашли
-        if (_noteGenerator == null)
-        {
-            GameObject newGenerator = new GameObject("NoteGenerator");
-            _noteGenerator = newGenerator.AddComponent<NoteGenerator>();
-        }
-        
-        // Инициализируем NoteGenerator
-        InitializeNoteGenerator();
+        Debug.Log("Found old NoteGenerator, disabling...");
+        _noteGenerator.gameObject.SetActive(false);
     }
+    
+    // Ищем SmartNoteGenerator
+    _smartGenerator = FindAnyObjectByType<SmartNoteGenerator>();
+    
+    if (_smartGenerator == null)
+    {
+        Debug.Log("Creating SmartNoteGenerator...");
+        GameObject go = new GameObject("SmartNoteGenerator");
+        _smartGenerator = go.AddComponent<SmartNoteGenerator>();
+    }
+    else
+    {
+        Debug.Log("Found existing SmartNoteGenerator");
+    }
+    
+    InitializeNoteGenerator();
+}
+
 
     private void InitializeNoteGenerator()
+{
+    Debug.Log($"GameManager: SmartGenerator = {_smartGenerator != null}");
+    Debug.Log($"GameManager: LevelManager = {levelManager != null}");
+    // Старый NoteGenerator (пока оставляем)
+    if (_noteGenerator != null)
     {
-        if (_noteGenerator == null) return;
-        
-        // ПОДПИСЫВАЕМСЯ НА СОБЫТИЕ ГЕНЕРАЦИИ НОТ
         _noteGenerator.OnNoteGenerated += HandleNewNoteGenerated;
     }
+    
+    // Новый SmartNoteGenerator
+    if (_smartGenerator != null)
+    {
+        _smartGenerator.OnNoteGenerated += HandleNewNoteGenerated;
+        _smartGenerator.OnProgressUpdated += HandleProgressUpdated; // ⭐ ДОБАВЬ ЭТУ СТРОКУ
+        
+        // Передаём в LevelManager
+        if (levelManager != null)
+        {
+            Debug.Log($"Calling SetSmartNoteGenerator...");
+            levelManager.SetSmartNoteGenerator(_smartGenerator);
+        }
+    }
+}
     
     private void ValidateComponents()
     {
@@ -103,10 +133,14 @@ public class GameManager : MonoBehaviour
 
     private void GenerateFirstNote()
     {
-        if (_noteGenerator != null)
-        {
-            _noteGenerator.GenerateRandomNote();
-        }
+        if (_smartGenerator != null)
+{
+    _smartGenerator.GenerateNote();
+}
+else if (_noteGenerator != null) // fallback на старый
+{
+    _noteGenerator.GenerateRandomNote();
+}
     }
     
     #region Обработка нот
@@ -115,6 +149,16 @@ public class GameManager : MonoBehaviour
     {
         SetCurrentNote(newNote);
     }
+
+
+    private void HandleProgressUpdated(int guessed, int total)
+{
+    if (uiManager != null)
+    {
+        uiManager.UpdateProgress(guessed, total);
+    }
+}
+
 
     public void SetCurrentNote(string note)
     {
@@ -259,11 +303,17 @@ public class GameManager : MonoBehaviour
     {
         levelManager.AddScore(10);
         
-        // ПРОВЕРКА: если уровень завершился - не генерируем новую ноту
+        // ⭐ ДОБАВЬ ЭТО:
+        // Регистрируем правильный ответ в SmartGenerator
+        if (_smartGenerator != null)
+        {
+            _smartGenerator.RegisterCorrectGuess(_currentNote);
+        }
+        
         if (levelManager.IsLevelCompleted())
         {
-            _isWaitingForNextNote = false; // Важно сбросить!
-            return; // ← ВЫХОДИМ!
+            _isWaitingForNextNote = false;
+            return;
         }
     }
     
@@ -285,13 +335,20 @@ public class GameManager : MonoBehaviour
     #region Вспомогательные методы
     
     private void GenerateNextNote()
+{
+    _isWaitingForNextNote = false;
+    
+    // Пробуем новый SmartGenerator
+    if (_smartGenerator != null)
     {
-        _isWaitingForNextNote = false;
-        if (_noteGenerator != null)
-        {
-            _noteGenerator.GenerateRandomNote();
-        }
+        _smartGenerator.GenerateNote();
     }
+    // Fallback на старый
+    else if (_noteGenerator != null)
+    {
+        _noteGenerator.GenerateRandomNote();
+    }
+}
     
     #endregion
 }
