@@ -246,8 +246,15 @@ public class GameManager : MonoBehaviour
     
     _isWaitingForNextNote = true;
     
-    // ... UI код ...
+    // ⭐⭐⭐ ВЕРНИ ЭТОТ КОД! ⭐⭐⭐
+    // Обратная связь через UI
+    if (uiManager != null)
+    {
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(_currentNote);
+        uiManager.ShowFeedback(russianNote, true);
+    }
     
+    // ⭐⭐⭐ ДОБАВЛЯЕМ ОЧКИ В LEVELMANAGER ⭐⭐⭐
     if (levelManager != null)
     {
         levelManager.AddScore(10);
