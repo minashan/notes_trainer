@@ -14,9 +14,9 @@ namespace NotesTrainer
         [SerializeField] private int currentLevelIndex = 0;
         [SerializeField] private int currentLevelScore = 0;
         
-        private NoteGenerator noteGenerator;
         private GameManager gameManager;
         private UIManager uiManager;
+        private SmartNoteGenerator _smartNoteGenerator;
         
         public LevelData CurrentLevel => (levels != null && currentLevelIndex < levels.Length) ? levels[currentLevelIndex] : null;
         public int CurrentLevelNumber => currentLevelIndex + 1;
@@ -27,22 +27,19 @@ namespace NotesTrainer
         private void Start()
         {
             // Находим компоненты
-            noteGenerator = FindAnyObjectByType<NoteGenerator>();
             gameManager = FindAnyObjectByType<GameManager>();
             uiManager = FindAnyObjectByType<UIManager>();
             
-            //if (noteGenerator == null) Debug.LogError("NoteGenerator not found!");
             if (gameManager == null) Debug.LogError("GameManager not found!");
             if (uiManager == null) Debug.LogWarning("UIManager not found!");
 
-            Debug.Log($"Levels: {levels?.Length ?? 0}"); // ← УПРОЩЕНО
+            Debug.Log($"Levels: {levels?.Length ?? 0}"); 
             
             // Загружаем сохраненный прогресс
             int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
             currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
             
-            // Начинаем уровень
-            //StartCurrentLevel();
+            
             Debug.Log("LevelManager ready, waiting for GameManager...");
         }
         
@@ -55,13 +52,8 @@ namespace NotesTrainer
             _isLevelCompleting = false;
             if (CurrentLevel == null) return;
             
-            Debug.Log($"=== LEVEL {CurrentLevelNumber} ==="); // ← УПРОЩЕНО
-            
-            // Устанавливаем ноты для генератора
-            //if (noteGenerator != null)
-            //{
-                //noteGenerator.SetLevelNotes(new List<string>(CurrentLevel.includedNotes), CurrentLevel.allowEnharmonic);
-            //}
+            Debug.Log($"=== LEVEL {CurrentLevelNumber} ==="); 
+           
 
             if (_smartNoteGenerator != null)
             {
@@ -73,12 +65,6 @@ namespace NotesTrainer
             {
                 uiManager.UpdateLevelDisplay(CurrentLevelNumber, CurrentLevel.levelName, CurrentLevel.description);
                 uiManager.UpdateProgress(0);
-            }
-            
-            // Генерируем первую ноту
-            if (noteGenerator != null)
-            {
-                noteGenerator.GenerateRandomNote();
             }
 
             // Генерируем первую ноту из SmartGenerator
@@ -92,7 +78,7 @@ namespace NotesTrainer
 {
     if (CurrentLevel == null) return;
     
-    // ОСТАВЬ ЭТУ ПРОВЕРКУ - ОНА ВАЖНА!
+    
     if (_isLevelCompleting) return;
     
     currentLevelScore += points;
@@ -111,20 +97,7 @@ namespace NotesTrainer
     _isLevelCompleting = true;
     
     Debug.Log($"LEVEL {CurrentLevelNumber} COMPLETE");
-    
-    // ⭐⭐⭐ ВРЕМЕННО УБЕРИ UI КОД ⭐⭐⭐
-    /*
-    // Сохраняем прогресс
-    PlayerPrefs.SetInt("LastUnlockedLevel", Mathf.Max(currentLevelIndex + 1, 
-        PlayerPrefs.GetInt("LastUnlockedLevel", 0)));
-    PlayerPrefs.Save();
-    
-    // Показываем окно завершения
-    if (uiManager != null)
-    {
-        uiManager.ShowLevelComplete(CurrentLevelNumber, CurrentLevel.levelName);
-    }
-    */
+  
     
     // Автопереход через 3 секунды
     StartCoroutine(AutoNextLevel(3f));
@@ -151,7 +124,7 @@ namespace NotesTrainer
             }
             else
             {
-                Debug.Log("=== ALL LEVELS COMPLETE ==="); // ← УПРОЩЕНО
+                Debug.Log("=== ALL LEVELS COMPLETE ==="); 
             }
         }
 
@@ -167,19 +140,14 @@ namespace NotesTrainer
             }
             else
             {
-                Debug.Log("=== ALL LEVELS COMPLETE ==="); // ← УПРОЩЕНО
+                Debug.Log("=== ALL LEVELS COMPLETE ==="); 
                 
-                if (uiManager != null)
-                {
-                    // Или использовать ваш метод ShowLevelComplete с другим текстом
-                    //uiManager.ShowLevelComplete(CurrentLevelNumber, "🎉 Все уровни пройдены!");
-                }
+              
             }
         }
         
-        /// <summary>
+        
         /// Перейти на конкретный уровень
-        /// </summary>
         public void GoToLevel(int levelIndex)
         {
             if (levelIndex < 0 || levelIndex >= levels.Length)
@@ -193,9 +161,8 @@ namespace NotesTrainer
             StartCurrentLevel();
         }
         
-        /// <summary>
+        
         /// Сбросить прогресс
-        /// </summary>
         public void ResetProgress()
         {
             currentLevelIndex = 0;
@@ -204,30 +171,27 @@ namespace NotesTrainer
             PlayerPrefs.Save();
             StartCurrentLevel();
             
-            Debug.Log("Progress reset"); // ← УПРОЩЕНО
+            Debug.Log("Progress reset"); 
         }
         
-        /// <summary>
+        
         /// Загрузить сохраненный прогресс
-        /// </summary>
         private void LoadProgress()
         {
             int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
             currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
         }
         
-        /// <summary>
+        
         /// Сохранить текущий прогресс
-        /// </summary>
         private void SaveProgress()
         {
             PlayerPrefs.SetInt("CurrentLevel", currentLevelIndex);
             PlayerPrefs.Save();
         }
         
-        /// <summary>
+        
         /// Получить информацию о прогрессе
-        /// </summary>
         public string GetProgressInfo()
         {
             return $"Уровень {CurrentLevelNumber}/{TotalLevels}: {currentLevelScore}/{CurrentLevel.requiredScore}";
@@ -239,7 +203,7 @@ namespace NotesTrainer
             return currentLevelScore >= CurrentLevel.requiredScore;
         }
 
-         private SmartNoteGenerator _smartNoteGenerator;
+         
 
 public void SetSmartNoteGenerator(SmartNoteGenerator generator)
 {

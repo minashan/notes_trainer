@@ -15,7 +15,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private NoteController noteContainer;
     [SerializeField] private LevelManager levelManager;
     
-    private NoteGenerator _noteGenerator;
+    
     private SmartNoteGenerator _smartGenerator;
     
     [Header("Настройки времени")]
@@ -54,15 +54,15 @@ public class GameManager : MonoBehaviour
         }
         else
         {
-            // Если текущая нота пустая, получаем из NoteGenerator
-            if (string.IsNullOrEmpty(_currentNote) && _noteGenerator != null)
+            // Если текущая нота пустая, получаем из SmartNoteGenerator
+            if (string.IsNullOrEmpty(_currentNote) && _smartGenerator != null)
             {
-                var noteGeneratorType = _noteGenerator.GetType();
+                var noteGeneratorType = _smartGenerator.GetType();
                 var method = noteGeneratorType.GetMethod("GetLastGeneratedNote");
                 
                 if (method != null)
                 {
-                    string lastNote = (string)method.Invoke(_noteGenerator, null);
+                    string lastNote = (string)method.Invoke(_smartGenerator, null);
                     if (!string.IsNullOrEmpty(lastNote))
                     {
                         SetCurrentNote(lastNote);
@@ -74,13 +74,6 @@ public class GameManager : MonoBehaviour
     
     private void FindAndInitializeNoteGenerator()
 {
-    // Старый генератор - отключаем
-    _noteGenerator = FindAnyObjectByType<NoteGenerator>();
-    if (_noteGenerator != null)
-    {
-        Debug.Log("Found old NoteGenerator, disabling...");
-        _noteGenerator.gameObject.SetActive(false);
-    }
     
     // Ищем SmartNoteGenerator
     _smartGenerator = FindAnyObjectByType<SmartNoteGenerator>();
@@ -104,17 +97,11 @@ public class GameManager : MonoBehaviour
 {
     Debug.Log($"GameManager: SmartGenerator = {_smartGenerator != null}");
     Debug.Log($"GameManager: LevelManager = {levelManager != null}");
-    // Старый NoteGenerator (пока оставляем)
-    if (_noteGenerator != null)
-    {
-        _noteGenerator.OnNoteGenerated += HandleNewNoteGenerated;
-    }
     
-    // Новый SmartNoteGenerator
     if (_smartGenerator != null)
     {
         _smartGenerator.OnNoteGenerated += HandleNewNoteGenerated;
-        _smartGenerator.OnProgressUpdated += HandleProgressUpdated; // ⭐ ДОБАВЬ ЭТУ СТРОКУ
+        _smartGenerator.OnProgressUpdated += HandleProgressUpdated; 
         
         // Передаём в LevelManager
         if (levelManager != null)
@@ -128,8 +115,8 @@ public class GameManager : MonoBehaviour
     private void ValidateComponents()
     {
         if (NoteData.Instance == null) return;
-        if (_noteGenerator == null) return;
-    } // ← ВОТ ЗДЕСЬ ДОБАВИЛ ЗАКРЫВАЮЩУЮ СКОБКУ!
+        if (_smartGenerator == null) return;
+    } 
 
     private void GenerateFirstNote()
     {
@@ -137,10 +124,7 @@ public class GameManager : MonoBehaviour
 {
     _smartGenerator.GenerateNote();
 }
-else if (_noteGenerator != null) // fallback на старый
-{
-    _noteGenerator.GenerateRandomNote();
-}
+
     }
     
     #region Обработка нот
@@ -268,9 +252,8 @@ else if (_noteGenerator != null) // fallback на старый
     
     #region Публичные методы для PianoKey
     
-    /// <summary>
+    
     /// Проверяет правильность нажатой ноты
-    /// </summary>
     public bool CheckNote(string pressedNote)
     {
         if (string.IsNullOrEmpty(_currentNote)) return false;
@@ -281,16 +264,15 @@ else if (_noteGenerator != null) // fallback на старый
         return directMatch || enharmonicMatch;
     }
     
-    /// <summary>
+    
     /// Обработка правильного ответа
-    /// </summary>
     public void OnCorrectAnswer()
 {
     if (_isWaitingForNextNote) return;
     
     _isWaitingForNextNote = true;
     
-    // ⭐⭐⭐ ВЕРНИ ЭТОТ КОД! ⭐⭐⭐
+    
     // Обратная связь через UI
     if (uiManager != null)
     {
@@ -303,7 +285,7 @@ else if (_noteGenerator != null) // fallback на старый
     {
         levelManager.AddScore(10);
         
-        // ⭐ ДОБАВЬ ЭТО:
+        
         // Регистрируем правильный ответ в SmartGenerator
         if (_smartGenerator != null)
         {
@@ -343,11 +325,7 @@ else if (_noteGenerator != null) // fallback на старый
     {
         _smartGenerator.GenerateNote();
     }
-    // Fallback на старый
-    else if (_noteGenerator != null)
-    {
-        _noteGenerator.GenerateRandomNote();
-    }
+    
 }
     
     #endregion
