@@ -12,11 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
   m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
-  levelName: "\u041C\u0430\u043B\u0430\u044F \u0438 \u0442\u0440\u0435\u0442\u044C\u044F
+  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 3"
+  description: "\u041D\u043E\u0442\u044B \u043C\u0430\u043B\u043E\u0439 \u0438 3-\u0439
     \u043E\u043A\u0442\u0430\u0432\u044B"
-  description: "\u041D\u043E\u0442\u044B: \u0424\u0430 \u043C\u0430\u043B\u043E\u0439
-    - \u0421\u0438 \u043C\u0430\u043B\u043E\u0439,  \u0414\u043E 3-\u0439 - \u041C\u0438
-    3-\u0439"
   requiredScore: 140
   includedNotes:
   - F1

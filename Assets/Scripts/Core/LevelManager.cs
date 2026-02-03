@@ -23,6 +23,7 @@ namespace NotesTrainer
         public int TotalLevels => levels.Length;
 
         private bool _isLevelCompleting = false;
+        private bool _firstNote = true;
         
         private void Start()
         {
@@ -46,6 +47,23 @@ namespace NotesTrainer
         public void StartCurrentLevel()
         {
 
+        ResetFirstNoteFlag();
+
+        if (uiManager != null)
+    {
+        uiManager.UpdateLevelInfo(CurrentLevel.levelName, CurrentLevel.description);
+        uiManager.ShowLevelInfo(true); // ← ПОКАЗАТЬ
+    }
+
+        Debug.Log($"UI Manager: {uiManager != null}");
+    
+    if (uiManager != null)
+    {
+        string levelName = CurrentLevel.levelName;
+        Debug.Log($"Setting level info: {levelName}");
+        uiManager.UpdateLevelInfo(levelName, CurrentLevel.description);
+    }
+
         Debug.Log($"StartCurrentLevel: CurrentLevel = {CurrentLevel != null}");
         Debug.Log($"SmartNoteGenerator = {_smartNoteGenerator != null}");
 
@@ -59,20 +77,38 @@ namespace NotesTrainer
             {
                 _smartNoteGenerator.SetLevel(CurrentLevel);
             }
-            
-            // Обновляем UI
-            if (uiManager != null)
-            {
-                uiManager.UpdateLevelDisplay(CurrentLevelNumber, CurrentLevel.levelName, CurrentLevel.description);
-                uiManager.UpdateProgress(0);
-            }
 
             // Генерируем первую ноту из SmartGenerator
             if (_smartNoteGenerator != null)
             {
                 _smartNoteGenerator.GenerateNote();
             }
+
         }
+
+        public void HideLevelInfo()
+{
+    if (uiManager != null)
+    {
+        uiManager.ShowLevelInfo(false);
+    }
+}
+
+public bool IsFirstNoteInLevel()
+{
+    if (_firstNote)
+    {
+        _firstNote = false;
+        return true;
+    }
+    return false;
+}
+
+public void ResetFirstNoteFlag()
+{
+    _firstNote = true;
+}
+
         
         public void AddScore(int points)
 {

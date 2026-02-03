@@ -12,7 +12,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
   m_Name: Level7
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
-  levelName: "\u0412\u0441\u0435 \u043D\u043E\u0442\u044B \u0434\u0438\u0430\u043F\u0430\u0437\u043E\u043D\u0430"
+  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 7"
   description: "\u0412\u0441\u0435 \u043D\u043E\u0442\u044B \u043E\u0442 \u0424\u0430
     \u043C\u0430\u043B\u043E\u0439 \u0434\u043E \u041C\u0438 3-\u0439"
   requiredScore: 1220

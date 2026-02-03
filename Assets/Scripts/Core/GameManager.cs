@@ -297,6 +297,11 @@ public class GameManager : MonoBehaviour
             _isWaitingForNextNote = false;
             return;
         }
+
+        if (levelManager != null && levelManager.IsFirstNoteInLevel())
+    {
+        levelManager.HideLevelInfo();
+    }
     }
     
     Invoke(nameof(GenerateNextNote), noteDisplayDelay);

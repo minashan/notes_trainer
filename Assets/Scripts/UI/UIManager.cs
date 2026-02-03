@@ -26,18 +26,26 @@ public class UIManager : MonoBehaviour
     [SerializeField] private Slider progressSlider;
     [SerializeField] public GameObject levelCompletePanel;
     [SerializeField] private TextMeshProUGUI levelCompleteText;
+
     
     private Coroutine _currentFeedbackCoroutine;
 
 
-
-    public void UpdateProgress(int guessed, int total)
+    public void UpdateLevelInfo(string levelName, string description)
 {
-    if (progressText != null) // если есть TextMeshPro для прогресса
+    if (levelText != null)
     {
-        progressText.text = $"{guessed}/{total}";
+        levelText.text = levelName;
+        Debug.Log($"LevelText set: {levelName}");
+    }
+    
+    if (levelDescriptionText != null)
+    {
+        levelDescriptionText.text = description;
+        Debug.Log($"Description set: {description}");
     }
 }
+
     
     /// <summary>
     /// Показать обратную связь (правильно/неправильно)
@@ -142,30 +150,36 @@ public class UIManager : MonoBehaviour
     public void UpdateLevelDisplay(int levelNumber, string levelName, string description)
     {
         if (levelText != null)
-            levelText.text = $"Уровень {levelNumber}: {levelName}";
+            levelText.text = levelName;
         
         if (levelDescriptionText != null)
             levelDescriptionText.text = description;
     }
+
+    public void ShowLevelInfo(bool show)
+{
+    if (levelText != null)
+        levelText.gameObject.SetActive(show);
     
-    /// <summary>
-    /// Обновить прогресс-бар
-    /// </summary>
-    public void UpdateProgress(float progress)
+    if (levelDescriptionText != null)
+        levelDescriptionText.gameObject.SetActive(show);
+}
+    
+  
+
+    public void UpdateProgress(int guessed, int total)
+{
+    if (progressSlider != null)
     {
-        if (progressSlider != null)
-        {
-            progressSlider.value = progress;
-            
-            // Можно добавить цвет в зависимости от прогресса
-            if (progress >= 0.8f)
-                progressSlider.fillRect.GetComponent<Image>().color = Color.green;
-            else if (progress >= 0.5f)
-                progressSlider.fillRect.GetComponent<Image>().color = Color.yellow;
-            else
-                progressSlider.fillRect.GetComponent<Image>().color = Color.red;
-        }
+        progressSlider.maxValue = total; // ← динамически
+        progressSlider.value = guessed;
     }
+    
+    if (progressText != null)
+    {
+        progressText.text = $"{guessed}/{total}";
+    }
+}
     
     /// <summary>
     /// Показать сообщение о завершении уровня
