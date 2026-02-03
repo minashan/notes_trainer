@@ -26,23 +26,29 @@ namespace NotesTrainer
         private bool _firstNote = true;
         
         private void Start()
-        {
-            // Находим компоненты
-            gameManager = FindAnyObjectByType<GameManager>();
-            uiManager = FindAnyObjectByType<UIManager>();
-            
-            if (gameManager == null) Debug.LogError("GameManager not found!");
-            if (uiManager == null) Debug.LogWarning("UIManager not found!");
+{
+    // Находим компоненты
+    gameManager = FindAnyObjectByType<GameManager>();
+    uiManager = FindAnyObjectByType<UIManager>();
+    
+    if (gameManager == null) Debug.LogError("GameManager not found!");
+    if (uiManager == null) Debug.LogWarning("UIManager not found!");
 
-            Debug.Log($"Levels: {levels?.Length ?? 0}"); 
-            
-            // Загружаем сохраненный прогресс
-            int savedLevel = PlayerPrefs.GetInt("CurrentLevel", 0);
-            currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
-            
-            
-            Debug.Log("LevelManager ready, waiting for GameManager...");
-        }
+    Debug.Log($"Levels: {levels?.Length ?? 0}");
+    
+    // Загружаем сохраненный прогресс
+    int savedLevel = PlayerPrefs.GetInt("HighestLevel", 0);
+    if (savedLevel > 0)
+    {
+        currentLevelIndex = Mathf.Clamp(savedLevel - 1, 0, levels.Length - 1);
+        Debug.Log($"Loaded progress: Level {savedLevel}");
+    }
+    
+    currentLevelIndex = Mathf.Clamp(savedLevel - 1, 0, levels.Length - 1);
+
+    Debug.Log("LevelManager ready, waiting for GameManager...");
+    Debug.Log($"Saved level: {PlayerPrefs.GetInt("HighestLevel", 0)}, CurrentIndex: {currentLevelIndex}");
+}
         
         public void StartCurrentLevel()
         {
@@ -133,6 +139,38 @@ public void ResetFirstNoteFlag()
     _isLevelCompleting = true;
     
     Debug.Log($"LEVEL {CurrentLevelNumber} COMPLETE");
+
+    // Проверяем какое значение было до сохранения
+    int oldHighest = PlayerPrefs.GetInt("HighestLevel", 0);
+    Debug.Log($"Old highest level: {oldHighest}");
+    
+    if (CurrentLevelNumber > oldHighest)
+    {
+        PlayerPrefs.SetInt("HighestLevel", CurrentLevelNumber);
+        PlayerPrefs.Save();
+        Debug.Log($"Progress saved: Level {CurrentLevelNumber}");
+    }
+    
+    // Показываем UI завершения уровня
+    //if (uiManager != null)
+    //{
+    //   uiManager.ShowLevelComplete(true);
+    //}
+    
+    //_isLevelCompleting = true;
+
+    if (CurrentLevelNumber > PlayerPrefs.GetInt("HighestLevel", 0))
+    {
+        PlayerPrefs.SetInt("HighestLevel", CurrentLevelNumber);
+        PlayerPrefs.Save();
+        Debug.Log($"Progress saved: Level {CurrentLevelNumber}");
+    }
+
+    int nextLevel = CurrentLevelNumber + 1;
+if (nextLevel > PlayerPrefs.GetInt("HighestLevel", 0))
+{
+    PlayerPrefs.SetInt("HighestLevel", nextLevel);
+}
   
     
     // Автопереход через 3 секунды
@@ -238,6 +276,11 @@ public void ResetFirstNoteFlag()
             if (CurrentLevel == null) return false;
             return currentLevelScore >= CurrentLevel.requiredScore;
         }
+
+        void OnApplicationQuit()
+{
+    Debug.Log($"OnApplicationQuit: HighestLevel = {PlayerPrefs.GetInt("HighestLevel", 0)}");
+}
 
          
 

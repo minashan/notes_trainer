@@ -26,6 +26,7 @@ public class GameManager : MonoBehaviour
     
     private void Start()
 {
+    Debug.Log($"GameManager: Saved level = {PlayerPrefs.GetInt("HighestLevel", 0)}");
     Debug.Log("GameManager Started");
     
     // 1. Инициализируем компоненты
