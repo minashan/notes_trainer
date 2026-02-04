@@ -50,55 +50,46 @@ namespace NotesTrainer
     Debug.Log($"Saved level: {PlayerPrefs.GetInt("HighestLevel", 0)}, CurrentIndex: {currentLevelIndex}");
 }
         
-        public void StartCurrentLevel()
-        {
-
-        ResetFirstNoteFlag();
-
-        if (uiManager != null)
-    {
-        uiManager.UpdateLevelInfo(CurrentLevel.levelName, CurrentLevel.description);
-        uiManager.ShowLevelInfo(true); // ← ПОКАЗАТЬ
-    }
-
-        Debug.Log($"UI Manager: {uiManager != null}");
+public void StartCurrentLevel()
+{
+    ResetFirstNoteFlag();
+    _isLevelCompleting = false;
     
+    if (CurrentLevel == null) return;
+    
+    Debug.Log($"=== LEVEL {CurrentLevelNumber} ===");
+    Debug.Log($"UI Manager: {uiManager != null}");
+    Debug.Log($"SmartNoteGenerator = {_smartNoteGenerator != null}");
+    
+    // ПОКАЗЫВАЕМ инфо с анимацией
     if (uiManager != null)
     {
         string levelName = CurrentLevel.levelName;
-        Debug.Log($"Setting level info: {levelName}");
         uiManager.UpdateLevelInfo(levelName, CurrentLevel.description);
+        uiManager.ShowLevelInfo(true, 1f); // плавное появление
     }
+    
+    // НАСТРАИВАЕМ генератор
+    if (_smartNoteGenerator != null)
+    {
+        _smartNoteGenerator.SetLevel(CurrentLevel);
+    }
+    
+    // Генерируем первую ноту
+    if (_smartNoteGenerator != null)
+    {
+        _smartNoteGenerator.GenerateNote();
+    }
+}
 
-        Debug.Log($"StartCurrentLevel: CurrentLevel = {CurrentLevel != null}");
-        Debug.Log($"SmartNoteGenerator = {_smartNoteGenerator != null}");
-
-            _isLevelCompleting = false;
-            if (CurrentLevel == null) return;
-            
-            Debug.Log($"=== LEVEL {CurrentLevelNumber} ==="); 
-           
-
-            if (_smartNoteGenerator != null)
-            {
-                _smartNoteGenerator.SetLevel(CurrentLevel);
-            }
-
-            // Генерируем первую ноту из SmartGenerator
-            if (_smartNoteGenerator != null)
-            {
-                _smartNoteGenerator.GenerateNote();
-            }
-
-        }
-
-        public void HideLevelInfo()
+public void HideLevelInfo()
 {
     if (uiManager != null)
     {
-        uiManager.ShowLevelInfo(false);
+        uiManager.ShowLevelInfo(false, 0.5f); // плавное исчезание
     }
 }
+
 
 public bool IsFirstNoteInLevel()
 {

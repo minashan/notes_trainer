@@ -27,6 +27,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] public GameObject levelCompletePanel;
     [SerializeField] private TextMeshProUGUI levelCompleteText;
 
+    [Header("Анимации")]
+    [SerializeField] private CanvasGroup levelInfoCanvasGroup;
+
     
     private Coroutine _currentFeedbackCoroutine;
 
@@ -156,13 +159,39 @@ public class UIManager : MonoBehaviour
             levelDescriptionText.text = description;
     }
 
-    public void ShowLevelInfo(bool show)
+    public void ShowLevelInfo(bool show, float fadeTime = 0.5f)
 {
-    if (levelText != null)
-        levelText.gameObject.SetActive(show);
+    // Если есть CanvasGroup - используем анимацию
+    if (levelInfoCanvasGroup != null)
+    {
+        StartCoroutine(FadeLevelInfo(show, fadeTime));
+    }
+    else // Иначе старый способ
+    {
+        if (levelText != null)
+            levelText.gameObject.SetActive(show);
+        
+        if (levelDescriptionText != null)
+            levelDescriptionText.gameObject.SetActive(show);
+    }
+}
+
+private IEnumerator FadeLevelInfo(bool show, float fadeTime)
+{
+    if (levelInfoCanvasGroup == null) yield break;
     
-    if (levelDescriptionText != null)
-        levelDescriptionText.gameObject.SetActive(show);
+    float targetAlpha = show ? 1f : 0f;
+    float startAlpha = levelInfoCanvasGroup.alpha;
+    float elapsed = 0f;
+    
+    while (elapsed < fadeTime)
+    {
+        levelInfoCanvasGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, elapsed / fadeTime);
+        elapsed += Time.deltaTime;
+        yield return null;
+    }
+    
+    levelInfoCanvasGroup.alpha = targetAlpha;
 }
     
   

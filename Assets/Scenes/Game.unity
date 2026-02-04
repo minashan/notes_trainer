@@ -2704,6 +2704,7 @@ MonoBehaviour:
   progressSlider: {fileID: 0}
   levelCompletePanel: {fileID: 0}
   levelCompleteText: {fileID: 0}
+  levelInfoCanvasGroup: {fileID: 1942406891}
 --- !u!4 &532508621
 Transform:
   m_ObjectHideFlags: 0
@@ -11314,6 +11315,7 @@ GameObject:
   - component: {fileID: 1942406888}
   - component: {fileID: 1942406890}
   - component: {fileID: 1942406889}
+  - component: {fileID: 1942406891}
   m_Layer: 5
   m_Name: LevelInfoPanel
   m_TagString: Untagged
@@ -11380,6 +11382,18 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1942406887}
   m_CullTransparentMesh: 1
+--- !u!225 &1942406891
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1942406887}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &1961685599
 GameObject:
   m_ObjectHideFlags: 0
