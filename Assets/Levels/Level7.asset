@@ -13,45 +13,9 @@ MonoBehaviour:
   m_Name: Level7
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
   levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 7"
-  description: "\u0412\u0441\u0435 \u043D\u043E\u0442\u044B "
-  requiredScore: 1220
+  description: "(\u0431\u0435\u043C\u043E\u043B\u0438)"
+  requiredScore: 300
   includedNotes:
-  - F1
-  - G1
-  - A1
-  - B1
-  - C
-  - D
-  - E
-  - F
-  - G
-  - A
-  - B
-  - C2
-  - D2
-  - E2
-  - F2
-  - G2
-  - A2
-  - B2
-  - C3
-  - D3
-  - E3
-  - F1sharp
-  - G1sharp
-  - A1sharp
-  - Csharp
-  - Dsharp
-  - Fsharp
-  - Gsharp
-  - Asharp
-  - C2sharp
-  - D2sharp
-  - F2sharp
-  - G2sharp
-  - A2sharp
-  - C3sharp
-  - D3sharp
   - G1flat
   - A1flat
   - B1flat
@@ -67,17 +31,7 @@ MonoBehaviour:
   - B2flat
   - D3flat
   - E3flat
-  - B1sharp
-  - Cflat
-  - Esharp
-  - Fflat
-  - Bsharp
-  - C2flat
-  - E2sharp
-  - F2flat
-  - B2sharp
-  - C3flat
-  allowEnharmonic: 1
+  allowEnharmonic: 0
   timeLimit: 0
   levelColor: {r: 1, g: 1, b: 1, a: 1}
   levelIcon: {fileID: 0}

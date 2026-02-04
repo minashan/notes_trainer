@@ -10,11 +10,11 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
-  m_Name: Level5
+  m_Name: Level8
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
-  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 5"
-  description: "(\u0432\u0441\u0435 \u043D\u043E\u0442\u044B \u0431\u0435\u0437 \u0430\u043B\u044C\u0442\u0435\u0440\u0430\u0446\u0438\u0438)"
-  requiredScore: 420
+  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 8"
+  description: "(\u0432\u0441\u0435 \u043D\u043E\u0442\u044B)"
+  requiredScore: 1220
   includedNotes:
   - F1
   - G1
@@ -37,7 +37,47 @@ MonoBehaviour:
   - C3
   - D3
   - E3
-  allowEnharmonic: 0
+  - F1sharp
+  - G1sharp
+  - A1sharp
+  - Csharp
+  - Dsharp
+  - Fsharp
+  - Gsharp
+  - Asharp
+  - C2sharp
+  - D2sharp
+  - F2sharp
+  - G2sharp
+  - A2sharp
+  - C3sharp
+  - D3sharp
+  - G1flat
+  - A1flat
+  - B1flat
+  - Dflat
+  - Eflat
+  - Gflat
+  - Aflat
+  - Bflat
+  - D2flat
+  - E2flat
+  - G2flat
+  - A2flat
+  - B2flat
+  - D3flat
+  - E3flat
+  - B1sharp
+  - Cflat
+  - Esharp
+  - Fflat
+  - Bsharp
+  - C2flat
+  - E2sharp
+  - F2flat
+  - B2sharp
+  - C3flat
+  allowEnharmonic: 1
   timeLimit: 0
   levelColor: {r: 1, g: 1, b: 1, a: 1}
   levelIcon: {fileID: 0}

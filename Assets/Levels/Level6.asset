@@ -13,24 +13,24 @@ MonoBehaviour:
   m_Name: Level6
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
   levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 6"
-  description: "\u0412\u0441\u0435 \u0431\u0435\u043C\u043E\u043B\u0438 "
+  description: "(\u0434\u0438\u0435\u0437\u044B) "
   requiredScore: 300
   includedNotes:
-  - G1flat
-  - A1flat
-  - B1flat
-  - Dflat
-  - Eflat
-  - Gflat
-  - Aflat
-  - Bflat
-  - D2flat
-  - E2flat
-  - G2flat
-  - A2flat
-  - B2flat
-  - D3flat
-  - E3flat
+  - F1sharp
+  - G1sharp
+  - A1sharp
+  - Csharp
+  - Dsharp
+  - Fsharp
+  - Gsharp
+  - Asharp
+  - C2sharp
+  - D2sharp
+  - F2sharp
+  - G2sharp
+  - A2sharp
+  - C3sharp
+  - D3sharp
   allowEnharmonic: 0
   timeLimit: 0
   levelColor: {r: 1, g: 1, b: 1, a: 1}

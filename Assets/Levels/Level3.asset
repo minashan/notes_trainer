@@ -13,17 +13,24 @@ MonoBehaviour:
   m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
   levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 3"
-  description: "\u041D\u043E\u0442\u044B \u043C\u0430\u043B\u043E\u0439 \u0438 3-\u0439
-    \u043E\u043A\u0442\u0430\u0432\u044B"
-  requiredScore: 140
+  description: "(\u043F\u0435\u0440\u0432\u0430\u044F \u0438 \u0432\u0442\u043E\u0440\u0430\u044F
+    \u043E\u043A\u0442\u0430\u0432\u044B)"
+  requiredScore: 280
   includedNotes:
-  - F1
-  - G1
-  - A1
-  - B1
-  - C3
-  - D3
-  - E3
+  - C
+  - D
+  - E
+  - F
+  - G
+  - A
+  - B
+  - C2
+  - D2
+  - E2
+  - F2
+  - G2
+  - A2
+  - B2
   allowEnharmonic: 0
   timeLimit: 0
   levelColor: {r: 1, g: 1, b: 1, a: 1}
