@@ -27,6 +27,9 @@ namespace NotesTrainer
         
         private void Start()
 {
+    int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
+    Debug.Log($"Текущий уровень: {currentLevel}");
+
     // Находим компоненты
     gameManager = FindAnyObjectByType<GameManager>();
     uiManager = FindAnyObjectByType<UIManager>();
@@ -36,18 +39,18 @@ namespace NotesTrainer
 
     Debug.Log($"Levels: {levels?.Length ?? 0}");
     
-    // Загружаем сохраненный прогресс
-    int savedLevel = PlayerPrefs.GetInt("HighestLevel", 0);
-    if (savedLevel > 0)
-    {
-        currentLevelIndex = Mathf.Clamp(savedLevel - 1, 0, levels.Length - 1);
-        Debug.Log($"Loaded progress: Level {savedLevel}");
-    }
-    
-    currentLevelIndex = Mathf.Clamp(savedLevel - 1, 0, levels.Length - 1);
+    int savedHighest = PlayerPrefs.GetInt("HighestLevel", 1); // Максимальный открытый
+int selectedLevel = PlayerPrefs.GetInt("CurrentLevel", 1); // Выбранный сейчас
 
-    Debug.Log("LevelManager ready, waiting for GameManager...");
-    Debug.Log($"Saved level: {PlayerPrefs.GetInt("HighestLevel", 0)}, CurrentIndex: {currentLevelIndex}");
+// Проверяем что выбранный уровень не больше открытого
+if (selectedLevel > savedHighest)
+{
+    Debug.LogWarning($"Уровень {selectedLevel} заблокирован! Открыт только до {savedHighest}");
+    selectedLevel = savedHighest;
+}
+
+currentLevelIndex = Mathf.Clamp(selectedLevel - 1, 0, levels.Length - 1);
+Debug.Log($"Загружаем уровень: {selectedLevel} (индекс: {currentLevelIndex})");
 }
         
 public void StartCurrentLevel()

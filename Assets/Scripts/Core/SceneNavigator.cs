@@ -28,17 +28,20 @@ public class SceneNavigator : MonoBehaviour
     
     // Для загрузки игры с конкретным уровнем
     public void LoadGameWithLevel(int levelIndex)
+{
+    if (levelIndex < 1 || levelIndex > 8)
     {
-        if (levelIndex < 1 || levelIndex > 8)
-        {
-            Debug.LogError($"Неверный индекс уровня: {levelIndex}");
-            return;
-        }
-        
-        PlayerPrefs.SetInt("CurrentLevel", levelIndex);
-        Debug.Log($"Загружаем уровень {levelIndex}");
-        LoadGameScene();
+        Debug.LogError($"Неверный индекс уровня: {levelIndex}");
+        return;
     }
+    
+    // Сохраняем выбранный уровень
+    PlayerPrefs.SetInt("CurrentLevel", levelIndex);
+    PlayerPrefs.Save();
+    
+    Debug.Log($"Загружаем уровень {levelIndex}");
+    LoadGameScene();
+}
     
     // Общий метод загрузки
     private void LoadScene(string sceneName)
