@@ -52,10 +52,11 @@ public class SceneNavigator : MonoBehaviour
     
     // Для кнопки "Начать заново" в игровой сцене
     public void RestartCurrentLevel()
-    {
-        int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-        LoadGameWithLevel(currentLevel);
-    }
+{
+    int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
+    Debug.Log($"Рестарт уровня {currentLevel}");
+    LoadGameWithLevel(currentLevel);
+}
     
     // Для выхода в меню уровней из игры
     public void ReturnToLevelSelection()
