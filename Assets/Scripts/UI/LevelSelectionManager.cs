@@ -200,8 +200,10 @@ void ResetAllProgress()
     // Назначаем действие
     levelButton.button.onClick.RemoveAllListeners();
     levelButton.button.onClick.AddListener(() => {
-        SceneNavigator.Instance.LoadGameWithLevel(levelIndex);
-    });
+    PlayerPrefs.SetInt("CurrentLevel", levelIndex);
+    PlayerPrefs.Save();
+    SceneNavigator.Instance.LoadGameWithLevel(levelIndex);
+});
 }
 
     

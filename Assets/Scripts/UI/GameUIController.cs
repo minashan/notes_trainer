@@ -55,16 +55,16 @@ public class GameUIController : MonoBehaviour
         SceneNavigator.Instance.LoadKeySelection();
     }
     
-    void RestartLevel()
+   void RestartLevel()
 {
-    int currentBefore = PlayerPrefs.GetInt("CurrentLevel", 1);
-    Debug.Log($"Рестарт уровня. CurrentLevel до: {currentBefore}");
+    int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
+    Debug.Log($"Рестарт уровня {currentLevel}");
+    
+    // Принудительно сохраняем (на всякий случай)
+    PlayerPrefs.SetInt("CurrentLevel", currentLevel);
+    PlayerPrefs.Save();
     
     SceneNavigator.Instance.RestartCurrentLevel();
-    
-    // Можно проверить после
-    int currentAfter = PlayerPrefs.GetInt("CurrentLevel", 1);
-    Debug.Log($"CurrentLevel после: {currentAfter}");
 }
 
      void BackToLevels()

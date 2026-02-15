@@ -26,6 +26,11 @@ public class GameManager : MonoBehaviour
     
     private void Start()
 {
+
+int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
+    Debug.Log($"GameManager: CurrentLevel из PlayerPrefs = {currentLevel}");
+    Debug.Log($"GameManager: HighestLevel = {PlayerPrefs.GetInt("HighestLevel", 0)}");
+
     Debug.Log($"GameManager: Saved level = {PlayerPrefs.GetInt("HighestLevel", 0)}");
     Debug.Log("GameManager Started");
     
