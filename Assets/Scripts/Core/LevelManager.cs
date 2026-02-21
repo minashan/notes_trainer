@@ -145,14 +145,21 @@ public void ResetFirstNoteFlag()
         Debug.Log($"Progress saved: Level {CurrentLevelNumber}");
     }
     
+    // СОХРАНЯЕМ СЛЕДУЮЩИЙ УРОВЕНЬ КАК ТЕКУЩИЙ
+    int nextLevel = CurrentLevelNumber + 1;
+    if (nextLevel <= 8)
+    {
+        PlayerPrefs.SetInt("CurrentLevel", nextLevel);
+        PlayerPrefs.Save();
+        Debug.Log($"CurrentLevel обновлён на {nextLevel}");
+    }
+    
     // Показываем UI завершения уровня
     //if (uiManager != null)
     //{
     //   uiManager.ShowLevelComplete(true);
     //}
     
-    //_isLevelCompleting = true;
-
     if (CurrentLevelNumber > PlayerPrefs.GetInt("HighestLevel", 0))
     {
         PlayerPrefs.SetInt("HighestLevel", CurrentLevelNumber);
@@ -160,13 +167,12 @@ public void ResetFirstNoteFlag()
         Debug.Log($"Progress saved: Level {CurrentLevelNumber}");
     }
 
-    int nextLevel = CurrentLevelNumber + 1;
-if (nextLevel > PlayerPrefs.GetInt("HighestLevel", 0))
-{
-    PlayerPrefs.SetInt("HighestLevel", nextLevel);
-}
+    if (nextLevel > PlayerPrefs.GetInt("HighestLevel", 0))
+    {
+        PlayerPrefs.SetInt("HighestLevel", nextLevel);
+        PlayerPrefs.Save();
+    }
   
-    
     // Автопереход через 3 секунды
     StartCoroutine(AutoNextLevel(3f));
 }

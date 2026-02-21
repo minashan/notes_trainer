@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: d4015e6401fbe0a4ba67dd7f956a2e73
+guid: 4c6664b385778c442bd2ad43eec3f1b6
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 6394364291577383993
-    second: LogoMenu_0
+      213: -8492336567695241739
+    second: logo2_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: LogoMenu_0
+      name: logo2_0
       rect:
         serializedVersion: 2
         x: 0
         y: 0
-        width: 259
-        height: 146
+        width: 1024
+        height: 1024
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 93c89e3c1785db850800000000000000
-      internalID: 6394364291577383993
+      spriteID: 5fd0771d2e8252a80800000000000000
+      internalID: -8492336567695241739
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      LogoMenu_0: 6394364291577383993
+      logo2_0: -8492336567695241739
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
