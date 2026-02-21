@@ -11,6 +11,8 @@ public class PianoInputHandler : MonoBehaviour
     [Header("Цвета клавиш")]
     public Color correctKeyColor = Color.green;
     public Color incorrectKeyColor = Color.red;
+
+    
     
     public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
     {
@@ -52,9 +54,12 @@ public class PianoInputHandler : MonoBehaviour
     }
     
     private void PlayKeySound(GameObject pressedKey)
+{
+    if (!enableSound) return;
+    
+    // Проверяем muted через AudioManager
+    if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
     {
-        if (!enableSound) return;
-        
         AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
         if (audioSource != null)
         {
@@ -62,4 +67,5 @@ public class PianoInputHandler : MonoBehaviour
             audioSource.Play();
         }
     }
+}
 }

@@ -269,11 +269,21 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
         
         return directMatch || enharmonicMatch;
     }
+
+    private void TryHideLevelInfoOnFirstNote()
+{
+    if (levelManager != null && levelManager.IsFirstNoteInLevel())
+    {
+        levelManager.HideLevelInfo();
+    }
+}
     
     
     /// Обработка правильного ответа
     public void OnCorrectAnswer()
 {
+    TryHideLevelInfoOnFirstNote();
+
     if (_isWaitingForNextNote) return;
     
     _isWaitingForNextNote = true;
@@ -303,11 +313,6 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
             _isWaitingForNextNote = false;
             return;
         }
-
-        if (levelManager != null && levelManager.IsFirstNoteInLevel())
-    {
-        levelManager.HideLevelInfo();
-    }
     }
     
     Invoke(nameof(GenerateNextNote), noteDisplayDelay);
@@ -315,6 +320,8 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
     
     public void OnIncorrectAnswer(string pressedNote)
     {
+
+    TryHideLevelInfoOnFirstNote();
         // Обратная связь через UI
         if (uiManager != null)
         {
