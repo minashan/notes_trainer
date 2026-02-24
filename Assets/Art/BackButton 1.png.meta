@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: e45c08cb1a24600459099c15109b5da3
+guid: 680151bce857c7040a2354b3f1b67ca8
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -3534288053459477036
-    second: MuteButton_0
+      213: 83631464288854834
+    second: BackButton 1_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,7 +126,7 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: MuteButton_0
+      name: BackButton 1_0
       rect:
         serializedVersion: 2
         x: 0
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4dd14a7adbfa3fec0800000000000000
-      internalID: -3534288053459477036
+      spriteID: 233abf8af5e192100800000000000000
+      internalID: 83631464288854834
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      MuteButton_0: -3534288053459477036
+      BackButton 1_0: 83631464288854834
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

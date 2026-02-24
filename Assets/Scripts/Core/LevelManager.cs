@@ -202,11 +202,6 @@ public void ResetFirstNoteFlag()
         {
             yield return new WaitForSeconds(delay);
             
-            // Закрываем панель
-            if (uiManager != null && uiManager.levelCompletePanel != null)
-            {
-                uiManager.levelCompletePanel.SetActive(false);
-            }
             
             // Переходим на следующий уровень
             int nextLevelIndex = currentLevelIndex + 1;
