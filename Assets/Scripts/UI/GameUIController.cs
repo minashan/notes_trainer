@@ -6,6 +6,9 @@ public class GameUIController : MonoBehaviour
     [SerializeField] private Button exitToMenuButton;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backToLevelsButton;
+
+    [Header("Audio")]
+    [SerializeField] private AudioClip buttonClickSound;
     
    void Start()
 {
