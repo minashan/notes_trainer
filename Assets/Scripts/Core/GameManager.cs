@@ -23,6 +23,7 @@ public class GameManager : MonoBehaviour
     
     private string _currentNote;
     private bool _isWaitingForNextNote = false;
+    private int _wrongAttempts = 0;
     
     private void Start()
 {
@@ -282,7 +283,12 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
     /// Обработка правильного ответа
     public void OnCorrectAnswer()
 {
-    
+    // ⭐ ОСТАНАВЛИВАЕМ ПУЛЬСАЦИЮ ПРИ ПРАВИЛЬНОМ ОТВЕТЕ
+    HintButton hintButton = FindFirstObjectByType<HintButton>();
+    if (hintButton != null)
+    {
+        hintButton.StopPulsing();
+    }
 
     if (_isWaitingForNextNote) return;
     
@@ -319,16 +325,41 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
 }
     
     public void OnIncorrectAnswer(string pressedNote)
-    {
+{
 
+    _wrongAttempts++;
     
-        // Обратная связь через UI
-        if (uiManager != null)
+    if (_wrongAttempts >= 3)
+    {
+        HintButton hintButton = FindFirstObjectByType<HintButton>();
+        if (hintButton != null)
         {
-            string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
-            uiManager.ShowFeedback(russianNote, false);
+            hintButton.StartPulsing();
         }
+        _wrongAttempts = 0;
     }
+
+    // ⭐ НОВОЕ: увеличиваем счётчик ошибок
+    _wrongAttempts++;
+    
+    // ⭐ НОВОЕ: проверяем, не пора ли показать подсказку
+    if (_wrongAttempts >= 3)
+    {
+        HintButton hintButton = FindFirstObjectByType<HintButton>();
+        if (hintButton != null)
+        {
+            hintButton.StartPulsing();
+        }
+        _wrongAttempts = 0; // сбрасываем после активации
+    }
+    
+    // Обратная связь через UI
+    if (uiManager != null)
+    {
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
+        uiManager.ShowFeedback(russianNote, false);
+    }
+}
     
     #endregion
     
@@ -347,4 +378,8 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
 }
     
     #endregion
+    public string GetCurrentNoteName()
+{
+    return _currentNote; // или как у тебя называется переменная с текущей нотой
+}
 }
