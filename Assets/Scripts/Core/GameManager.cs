@@ -282,7 +282,7 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
     /// Обработка правильного ответа
     public void OnCorrectAnswer()
 {
-    TryHideLevelInfoOnFirstNote();
+    
 
     if (_isWaitingForNextNote) return;
     
@@ -321,7 +321,7 @@ int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
     public void OnIncorrectAnswer(string pressedNote)
     {
 
-    TryHideLevelInfoOnFirstNote();
+    
         // Обратная связь через UI
         if (uiManager != null)
         {

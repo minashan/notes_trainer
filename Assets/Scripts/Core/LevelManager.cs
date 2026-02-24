@@ -69,13 +69,34 @@ public void StartCurrentLevel()
     {
         string levelName = CurrentLevel.levelName;
         uiManager.UpdateLevelInfo(levelName, CurrentLevel.description);
-        uiManager.ShowLevelInfo(true, 1f); // плавное появление
+        uiManager.ShowLevelInfo(true, 1f);
     }
     
     // НАСТРАИВАЕМ генератор
     if (_smartNoteGenerator != null)
     {
         _smartNoteGenerator.SetLevel(CurrentLevel);
+    }
+    
+    // СТАРТУЕМ КОРУТИНУ (3 сек) вместо немедленной генерации
+    StartCoroutine(StartLevelAfterDelay(3f));
+}
+
+private IEnumerator StartLevelAfterDelay(float delay)
+{
+    // Скрываем ноту и диез перед паузой
+    if (uiManager != null)
+    {
+        uiManager.ShowNoteSprite(false);
+    }
+    
+    yield return new WaitForSeconds(delay);
+    
+    // Показываем ноту и диез обратно
+    if (uiManager != null)
+    {
+        uiManager.ShowNoteSprite(true);
+        uiManager.ShowLevelInfo(false, 0.5f);
     }
     
     // Генерируем первую ноту

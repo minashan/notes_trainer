@@ -30,6 +30,15 @@ public class UIManager : MonoBehaviour
     [Header("Анимации")]
     [SerializeField] private CanvasGroup levelInfoCanvasGroup;
 
+    [Header("Note Display")]
+    [SerializeField] private GameObject noteSprite;
+    [SerializeField] private GameObject accidentalSprite;
+
+    [Header("Ledger Lines")]
+    [SerializeField] private GameObject ledgerLine1;
+    [SerializeField] private GameObject ledgerLine2;
+    [SerializeField] private GameObject ledgerLine3;
+
     
     private Coroutine _currentFeedbackCoroutine;
 
@@ -47,6 +56,24 @@ public class UIManager : MonoBehaviour
         levelDescriptionText.text = description;
         Debug.Log($"Description set: {description}");
     }
+}
+
+public void ShowNoteSprite(bool show)
+{
+    if (noteSprite != null)
+        noteSprite.gameObject.SetActive(show);
+    
+    if (accidentalSprite != null)
+        accidentalSprite.gameObject.SetActive(show);
+    
+    if (ledgerLine1 != null)
+        ledgerLine1.gameObject.SetActive(show);
+    
+    if (ledgerLine2 != null)
+        ledgerLine2.gameObject.SetActive(show);
+    
+    if (ledgerLine3 != null)
+        ledgerLine3.gameObject.SetActive(show);
 }
 
     
