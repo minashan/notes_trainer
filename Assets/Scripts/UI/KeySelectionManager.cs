@@ -3,6 +3,9 @@ using UnityEngine.UI;
 
 public class KeySelectionManager : MonoBehaviour
 {
+    [Header("Exit Button")]
+    [SerializeField] private Button exitButton;
+
     [SerializeField] private Button trebleClefButton;
     [SerializeField] private Button bassClefButton;
     [SerializeField] private GameObject bassLockedPanel;
@@ -26,7 +29,16 @@ public class KeySelectionManager : MonoBehaviour
             bassLockedPanel.SetActive(true);
         }
         
-    }
+        if (exitButton != null)
+{
+    exitButton.onClick.RemoveAllListeners();
+    exitButton.onClick.AddListener(OnExitButtonClicked);
+}
+else
+{
+    Debug.LogError("ExitButton не назначен в KeySelectionManager!");
+}
+}
     
     void OnTrebleClefClicked()
     {
@@ -38,4 +50,16 @@ public class KeySelectionManager : MonoBehaviour
     {
         Debug.Log("Басовый ключ заблокирован");
     }
+
+
+
+    private void OnExitButtonClicked()
+{
+    Debug.Log("Выход из приложения");
+    Application.Quit();
+    
+    #if UNITY_EDITOR
+    UnityEditor.EditorApplication.isPlaying = false;
+    #endif
+}
 }
