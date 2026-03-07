@@ -1,21 +1,20 @@
 using UnityEngine;
-using UnityEngine.UI;
 
 public class LoadingProgressBar : MonoBehaviour
 {
+    [Header("Progress Bar")]
     [SerializeField] private RectTransform progressBarFill;
     [SerializeField] private float loadingTime = 2f;
     
-    private float timer = 0f;
+    private float _timer;
     
-    void Update()
+    private void Update()
     {
-        if (timer >= loadingTime) return;
+        if (_timer >= loadingTime) return;
         
-        timer += Time.deltaTime;
-        float progress = Mathf.Clamp01(timer / loadingTime);
+        _timer += Time.deltaTime;
+        float progress = Mathf.Clamp01(_timer / loadingTime);
         
-        // Меняем anchorMax по X
         Vector2 anchorMin = progressBarFill.anchorMin;
         progressBarFill.anchorMax = new Vector2(anchorMin.x + progress, anchorMin.y);
         
@@ -25,9 +24,8 @@ public class LoadingProgressBar : MonoBehaviour
         }
     }
     
-    void CompleteLoading()
+    private void CompleteLoading()
     {
-        Debug.Log("Загрузка завершена!");
-        SceneNavigator.Instance.LoadKeySelection();
+        SceneNavigator.Instance?.LoadKeySelection();
     }
 }

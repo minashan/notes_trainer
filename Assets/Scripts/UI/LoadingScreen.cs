@@ -2,53 +2,42 @@ using UnityEngine;
 
 public class LoadingScreen : MonoBehaviour
 {
+    [Header("Loading Settings")]
     [SerializeField] private float loadingTime = 2f;
-    [SerializeField] private bool skipButtonEnabled = false;
+    [SerializeField] private bool skipButtonEnabled;
     
-    void Start()
+    private const string SCENE_NAVIGATOR_NAME = "SceneNavigator";
+    
+    private void Start()
     {
-        // Создаём SceneNavigator если его нет
         EnsureSceneNavigator();
-        
-        // Автопереход через указанное время
         Invoke(nameof(LoadKeySelection), loadingTime);
         
-        // Если хочешь кнопку пропуска (опционально)
         if (skipButtonEnabled)
         {
             SetupSkipButton();
         }
     }
     
-    void EnsureSceneNavigator()
+    private void EnsureSceneNavigator()
     {
-        if (SceneNavigator.Instance == null)
-        {
-            Debug.Log("Создаём SceneNavigator...");
-            GameObject navigatorObj = new GameObject("SceneNavigator");
-            navigatorObj.AddComponent<SceneNavigator>();
-        }
-        else
-        {
-            Debug.Log("SceneNavigator уже существует");
-        }
+        if (SceneNavigator.Instance != null) return;
+        
+        GameObject navigatorObj = new(SCENE_NAVIGATOR_NAME);
+        navigatorObj.AddComponent<SceneNavigator>();
     }
     
-    void LoadKeySelection()
+    private void LoadKeySelection()
     {
-        Debug.Log("Загрузка завершена, переходим к выбору ключа");
-        SceneNavigator.Instance.LoadKeySelection();
+        SceneNavigator.Instance?.LoadKeySelection();
     }
     
-    void SetupSkipButton()
+    private void SetupSkipButton()
     {
-        // Если в сцене есть кнопка - можно назначить её
-        // Пока просто оставляем закомментированным
-        // button.onClick.AddListener(LoadKeySelection);
+        // Reserved for future implementation
     }
     
-    // Для тестирования - переход по нажатию клавиши
-    void Update()
+    private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Space) || Input.GetKeyDown(KeyCode.Return))
         {

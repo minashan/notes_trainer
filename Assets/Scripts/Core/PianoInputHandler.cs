@@ -4,33 +4,27 @@ using System.Collections;
 
 public class PianoInputHandler : MonoBehaviour
 {
-    [Header("Настройки звука")]
-    public bool enableSound = true;
-    public float volume = 1.0f;
+    [Header("Audio Settings")]
+    [SerializeField] private bool enableSound = true;
     
-    [Header("Цвета клавиш")]
-    public Color correctKeyColor = Color.green;
-    public Color incorrectKeyColor = Color.red;
-
+    [Header("Key Colors")]
+    [SerializeField] private Color correctKeyColor = Color.green;
+    [SerializeField] private Color incorrectKeyColor = Color.red;
     
+    private const float COLOR_RESET_DELAY = 1f;
     
     public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
     {
-        
-        PlayKeySound(pressedKey); // только звук
+        PlayKeySound(pressedKey);
     }
     
     public void SetKeyFinalColor(GameObject keyObject, bool isCorrect)
     {
-        // Сразу устанавливаем цвет результата
         Image keyImage = keyObject.GetComponent<Image>();
-        if (keyImage != null)
-        {
-            keyImage.color = isCorrect ? correctKeyColor : incorrectKeyColor;
-        }
+        if (keyImage == null) return;
         
-        // Сбрасываем через секунду
-        StartCoroutine(ResetKeyAfterDelay(keyObject, 1f));
+        keyImage.color = isCorrect ? correctKeyColor : incorrectKeyColor;
+        StartCoroutine(ResetKeyAfterDelay(keyObject, COLOR_RESET_DELAY));
     }
     
     private IEnumerator ResetKeyAfterDelay(GameObject keyObject, float delay)
@@ -44,7 +38,6 @@ public class PianoInputHandler : MonoBehaviour
         Image keyImage = keyObject.GetComponent<Image>();
         if (keyImage == null) return;
         
-        // Определяем исходный цвет
         bool isBlackKey = keyObject.name.Contains("#") || 
                           keyObject.name.Contains("sharp") || 
                           keyObject.name.Contains("flat") ||
@@ -54,18 +47,13 @@ public class PianoInputHandler : MonoBehaviour
     }
     
     private void PlayKeySound(GameObject pressedKey)
-{
-    if (!enableSound) return;
-    
-    // Проверяем muted через AudioManager
-    if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
     {
-        AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-        if (audioSource != null)
+        if (!enableSound) return;
+        
+        if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
         {
-            audioSource.volume = volume;
-            audioSource.Play();
+            AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
+            audioSource?.Play();
         }
     }
-}
 }

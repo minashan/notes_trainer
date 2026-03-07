@@ -3,22 +3,20 @@ using UnityEngine.EventSystems;
 
 public class PianoKey : MonoBehaviour, IPointerDownHandler
 {
-    public string noteName;
+    [SerializeField] private string noteName;
     
-    // Используем полные имена компонентов
-    private MonoBehaviour _inputHandler;
-    private MonoBehaviour _gameManager;
+    private PianoInputHandler _inputHandler;
+    private GameManager _gameManager;
     
-    void Start()
+    private void Start()
     {
-        // Ищем по имени класса без namespace
-        _inputHandler = FindAnyObjectByType(typeof(PianoInputHandler)) as PianoInputHandler;
-        _gameManager = FindAnyObjectByType(typeof(GameManager)) as GameManager;
-        
-        if (_inputHandler == null)
-            Debug.LogError("PianoInputHandler not found! Check namespace.");
-        if (_gameManager == null)
-            Debug.LogError("GameManager not found! Check namespace.");
+        FindManagers();
+    }
+    
+    private void FindManagers()
+    {
+        _inputHandler = FindFirstObjectByType<PianoInputHandler>();
+        _gameManager = FindFirstObjectByType<GameManager>();
     }
     
     public void OnPointerDown(PointerEventData eventData)
@@ -28,41 +26,21 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler
     
     public void PressKey()
     {
-        if (_inputHandler == null || _gameManager == null) 
-        {
-            Debug.LogError("Managers not found!");
-            return;
-        }
+        if (_inputHandler == null || _gameManager == null) return;
         
-        // Приводим типы
-        PianoInputHandler inputHandler = _inputHandler as PianoInputHandler;
-        GameManager gameManager = _gameManager as GameManager;
+        _inputHandler.ProcessKeyPress(noteName, gameObject);
         
-        if (inputHandler == null || gameManager == null)
-        {
-            Debug.LogError("Failed to cast managers!");
-            return;
-        }
+        bool isCorrect = _gameManager.CheckNote(noteName);
         
-     
+        _inputHandler.SetKeyFinalColor(gameObject, isCorrect);
         
-        // 1. Обрабатываем звук и временную подсветку
-        inputHandler.ProcessKeyPress(noteName, gameObject);
-        
-        // 2. Проверяем правильность
-        bool isCorrect = gameManager.CheckNote(noteName);
-        
-        // 3. Устанавливаем финальный цвет
-        inputHandler.SetKeyFinalColor(gameObject, isCorrect);
-        
-        // 4. Уведомляем GameManager
         if (isCorrect)
         {
-            gameManager.OnCorrectAnswer();
+            _gameManager.OnCorrectAnswer();
         }
         else
         {
-            gameManager.OnIncorrectAnswer(noteName);
+            _gameManager.OnIncorrectAnswer(noteName);
         }
     }
 }

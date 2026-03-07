@@ -3,6 +3,7 @@ using UnityEngine.UI;
 
 public class GameUIController : MonoBehaviour
 {
+    [Header("Buttons")]
     [SerializeField] private Button exitToMenuButton;
     [SerializeField] private Button restartButton;
     [SerializeField] private Button backToLevelsButton;
@@ -10,74 +11,50 @@ public class GameUIController : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private AudioClip buttonClickSound;
     
-   void Start()
-{
-    Debug.Log("=== GameUIController Start ===");
+    private const string CURRENT_LEVEL_KEY = "CurrentLevel";
     
-    // Кнопка "← УРОВНИ"
-    if (backToLevelsButton != null)
+    private void Start()
     {
-        Debug.Log($"Back button найден: {backToLevelsButton.name}");
-        backToLevelsButton.onClick.RemoveAllListeners();
-        backToLevelsButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка '← УРОВНИ' нажата в GameUIController!");
-            BackToLevels();
-        });
-    }
-    else
-    {
-        Debug.LogError("BackToLevelsButton не назначен в GameUIController!");
+        InitializeButtons();
     }
     
-    // Кнопка "ЗАНОВО"
-    if (restartButton != null)
+    private void InitializeButtons()
     {
-        restartButton.onClick.RemoveAllListeners();
-        restartButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка 'ЗАНОВО' нажата");
-            RestartLevel();
-        });
+        if (backToLevelsButton != null)
+        {
+            backToLevelsButton.onClick.RemoveAllListeners();
+            backToLevelsButton.onClick.AddListener(BackToLevels);
+        }
+        
+        if (restartButton != null)
+        {
+            restartButton.onClick.RemoveAllListeners();
+            restartButton.onClick.AddListener(RestartLevel);
+        }
+        
+        if (exitToMenuButton != null)
+        {
+            exitToMenuButton.onClick.RemoveAllListeners();
+            exitToMenuButton.onClick.AddListener(ExitToMenu);
+        }
     }
     
-    // Кнопка "В МЕНЮ"
-    if (exitToMenuButton != null)
+    private void ExitToMenu()
     {
-        exitToMenuButton.onClick.RemoveAllListeners();
-        exitToMenuButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка 'В МЕНЮ' нажата");
-            ExitToMenu();
-        });
+        SceneNavigator.Instance?.LoadKeySelection();
     }
     
-    Debug.Log("=== GameUIController инициализирован ===");
-}
-    
-    void ExitToMenu()
+    private void RestartLevel()
     {
-        Debug.Log("Выход в меню выбора ключа");
-        SceneNavigator.Instance.LoadKeySelection();
+        int currentLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 1);
+        PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, currentLevel);
+        PlayerPrefs.Save();
+        
+        SceneNavigator.Instance?.RestartCurrentLevel();
     }
     
-   void RestartLevel()
-{
-    int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-    Debug.Log($"Рестарт уровня {currentLevel}");
-    
-    // Принудительно сохраняем (на всякий случай)
-    PlayerPrefs.SetInt("CurrentLevel", currentLevel);
-    PlayerPrefs.Save();
-    
-    SceneNavigator.Instance.RestartCurrentLevel();
-}
-
-     void BackToLevels()
-{
-    Debug.Log("Назад к выбору уровней");
-    
-    // Загружаем сцену выбора уровней
-    SceneNavigator.Instance.LoadLevelSelection();
-    
-    // НЕЛЬЗЯ вызвать RefreshLevelButtons() тут - сцена ещё не загрузилась
-    // Обновление произойдёт автоматически в Start() LevelSelectionManager
-}
+    private void BackToLevels()
+    {
+        SceneNavigator.Instance?.LoadLevelSelection();
+    }
 }

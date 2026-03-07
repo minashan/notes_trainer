@@ -3,15 +3,20 @@ using UnityEngine.UI;
 
 public class KeySelectionManager : MonoBehaviour
 {
-    [Header("Exit Button")]
+    [Header("Buttons")]
     [SerializeField] private Button exitButton;
-
     [SerializeField] private Button trebleClefButton;
     [SerializeField] private Button bassClefButton;
+    
+    [Header("Bass Clef Lock")]
     [SerializeField] private GameObject bassLockedPanel;
     
+    private void Start()
+    {
+        InitializeButtons();
+    }
     
-    void Start()
+    private void InitializeButtons()
     {
         if (trebleClefButton != null)
         {
@@ -30,36 +35,27 @@ public class KeySelectionManager : MonoBehaviour
         }
         
         if (exitButton != null)
-{
-    exitButton.onClick.RemoveAllListeners();
-    exitButton.onClick.AddListener(OnExitButtonClicked);
-}
-else
-{
-    Debug.LogError("ExitButton не назначен в KeySelectionManager!");
-}
-}
-    
-    void OnTrebleClefClicked()
-    {
-        Debug.Log("Скрипичный ключ выбран");
-        SceneNavigator.Instance.LoadLevelSelection();
+        {
+            exitButton.onClick.AddListener(OnExitButtonClicked);
+        }
     }
     
-    void OnBassClefClicked()
+    private void OnTrebleClefClicked()
     {
-        Debug.Log("Басовый ключ заблокирован");
+        SceneNavigator.Instance?.LoadLevelSelection();
     }
-
-
-
+    
+    private void OnBassClefClicked()
+    {
+        // Bass clef is locked - do nothing
+    }
+    
     private void OnExitButtonClicked()
-{
-    Debug.Log("Выход из приложения");
-    Application.Quit();
-    
-    #if UNITY_EDITOR
-    UnityEditor.EditorApplication.isPlaying = false;
-    #endif
-}
+    {
+        Application.Quit();
+        
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#endif
+    }
 }

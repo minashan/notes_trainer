@@ -3,13 +3,16 @@ using UnityEngine.UI;
 
 public class NoteController : MonoBehaviour
 {
+    [Header("Note Sprite")]
     public Image noteSprite;
     public Sprite normalUpSprite;
     public Sprite normalDownSprite;
+    
+    [Header("Ledger Lines")]
     public Image[] ledgerLines;
-
-    // ДОБАВЛЯЕМ ЭТИ ПОЛЯ:
-    public Image accidentalSprite;   // Image для знака альтерации
-    public Sprite sharpSprite;       // Спрайт диеза
-    public Sprite flatSprite;        // Спрайт бемоля
+    
+    [Header("Accidentals")]
+    public Image accidentalSprite;
+    public Sprite sharpSprite;
+    public Sprite flatSprite;
 }

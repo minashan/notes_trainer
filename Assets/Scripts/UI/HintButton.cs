@@ -5,136 +5,115 @@ using System.Collections;
 
 public class HintButton : MonoBehaviour
 {
-    [Header("Настройки пульсации")]
-    public float pulseSpeed = 0.7f;  // медленнее в 3 раза
-    public float pulseScale = 1.2f;
+    [Header("Pulse Settings")]
+    [SerializeField] private float pulseSpeed = 0.7f;
+    [SerializeField] private float pulseScale = 1.2f;
     
-    [Header("Подсказка")]
-    public GameObject hintBubble;
-    public TextMeshProUGUI hintText;
+    [Header("Hint Settings")]
+    [SerializeField] private GameObject hintBubble;
+    [SerializeField] private TextMeshProUGUI hintText;
     
-    private Button button;
-    private RectTransform rectTransform;
-    private Vector3 originalScale;
-    private bool isPulsing = false;
-    private Coroutine pulseCoroutine;
+    private Button _button;
+    private RectTransform _rectTransform;
+    private Vector3 _originalScale;
+    private bool _isPulsing;
+    private Coroutine _pulseCoroutine;
     
-    void Start()
+    private const float HINT_DISPLAY_TIME = 2f;
+    private const float PULSE_PAUSE = 0.2f;
+    
+    private void Start()
     {
-        button = GetComponent<Button>();
-        rectTransform = GetComponent<RectTransform>();
-        originalScale = rectTransform.localScale;
+        _button = GetComponent<Button>();
+        _rectTransform = GetComponent<RectTransform>();
+        _originalScale = _rectTransform.localScale;
         
-        button.onClick.AddListener(OnHintButtonClick);
+        _button.onClick.AddListener(OnHintButtonClick);
         
         if (hintBubble != null)
+        {
             hintBubble.SetActive(false);
-        
-        // Кнопка всегда активна, пульсация начинается только после ошибок
+        }
     }
     
     public void StartPulsing()
     {
-        if (!isPulsing)
-        {
-            isPulsing = true;
-            pulseCoroutine = StartCoroutine(PulseAnimation());
-        }
+        if (_isPulsing) return;
+        
+        _isPulsing = true;
+        _pulseCoroutine = StartCoroutine(PulseAnimation());
     }
     
     public void StopPulsing()
     {
-        if (isPulsing)
+        if (!_isPulsing) return;
+        
+        _isPulsing = false;
+        
+        if (_pulseCoroutine != null)
         {
-            isPulsing = false;
-            if (pulseCoroutine != null)
-                StopCoroutine(pulseCoroutine);
-            rectTransform.localScale = originalScale;
+            StopCoroutine(_pulseCoroutine);
         }
+        
+        _rectTransform.localScale = _originalScale;
     }
     
-    IEnumerator PulseAnimation()
+    private IEnumerator PulseAnimation()
     {
-        while (isPulsing)
+        while (_isPulsing)
         {
-            // Увеличиваем
-            while (rectTransform.localScale.x < pulseScale)
+            // Scale up
+            while (_rectTransform.localScale.x < pulseScale)
             {
-                rectTransform.localScale += Vector3.one * Time.deltaTime * pulseSpeed;
-                yield return null;
-            }
-            // Уменьшаем
-            while (rectTransform.localScale.x > originalScale.x)
-            {
-                rectTransform.localScale -= Vector3.one * Time.deltaTime * pulseSpeed;
+                _rectTransform.localScale += Vector3.one * (Time.deltaTime * pulseSpeed);
                 yield return null;
             }
             
-            // Небольшая пауза между пульсациями
-            yield return new WaitForSeconds(0.2f);
+            // Scale down
+            while (_rectTransform.localScale.x > _originalScale.x)
+            {
+                _rectTransform.localScale -= Vector3.one * (Time.deltaTime * pulseSpeed);
+                yield return null;
+            }
+            
+            yield return new WaitForSeconds(PULSE_PAUSE);
         }
     }
     
-    void OnHintButtonClick()
-{
-    Debug.Log($"Hint clicked");
-    
-    // ⭐ ОСТАНАВЛИВАЕМ ПУЛЬСАЦИЮ СРАЗУ ПРИ НАЖАТИИ
-    StopPulsing();
-    
-    string correctNoteName = GetCurrentCorrectNoteName();
-    Debug.Log($"Correct note name: {correctNoteName}");
-    
-    ShowHintBubble(correctNoteName);
-}
-    
-    string GetCurrentCorrectNoteName()
-{
-    GameManager gameManager = FindFirstObjectByType<GameManager>();
-    
-    if (gameManager != null)
+    private void OnHintButtonClick()
     {
+        StopPulsing();
+        
+        string correctNoteName = GetCurrentCorrectNoteName();
+        ShowHintBubble(correctNoteName);
+    }
+    
+    private string GetCurrentCorrectNoteName()
+    {
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        
+        if (gameManager == null) return "До";
+        
         string englishNote = gameManager.GetCurrentNoteName();
-        string russianNote = NoteData.Instance.GetTranslatedNoteName(englishNote);
-        
-        if (!string.IsNullOrEmpty(russianNote))
-        {
-            Debug.Log($"Нота: {englishNote} -> {russianNote}");
-            return russianNote;
-        }
+        return NoteData.Instance.GetTranslatedNoteName(englishNote);
     }
     
-    Debug.LogWarning("Не удалось получить ноту, возвращаем 'До'");
-    return "До";
-}
-    
-
-    
-    void ShowHintBubble(string noteName)
+    private void ShowHintBubble(string noteName)
     {
-        Debug.Log($"ShowHintBubble called with note: {noteName}");
-        Debug.Log($"hintBubble: {hintBubble != null}, hintText: {hintText != null}");
-        
-        if (hintBubble == null || hintText == null)
-        {
-            Debug.LogError("HintBubble или HintText не назначены в инспекторе!");
-            return;
-        }
+        if (hintBubble == null || hintText == null) return;
         
         hintText.text = noteName;
         hintBubble.SetActive(true);
-        Debug.Log($"HintBubble active: {hintBubble.activeSelf}");
         
-        StartCoroutine(HideHintAfterDelay(2f));
+        StartCoroutine(HideHintAfterDelay(HINT_DISPLAY_TIME));
     }
     
-    IEnumerator HideHintAfterDelay(float delay)
+    private IEnumerator HideHintAfterDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
         hintBubble.SetActive(false);
     }
     
-    // Для вызова из другого скрипта (например LevelManager при ошибках)
     public void ActivateHint()
     {
         StartPulsing();

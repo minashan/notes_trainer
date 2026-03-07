@@ -12,231 +12,193 @@ public class LevelSelectionManager : MonoBehaviour
         public TextMeshProUGUI numberText;
         public TextMeshProUGUI descriptionText;
         public Image lockIcon;
-        
     }
     
-    [Header("Кнопки уровней")]
-    [SerializeField] private List<LevelButton> levelButtons = new List<LevelButton>();
+    [Header("Level Buttons")]
+    [SerializeField] private List<LevelButton> levelButtons = new();
     
-    [Header("Кнопка назад")]
+    [Header("Navigation")]
     [SerializeField] private Button backButton;
-
-    [Header("Кнопка сброса")]
+    
+    [Header("Reset Progress")]
     [SerializeField] private Button resetProgressButton;
     [SerializeField] private GameObject resetConfirmationPanel;
     [SerializeField] private Button confirmResetButton;
     [SerializeField] private Button cancelResetButton;
     
-    [Header("Цвета")]
-    [SerializeField] private Color lockedColor = new Color(0.619f, 0.619f, 0.619f); // #9E9E9E
+    [Header("Colors")]
+    [SerializeField] private Color lockedColor = new(0.619f, 0.619f, 0.619f);
     
-    [Header("Описания уровней")]
-    private string[] levelDescriptions = new string[]
+    private const int TOTAL_LEVELS = 8;
+    private const string HIGHEST_LEVEL_KEY = "HighestLevel";
+    private const string CURRENT_LEVEL_KEY = "CurrentLevel";
+    private const string LEVEL_PROGRESS_KEY = "Level{0}_Progress";
+    
+    private readonly string[] _levelDescriptions = 
     {
-        "Первая октава",
-        "Вторая октава", 
-        "Две октавы",
-        "Малая + третья октавы",
-        "Все ноты без альтерации",
-        "Диезы (#)",
-        "Бемоли (b)",
-        "Все ноты"
+        "First Octave",
+        "Second Octave",
+        "Two Octaves",
+        "Lower + Third Octaves",
+        "All Notes (No Accidentals)",
+        "Sharps (#)",
+        "Flats (b)",
+        "All Notes"
     };
     
-    private int highestLevel;
+    private int _highestLevel;
     
-   void Start()
-{
-    // SceneNavigator код...
-    
-    highestLevel = PlayerPrefs.GetInt("HighestLevel", 1);
-    
-    // ОТЛАДКА - можно оставить
-    Debug.Log($"HighestLevel: {highestLevel}");
-    
-    InitializeButtons();
-    
-    // 1. Кнопка назад
-    if (backButton != null)
+    private void Start()
     {
-        backButton.onClick.AddListener(() => {
-            SceneNavigator.Instance.LoadKeySelection();
-        });
+        _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
+        InitializeUI();
     }
     
-    // 2. Кнопка сброса прогресса (ОСНОВНАЯ)
-    if (resetProgressButton != null)
+    private void InitializeUI()
     {
-        Debug.Log($"Инициализируем кнопку сброса: {resetProgressButton.name}");
-        resetProgressButton.onClick.RemoveAllListeners();
-        resetProgressButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка сброса нажата!");
-            ShowResetConfirmation(true);
-        });
-    }
-    else
-    {
-        Debug.LogError("ResetProgressButton не назначен!");
+        InitializeButtons();
+        SetupNavigationButtons();
+        SetupResetButtons();
+        
+        if (resetConfirmationPanel != null)
+        {
+            resetConfirmationPanel.SetActive(false);
+        }
     }
     
-    // 3. Кнопки диалога
-    if (confirmResetButton != null)
+    private void InitializeButtons()
     {
-        Debug.Log($"Инициализируем кнопку ДА: {confirmResetButton.name}");
-        confirmResetButton.onClick.RemoveAllListeners();
-        confirmResetButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка ДА нажата в менеджере!");
-            ResetAllProgress();
-        });
+        _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
+        
+        for (int i = 0; i < levelButtons.Count && i < TOTAL_LEVELS; i++)
+        {
+            int levelIndex = i + 1;
+            LevelButton levelButton = levelButtons[i];
+            
+            if (levelButton == null) continue;
+            
+            SetButtonTexts(levelButton, levelIndex, i);
+            
+            bool isUnlocked = levelIndex == 1 || levelIndex <= _highestLevel;
+            
+            if (isUnlocked)
+            {
+                SetupAvailableButton(levelButton, levelIndex);
+            }
+            else
+            {
+                SetupLockedButton(levelButton);
+            }
+        }
     }
     
-    if (cancelResetButton != null)
+    private void SetButtonTexts(LevelButton levelButton, int levelIndex, int arrayIndex)
     {
-        Debug.Log($"Инициализируем кнопку НЕТ: {cancelResetButton.name}");
-        cancelResetButton.onClick.RemoveAllListeners();
-        cancelResetButton.onClick.AddListener(() => {
-            Debug.Log("Кнопка НЕТ нажата в менеджере!");
-            ShowResetConfirmation(false);
-        });
+        if (levelButton.numberText != null)
+        {
+            levelButton.numberText.text = $"Level {levelIndex}";
+        }
+        
+        if (levelButton.descriptionText != null && arrayIndex < _levelDescriptions.Length)
+        {
+            levelButton.descriptionText.text = _levelDescriptions[arrayIndex];
+        }
     }
     
-    // 4. Скрываем панель
-    if (resetConfirmationPanel != null)
+    private void SetupAvailableButton(LevelButton levelButton, int levelIndex)
     {
-        resetConfirmationPanel.SetActive(false);
+        levelButton.button.interactable = true;
+        
+        if (levelButton.lockIcon != null)
+        {
+            levelButton.lockIcon.gameObject.SetActive(false);
+        }
+        
+        levelButton.button.onClick.RemoveAllListeners();
+        levelButton.button.onClick.AddListener(() => LoadLevel(levelIndex));
     }
-}
-
-
-void ShowResetConfirmation(bool show)
-{
-    if (resetConfirmationPanel != null)
+    
+    private void LoadLevel(int levelIndex)
     {
+        PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
+        PlayerPrefs.Save();
+        SceneNavigator.Instance?.LoadGameWithLevel(levelIndex);
+    }
+    
+    private void SetupLockedButton(LevelButton levelButton)
+    {
+        levelButton.button.interactable = false;
+        
+        ColorBlock colors = levelButton.button.colors;
+        colors.normalColor = lockedColor;
+        levelButton.button.colors = colors;
+        
+        if (levelButton.lockIcon != null)
+        {
+            levelButton.lockIcon.gameObject.SetActive(true);
+        }
+    }
+    
+    private void SetupNavigationButtons()
+    {
+        if (backButton != null)
+        {
+            backButton.onClick.AddListener(() => SceneNavigator.Instance?.LoadKeySelection());
+        }
+    }
+    
+    private void SetupResetButtons()
+    {
+        if (resetProgressButton != null)
+        {
+            resetProgressButton.onClick.RemoveAllListeners();
+            resetProgressButton.onClick.AddListener(() => ShowResetConfirmation(true));
+        }
+        
+        if (confirmResetButton != null)
+        {
+            confirmResetButton.onClick.RemoveAllListeners();
+            confirmResetButton.onClick.AddListener(ResetAllProgress);
+        }
+        
+        if (cancelResetButton != null)
+        {
+            cancelResetButton.onClick.RemoveAllListeners();
+            cancelResetButton.onClick.AddListener(() => ShowResetConfirmation(false));
+        }
+    }
+    
+    private void ShowResetConfirmation(bool show)
+    {
+        if (resetConfirmationPanel == null) return;
+        
         resetConfirmationPanel.SetActive(show);
         
-        // Если показываем - делаем её поверх всего
         if (show)
         {
             resetConfirmationPanel.transform.SetAsLastSibling();
         }
     }
-}
-
-void ResetAllProgress()
-{
-    // Сбрасываем прогресс
-    PlayerPrefs.DeleteKey("HighestLevel");
-    PlayerPrefs.DeleteKey("CurrentLevel");
     
-    for (int i = 1; i <= 8; i++)
+    private void ResetAllProgress()
     {
-        PlayerPrefs.DeleteKey($"Level{i}_Progress");
-    }
-    
-    PlayerPrefs.Save();
-    Debug.Log("Весь прогресс сброшен!");
-    
-    // Скрываем панель
-    ShowResetConfirmation(false);
-    
-    // Перезагружаем сцену
-    SceneNavigator.Instance.LoadLevelSelection();
-}
-    
-    void InitializeButtons()
-{
-    // ОБНОВЛЯЕМ прогресс перед отрисовкой
-    highestLevel = PlayerPrefs.GetInt("HighestLevel", 1);
-    Debug.Log($"InitializeButtons: highestLevel = {highestLevel}");
-    
-    for (int i = 0; i < levelButtons.Count && i < 8; i++)
-    {
-        int levelIndex = i + 1;
-        var levelButton = levelButtons[i];
+        PlayerPrefs.DeleteKey(HIGHEST_LEVEL_KEY);
+        PlayerPrefs.DeleteKey(CURRENT_LEVEL_KEY);
         
-        if (levelButton == null) continue;
-        
-        // Устанавливаем тексты
-        if (levelButton.numberText != null)
-            levelButton.numberText.text = $"Уровень {levelIndex}";
-        
-        if (levelButton.descriptionText != null && i < levelDescriptions.Length)
-            levelButton.descriptionText.text = levelDescriptions[i];
-        
-        // Проверяем статус уровня
-        bool isLevel1 = levelIndex == 1;
-        bool isUnlocked = levelIndex <= highestLevel;
-        
-        if (isLevel1 || isUnlocked)
+        for (int i = 1; i <= TOTAL_LEVELS; i++)
         {
-            // Уровень доступен
-            SetupAvailableButton(levelButton, levelIndex);
+            PlayerPrefs.DeleteKey(string.Format(LEVEL_PROGRESS_KEY, i));
         }
-        else
-        {
-            // Уровень заблокирован
-            SetupLockedButton(levelButton);
-        }
+        
+        PlayerPrefs.Save();
+        
+        ShowResetConfirmation(false);
+        SceneNavigator.Instance?.LoadLevelSelection();
     }
-}
     
-    void SetupAvailableButton(LevelButton levelButton, int levelIndex)
-{
-    Debug.Log($"Настраиваем доступную кнопку уровня {levelIndex}");
-    
-    levelButton.button.interactable = true;
-    
-    // Скрываем иконку замка
-    if (levelButton.lockIcon != null)
+    public void RefreshLevelButtons()
     {
-        Debug.Log($"Скрываем замок для уровня {levelIndex}");
-        levelButton.lockIcon.gameObject.SetActive(false);
+        _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
+        InitializeButtons();
     }
-    else
-    {
-        Debug.LogWarning($"LockIcon не назначен для уровня {levelIndex}");
-    }
-    
-    // Назначаем действие
-    levelButton.button.onClick.RemoveAllListeners();
-    levelButton.button.onClick.AddListener(() => {
-    PlayerPrefs.SetInt("CurrentLevel", levelIndex);
-    PlayerPrefs.Save();
-    SceneNavigator.Instance.LoadGameWithLevel(levelIndex);
-});
-}
-
-    
-    void SetupLockedButton(LevelButton levelButton)
-{
-    Debug.Log($"Настраиваем заблокированную кнопку");
-    
-    levelButton.button.interactable = false;
-    
-    // Серый цвет
-    var colors = levelButton.button.colors;
-    colors.normalColor = lockedColor;
-    levelButton.button.colors = colors;
-    
-    // Показываем замок
-    if (levelButton.lockIcon != null)
-    {
-        Debug.Log($"Показываем замок");
-        levelButton.lockIcon.gameObject.SetActive(true);
-    }
-}
-
-
-public void RefreshLevelButtons()
-{
-    Debug.Log("Обновляем кнопки уровней...");
-    
-    // Обновляем прогресс
-    highestLevel = PlayerPrefs.GetInt("HighestLevel", 1);
-    
-    // Переинициализируем все кнопки
-    InitializeButtons();
-    
-    Debug.Log($"HighestLevel после обновления: {highestLevel}");
-}
 }

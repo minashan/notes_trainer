@@ -6,6 +6,8 @@ public class SceneNavigator : MonoBehaviour
     private static SceneNavigator _instance;
     public static SceneNavigator Instance => _instance;
     
+    private const string CURRENT_LEVEL_KEY = "CurrentLevel";
+    
     private void Awake()
     {
         if (_instance != null && _instance != this)
@@ -16,49 +18,35 @@ public class SceneNavigator : MonoBehaviour
         
         _instance = this;
         DontDestroyOnLoad(gameObject);
-        
-        Debug.Log("SceneNavigator initialized");
     }
     
-    // Методы для загрузки конкретных сцен
+    // Scene loading methods
     public void LoadLoadingScene() => LoadScene("0_Loading");
     public void LoadKeySelection() => LoadScene("1_KeySelection");
     public void LoadLevelSelection() => LoadScene("2_LevelSelection");
     public void LoadGameScene() => LoadScene("3_Game");
     
-    // Для загрузки игры с конкретным уровнем
     public void LoadGameWithLevel(int levelIndex)
-{
-    if (levelIndex < 1 || levelIndex > 8)
     {
-        Debug.LogError($"Неверный индекс уровня: {levelIndex}");
-        return;
+        if (levelIndex < 1 || levelIndex > 8) return;
+        
+        PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
+        PlayerPrefs.Save();
+        
+        LoadGameScene();
     }
     
-    // Сохраняем выбранный уровень
-    PlayerPrefs.SetInt("CurrentLevel", levelIndex);
-    PlayerPrefs.Save();
-    
-    Debug.Log($"Загружаем уровень {levelIndex}");
-    LoadGameScene();
-}
-    
-    // Общий метод загрузки
     private void LoadScene(string sceneName)
     {
-        Debug.Log($"Загружаем сцену: {sceneName}");
         SceneManager.LoadScene(sceneName);
     }
     
-    // Для кнопки "Начать заново" в игровой сцене
     public void RestartCurrentLevel()
-{
-    int currentLevel = PlayerPrefs.GetInt("CurrentLevel", 1);
-    Debug.Log($"Рестарт уровня {currentLevel}");
-    LoadGameWithLevel(currentLevel);
-}
+    {
+        int currentLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 1);
+        LoadGameWithLevel(currentLevel);
+    }
     
-    // Для выхода в меню уровней из игры
     public void ReturnToLevelSelection()
     {
         LoadLevelSelection();

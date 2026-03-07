@@ -2,20 +2,24 @@ using UnityEngine;
 
 public class AudioManager : MonoBehaviour
 {
-    public static AudioManager Instance;
-    
+    [Header("REFERENCES")]
     [SerializeField] private AudioSource pianoSource;
     
-    private bool _isMuted = false;
-    public bool IsMuted => _isMuted;
+    [Header("SETTINGS")]
+    private const string MUTED_PREF_KEY = "Muted";
     
-    void Awake()
+    public static AudioManager Instance { get; private set; }
+    public bool IsMuted { get; private set; }
+    
+    private void Awake()
     {
         if (Instance == null)
         {
             Instance = this;
             DontDestroyOnLoad(gameObject);
-            _isMuted = PlayerPrefs.GetInt("Muted", 0) == 1;
+            
+            // Load mute state
+            IsMuted = PlayerPrefs.GetInt(MUTED_PREF_KEY, 0) == 1;
             ApplyMute();
         }
         else
@@ -26,23 +30,25 @@ public class AudioManager : MonoBehaviour
     
     public void ToggleMute()
     {
-        _isMuted = !_isMuted;
-        PlayerPrefs.SetInt("Muted", _isMuted ? 1 : 0);
+        IsMuted = !IsMuted;
+        PlayerPrefs.SetInt(MUTED_PREF_KEY, IsMuted ? 1 : 0);
         PlayerPrefs.Save();
+        
         ApplyMute();
     }
     
     private void ApplyMute()
     {
         if (pianoSource != null)
-            pianoSource.mute = _isMuted;
+        {
+            pianoSource.mute = IsMuted;
+        }
     }
     
     public void PlayPianoNote(AudioClip clip)
     {
-        if (!_isMuted && pianoSource != null && clip != null)
-        {
-            pianoSource.PlayOneShot(clip);
-        }
+        if (IsMuted || pianoSource == null || clip == null) return;
+        
+        pianoSource.PlayOneShot(clip);
     }
 }

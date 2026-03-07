@@ -5,23 +5,26 @@ namespace NotesTrainer
     [CreateAssetMenu(fileName = "NewLevel", menuName = "Notes Trainer/Level Data")]
     public class LevelData : ScriptableObject
     {
-        [Header("Основные настройки")]
-        public string levelName = "Новый уровень";
-        [TextArea] public string description = "Описание уровня";
-        public int requiredScore = 50; // очков для перехода
+        [Header("Basic Settings")]
+        public string levelName = "New Level";
         
-        [Header("Ноты в уровне")]
+        [TextArea] 
+        public string description = "Level description";
+        
+        public int requiredScore = 50;
+        
+        [Header("Notes in Level")]
         public string[] includedNotes;
         
-        [Header("Дополнительные настройки")]
-        public bool allowEnharmonic = false; // учитывать энгармонизм?
-        public int timeLimit = 0; // 0 = без ограничения времени
+        [Header("Optional Settings")]
+        public bool allowEnharmonic;
+        public int timeLimit; // 0 = no time limit
         
-        [Header("Визуальные настройки")]
+        [Header("Visual Settings")]
         public Color levelColor = Color.white;
         public Sprite levelIcon;
         
-        [Header("Подсказки")]
-        public string hintText = "";
+        [Header("Hints")]
+        public string hintText;
     }
 }
