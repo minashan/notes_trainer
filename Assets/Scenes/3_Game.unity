@@ -1875,7 +1875,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PianoInputHandler
   enableSound: 1
-  volume: 1
   correctKeyColor: {r: 0, g: 1, b: 0, a: 1}
   incorrectKeyColor: {r: 1, g: 0, b: 0, a: 1}
 --- !u!4 &256454525
@@ -8773,7 +8772,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 21300000, guid: 8d2e7e4099a7a9a43b190231a437af4f, type: 3}
+  m_Sprite: {fileID: 21300000, guid: b3c5d0c5a42070f44a64eb31fcafc067, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -11834,6 +11833,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::MuteButton
   unmutedSprite: {fileID: -3534288053459477036, guid: e45c08cb1a24600459099c15109b5da3, type: 3}
   mutedSprite: {fileID: -1682965465704316622, guid: 90f45481e8ff4ec47a27d02d5d471c5c, type: 3}
+  mutedColor: {r: 0.7, g: 0.7, b: 0.7, a: 1}
+  unmutedColor: {r: 1, g: 1, b: 1, a: 1}
 --- !u!1 &1807532214
 GameObject:
   m_ObjectHideFlags: 0

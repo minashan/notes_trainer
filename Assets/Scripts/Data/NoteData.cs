@@ -8,6 +8,7 @@ public class NoteData : MonoBehaviour
     public Dictionary<string, NotePosition> NoteSettings { get; private set; }
     public Dictionary<string, string[]> EnharmonicEquivalents { get; private set; }
     public Dictionary<string, string> NoteTranslations { get; private set; }
+    public Dictionary<string, NotePosition> BassNoteSettings { get; private set; }
     
     private void Awake()
     {
@@ -26,6 +27,7 @@ public class NoteData : MonoBehaviour
     private void InitializeData()
     {
         InitializeNoteSettings();
+        InitializeBassNoteSettings();
         InitializeEnharmonicEquivalents();
         InitializeTranslations();
     }
@@ -34,6 +36,51 @@ public class NoteData : MonoBehaviour
     {
         NoteTranslations = new Dictionary<string, string>
         {
+            // 🔥 НОВЫЕ: Контр-октава
+        { "A_", "Ля" },
+        { "A_sharp", "Ля диез" },
+        { "B_flat", "Си бемоль" },
+        { "B_", "Си" },
+        { "B_sharp", "Си диез" },
+        
+        // Большая октава
+        { "C0flat", "До бемоль" },
+        { "C0", "До" },
+        { "C0sharp", "До диез" },
+        { "D0flat", "Ре бемоль" },
+        { "D0", "Ре" },
+        { "D0sharp", "Ре диез" },
+        { "E0flat", "Ми бемоль" },
+        { "E0", "Ми" },
+        { "E0sharp", "Ми диез" },
+        { "F0flat", "Фа бемоль" },
+        { "F0", "Фа" },
+        { "F0sharp", "Фа диез" },
+        { "G0flat", "Соль бемоль" },
+        { "G0", "Соль" },
+        { "G0sharp", "Соль диез" },
+        { "A0flat", "Ля бемоль" },
+        { "A0", "Ля" },
+        { "A0sharp", "Ля диез" },
+        { "B0flat", "Си бемоль" },
+        { "B0", "Си" },
+        { "B0sharp", "Си диез" },
+        
+        // Малая октава
+        { "C1flat", "До бемоль" },
+        { "C1", "До" },
+        { "C1sharp", "До диез" },
+        { "D1flat", "Ре бемоль" },
+        { "D1", "Ре" },
+        { "D1sharp", "Ре диез" },
+        { "E1flat", "Ми бемоль" },
+        { "E1", "Ми" },
+        { "E1sharp", "Ми диез" },
+        { "F1flat", "Фа бемоль" },
+        
+        
+        
+
             // Lower octave
             { "F1", "Фа" },
             { "F1sharp", "Фа диез" },
@@ -289,7 +336,35 @@ public class NoteData : MonoBehaviour
     {
         EnharmonicEquivalents = new Dictionary<string, string[]>
         {
-            // Lower octave
+              // Контр-октава
+        { "A_sharp", new[] { "B_flat" } },
+        { "B_flat", new[] { "A_sharp" } },
+        { "B_sharp", new[] { "C0" } },
+        
+        // Большая октава
+        { "C0sharp", new[] { "D0flat" } },
+        { "D0flat", new[] { "C0sharp" } },
+        { "D0sharp", new[] { "E0flat" } },
+        { "E0flat", new[] { "D0sharp" } },
+        { "E0sharp", new[] { "F0" } },
+        { "F0flat", new[] { "E0" } },
+        { "F0sharp", new[] { "G0flat" } },
+        { "G0flat", new[] { "F0sharp" } },
+        { "G0sharp", new[] { "A0flat" } },
+        { "A0flat", new[] { "G0sharp" } },
+        { "A0sharp", new[] { "B0flat" } },
+        { "B0flat", new[] { "A0sharp" } },
+        { "B0sharp", new[] { "C1" } },
+        
+        // Малая октава
+        { "C1sharp", new[] { "D1flat" } },
+        { "D1flat", new[] { "C1sharp" } },
+        { "D1sharp", new[] { "E1flat" } },
+        { "E1flat", new[] { "D1sharp" } },
+        { "E1sharp", new[] { "F1" } },
+        
+
+            // Малая октава
             { "F1sharp", new[] { "G1flat" } },
             { "G1flat",  new[] { "F1sharp" } },
             { "G1sharp", new[] { "A1flat" } },
@@ -299,7 +374,7 @@ public class NoteData : MonoBehaviour
             { "B1sharp", new[] { "C" } },
             { "Cflat",   new[] { "B1" } },
             
-            // First octave
+            // 1 октава
             { "Csharp",  new[] { "Dflat" } },
             { "Dflat",   new[] { "Csharp" } },
             { "Dsharp",  new[] { "Eflat" } },
@@ -315,7 +390,7 @@ public class NoteData : MonoBehaviour
             { "Bsharp",  new[] { "C2" } },
             { "C2flat",  new[] { "B" } },
             
-            // Second octave
+            // 2 октава
             { "C2sharp", new[] { "D2flat" } },
             { "D2flat",  new[] { "C2sharp" } },
             { "D2sharp", new[] { "E2flat" } },
@@ -331,13 +406,13 @@ public class NoteData : MonoBehaviour
             { "B2sharp", new[] { "C3" } },
             { "C3flat",  new[] { "B2" } },
             
-            // Third octave
+            // 3 октава
             { "C3sharp", new[] { "D3flat" } },
             { "D3flat",  new[] { "C3sharp" } },
             { "D3sharp", new[] { "E3flat" } },
             { "E3flat",  new[] { "D3sharp" } },
             
-            // White keys reverse links
+            // Обратные связи для белых клавиш
             { "F",       new[] { "Esharp" } },
             { "E",       new[] { "Fflat" } },
             { "C2",      new[] { "Bsharp" } },
@@ -346,9 +421,257 @@ public class NoteData : MonoBehaviour
             { "E2",      new[] { "F2flat" } },
             { "C3",      new[] { "B2sharp" } },
             { "B2",      new[] { "C3flat" } },
-            { "B1",      new[] { "Cflat" } }
+            { "B1",      new[] { "Cflat" } },
+
+        { "C0", new[] { "B_sharp" } },
+        { "E0", new[] { "F0flat" } },
+        { "F0", new[] { "E0sharp" } },
+        { "C1", new[] { "B0sharp" } },
+        { "E1", new[] { "F1flat" } },
+        
         };
     }
+
+
+        private void InitializeBassNoteSettings()
+{
+    BassNoteSettings = new Dictionary<string, NotePosition>
+    {
+        // Контр-октава
+        { "A_", new() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 0f, 
+            ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+            
+        { "A_sharp", new() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 0f, 
+            ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+            accidentalX = -67f, accidentalY = 90f, showAccidental = true, isSharp = true } },
+        
+        { "B_flat", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
+            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+            accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = false } },
+        
+        { "B_", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
+            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+        
+        { "B_sharp", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
+            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+            accidentalX = -67f, accidentalY = 103f, showAccidental = true, isSharp = true } },
+
+
+            // Большая октава
+{ "C0flat", new() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 141f, showAccidental = true, isSharp = false } },
+
+{ "C0", new() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "C0sharp", new() { containerY = -2f, noteSpriteY = 161f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = true } },
+
+{ "D0flat", new() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 154f, showAccidental = true, isSharp = false } },
+
+{ "D0", new() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "D0sharp", new() { containerY = -2f, noteSpriteY = 175f, noteSpriteX = 5f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 137f, showAccidental = true, isSharp = true } },
+
+{ "E0flat", new() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 173f, showAccidental = true, isSharp = false } },
+
+{ "E0", new() { containerY = -2f, noteSpriteY = 192f, noteSpriteX = 5f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "E0sharp", new() { containerY = -2f, noteSpriteY = 190f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 153f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 151f, showAccidental = true, isSharp = true } },
+
+{ "F0flat", new() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 181f, showAccidental = true, isSharp = false } },
+
+{ "F0", new() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "F0sharp", new() { containerY = -2f, noteSpriteY = 206f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 165f, showAccidental = true, isSharp = true } },
+
+{ "G0flat", new() { containerY = -2f, noteSpriteY = 221f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 203f, showAccidental = true, isSharp = false } },
+
+{ "G0", new() { containerY = -2f, noteSpriteY = 221f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "G0sharp", new() { containerY = -2f, noteSpriteY = 222f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 184f, showAccidental = true, isSharp = true } },
+
+{ "A0flat", new() { containerY = -2f, noteSpriteY = 239f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 222f, showAccidental = true, isSharp = false } },
+
+{ "A0", new() { containerY = -2f, noteSpriteY = 238f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "A0sharp", new() { containerY = -2f, noteSpriteY = 238f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 200f, showAccidental = true, isSharp = true } },
+
+{ "B0flat", new() { containerY = -2f, noteSpriteY = 256f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 237f, showAccidental = true, isSharp = false } },
+
+{ "B0", new() { containerY = -2f, noteSpriteY = 256f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "B0sharp", new() { containerY = -2f, noteSpriteY = 256f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 217f, showAccidental = true, isSharp = true } },
+
+
+    // Малая октава
+{ "C1flat", new() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 256f, showAccidental = true, isSharp = false } },
+
+{ "C1", new() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "C1sharp", new() { containerY = -2f, noteSpriteY = 273f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 234f, showAccidental = true, isSharp = true } },
+
+{ "D1flat", new() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 320f, showAccidental = true, isSharp = false } },
+
+{ "D1", new() { containerY = -52f, noteSpriteY = 265f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "D1sharp", new() { containerY = -50.8f, noteSpriteY = 265f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 301f, showAccidental = true, isSharp = true } },
+
+{ "E1flat", new() { containerY = -52f, noteSpriteY = 282f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 342f, showAccidental = true, isSharp = false } },
+
+{ "E1", new() { containerY = -50.8f, noteSpriteY = 282f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "E1sharp", new() { containerY = -50.8f, noteSpriteY = 281f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 318f, showAccidental = true, isSharp = true } },
+
+{ "F1flat", new() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 357f, showAccidental = true, isSharp = false } },
+
+{ "F1", new() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "F1sharp", new() { containerY = -51.6f, noteSpriteY = 299f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 335f, showAccidental = true, isSharp = true } },
+
+{ "G1flat", new() { containerY = -49.6f, noteSpriteY = 315f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 372f, showAccidental = true, isSharp = false } },
+
+{ "G1", new() { containerY = -49.6f, noteSpriteY = 315f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "G1sharp", new() { containerY = -48.5f, noteSpriteY = 314f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 351f, showAccidental = true, isSharp = true } },
+
+{ "A1flat", new() { containerY = -49.6f, noteSpriteY = 333f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 389f, showAccidental = true, isSharp = false } },
+
+{ "A1", new() { containerY = -48.5f, noteSpriteY = 334f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "A1sharp", new() { containerY = -48.5f, noteSpriteY = 334f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 367f, showAccidental = true, isSharp = true } },
+
+{ "B1flat", new() { containerY = -51.9f, noteSpriteY = 352f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 411f, showAccidental = true, isSharp = false } },
+
+{ "B1", new() { containerY = -51.9f, noteSpriteY = 352f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "B1sharp", new() { containerY = -51.9f, noteSpriteY = 352f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 390f, showAccidental = true, isSharp = true } },
+
+
+
+    // Первая октава (позиции из A2flat, A2, A2sharp, B2flat, B2, B2sharp, C3flat, C3, C3sharp)
+{ "Cflat", new() { containerY = 264.1f, noteSpriteY = 52f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 89.1f }, ledgerLinesX = new[] { 0f, 0f, 9f },
+    accidentalX = -67f, accidentalY = 110f, showAccidental = true, isSharp = false } },
+
+{ "C", new() { containerY = 264.1f, noteSpriteY = 52f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 89.1f }, ledgerLinesX = new[] { 0f, 0f, 9f } } },
+
+{ "Csharp", new() { containerY = 264.1f, noteSpriteY = 52f, noteSpriteX = 1.1f,
+    ledgerLinesY = new[] { 0f, 0f, 89.1f }, ledgerLinesX = new[] { 0f, 0f, 9f },
+    accidentalX = -67f, accidentalY = 87f, showAccidental = true, isSharp = true } },
+
+{ "Dflat", new() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 86.8f }, ledgerLinesX = new[] { 0f, 0f, 4f },
+    accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = false } },
+
+{ "D", new() { containerY = 265.3f, noteSpriteY = 67f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 86.8f }, ledgerLinesX = new[] { 0f, 0f, 4f } } },
+
+{ "Dsharp", new() { containerY = 264.1f, noteSpriteY = 75f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 0f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 105f, showAccidental = true, isSharp = true } },
+
+{ "Eflat", new() { containerY = 265.3f, noteSpriteY = 87f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 4f },
+    accidentalX = -67f, accidentalY = 143f, showAccidental = true, isSharp = false } },
+
+{ "E", new() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+
+{ "Esharp", new() { containerY = 264.1f, noteSpriteY = 87f, noteSpriteX = -10f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+    accidentalX = -67f, accidentalY = 120f, showAccidental = true, isSharp = true } },
+
+{ "Fflat", new() { containerY = 264.1f, noteSpriteY = 101f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 7.3f, 7.3f },
+    accidentalX = -67f, accidentalY = 158f, showAccidental = true, isSharp = false } },
+
+{ "F", new() { containerY = 264.1f, noteSpriteY = 101f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 7.3f, 7.3f } } },
+
+{ "Fsharp", new() { containerY = 264.1f, noteSpriteY = 101f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 0f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 7.3f, 7.3f },
+    accidentalX = -67f, accidentalY = 138f, showAccidental = true, isSharp = true } },
+
+{ "Gflat", new() { containerY = 264.1f, noteSpriteY = 111f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 146.9f, 116.9f, 86.6f }, ledgerLinesX = new[] { 8.7f, 8.7f, 8.7f },
+    accidentalX = -67f, accidentalY = 168f, showAccidental = true, isSharp = false } },
+
+{ "G", new() { containerY = 264.1f, noteSpriteY = 111f, noteSpriteX = 0f,
+    ledgerLinesY = new[] { 146.9f, 116.9f, 86.6f }, ledgerLinesX = new[] { 8.7f, 8.7f, 8.7f } } },
+
+    };
+}
+
+
     
     public NotePosition GetNotePosition(string noteName)
     {

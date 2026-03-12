@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
 using System.Collections.Generic;
+using NotesTrainer;
 
 public class LevelSelectionManager : MonoBehaviour
 {
@@ -28,6 +29,10 @@ public class LevelSelectionManager : MonoBehaviour
     
     [Header("Colors")]
     [SerializeField] private Color lockedColor = new(0.619f, 0.619f, 0.619f);
+
+    [Header("Level Lists")]
+    [SerializeField] private LevelData[] trebleLevels;
+    [SerializeField] private LevelData[] bassLevels;
     
     private const int TOTAL_LEVELS = 8;
     private const string HIGHEST_LEVEL_KEY = "HighestLevel";
@@ -48,11 +53,17 @@ public class LevelSelectionManager : MonoBehaviour
     
     private int _highestLevel;
     
+    private LevelData[] _currentLevels;
+    private ClefType _currentClef;
+
     private void Start()
-    {
-        _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
-        InitializeUI();
-    }
+{
+    _currentClef = SceneNavigator.Instance.LoadSelectedClef();
+    _currentLevels = _currentClef == ClefType.Treble ? trebleLevels : bassLevels;
+    
+    _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
+    InitializeUI();
+}
     
     private void InitializeUI()
     {
