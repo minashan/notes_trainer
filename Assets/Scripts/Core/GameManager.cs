@@ -27,6 +27,11 @@ public class GameManager : MonoBehaviour
     
     private void Start()
     {
+
+        ClefType selectedClef = SceneNavigator.Instance.LoadSelectedClef();
+        NoteData.Instance.SetCurrentClef(selectedClef);
+        Debug.Log($"GameManager: clef set to {selectedClef}");
+
         FindAndInitializeNoteGenerator();
         ValidateComponents();
         

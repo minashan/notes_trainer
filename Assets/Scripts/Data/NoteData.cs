@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using NotesTrainer;
 
 public class NoteData : MonoBehaviour
 {
@@ -9,6 +10,15 @@ public class NoteData : MonoBehaviour
     public Dictionary<string, string[]> EnharmonicEquivalents { get; private set; }
     public Dictionary<string, string> NoteTranslations { get; private set; }
     public Dictionary<string, NotePosition> BassNoteSettings { get; private set; }
+
+    private ClefType _currentClef = ClefType.Treble;
+
+
+
+    public void SetCurrentClef(ClefType clef)
+{
+    _currentClef = clef;
+}
     
     private void Awake()
     {
@@ -674,11 +684,10 @@ public class NoteData : MonoBehaviour
 
     
     public NotePosition GetNotePosition(string noteName)
-    {
-        return NoteSettings.TryGetValue(noteName, out NotePosition position) 
-            ? position 
-            : null;
-    }
+{
+    var settings = _currentClef == ClefType.Treble ? NoteSettings : BassNoteSettings;
+    return settings.TryGetValue(noteName, out NotePosition pos) ? pos : null;
+}
     
     public bool AreNotesEnharmonic(string note1, string note2)
     {

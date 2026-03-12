@@ -2,23 +2,27 @@ using UnityEngine;
 
 public class StaffDisplay : MonoBehaviour
 {
-    [Header("Staff Sprites")]
     [SerializeField] private GameObject trebleStaff;
     [SerializeField] private GameObject bassStaff;
     
     private void Start()
+{
+    string savedClef = PlayerPrefs.GetString("SelectedClef", "Treble");
+    bool isTreble = savedClef == "Treble";
+    
+    Debug.Log($"StaffDisplay: savedClef={savedClef}, isTreble={isTreble}");
+    Debug.Log($"trebleStaff assigned: {trebleStaff != null}, bassStaff assigned: {bassStaff != null}");
+    
+    if (trebleStaff != null)
     {
-        // Загружаем выбранный ключ из PlayerPrefs напрямую
-        string savedClef = PlayerPrefs.GetString("SelectedClef", "Treble");
-        UpdateStaffDisplay(savedClef == "Treble");
+        trebleStaff.SetActive(isTreble);
+        Debug.Log($"trebleStaff active set to: {isTreble}");
     }
     
-    private void UpdateStaffDisplay(bool isTreble)
+    if (bassStaff != null)
     {
-        if (trebleStaff != null)
-            trebleStaff.SetActive(isTreble);
-            
-        if (bassStaff != null)
-            bassStaff.SetActive(!isTreble);
+        bassStaff.SetActive(!isTreble);
+        Debug.Log($"bassStaff active set to: {!isTreble}");
     }
+}
 }
