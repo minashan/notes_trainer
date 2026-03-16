@@ -449,22 +449,22 @@ public class NoteData : MonoBehaviour
     {
         // Контр-октава
         { "A_", new() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 0f, 
-            ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+                ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
             
         { "A_sharp", new() { containerY = -2f, noteSpriteY = 130f, noteSpriteX = 0f, 
-            ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f },
-            accidentalX = -67f, accidentalY = 90f, showAccidental = true, isSharp = true } },
+                ledgerLinesY = new[] { 153f, 123f, 92.7f }, ledgerLinesX = new[] { 0f, 0f, 0f },
+                accidentalX = -67f, accidentalY = 90f, showAccidental = true, isSharp = true } },
         
         { "B_flat", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
-            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
-            accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = false } },
+                ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f }, 
+                accidentalX = -67f, accidentalY = 123f, showAccidental = true, isSharp = false } },
         
         { "B_", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
-            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
+                ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f } } },
         
         { "B_sharp", new() { containerY = -2f, noteSpriteY = 145f, noteSpriteX = 0f, 
-            ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f },
-            accidentalX = -67f, accidentalY = 103f, showAccidental = true, isSharp = true } },
+                ledgerLinesY = new[] { 153f, 123f, 0f }, ledgerLinesX = new[] { 0f, 0f, 0f }, 
+                accidentalX = -67f, accidentalY = 103f, showAccidental = true, isSharp = true } },
 
 
             // Большая октава
@@ -681,6 +681,7 @@ public class NoteData : MonoBehaviour
     };
 }
 
+           public ClefType GetCurrentClef() => _currentClef;
 
     
     public NotePosition GetNotePosition(string noteName)

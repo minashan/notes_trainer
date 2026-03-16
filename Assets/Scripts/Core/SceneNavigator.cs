@@ -28,15 +28,16 @@ public class SceneNavigator : MonoBehaviour
     public void LoadLevelSelection() => LoadScene("2_LevelSelection");
     public void LoadGameScene() => LoadScene("3_Game");
     
-    public void LoadGameWithLevel(int levelIndex)
-    {
-        if (levelIndex < 1 || levelIndex > 8) return;
-        
-        PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
-        PlayerPrefs.Save();
-        
-        LoadGameScene();
-    }
+    public void LoadGameWithLevel(int levelIndex, ClefType clef)
+{
+    if (levelIndex < 1 || levelIndex > 8) return;
+    
+    PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
+    SaveSelectedClef(clef); // 🔥 сохраняем ключ ещё раз
+    PlayerPrefs.Save();
+    
+    LoadGameScene();
+}
     
     private void LoadScene(string sceneName)
     {
@@ -44,10 +45,11 @@ public class SceneNavigator : MonoBehaviour
     }
     
     public void RestartCurrentLevel()
-    {
-        int currentLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 1);
-        LoadGameWithLevel(currentLevel);
-    }
+{
+    int currentLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 1);
+    ClefType currentClef = LoadSelectedClef(); // 🔥 получаем текущий ключ
+    LoadGameWithLevel(currentLevel, currentClef); // 🔥 передаём оба параметра
+}
     
     public void ReturnToLevelSelection()
     {

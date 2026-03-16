@@ -60,7 +60,7 @@ namespace NotesTrainer
             
             if (_smartNoteGenerator != null)
             {
-                _smartNoteGenerator.SetLevel(CurrentLevel);
+                //_smartNoteGenerator.SetLevel(CurrentLevel);
             }
             
             StartCoroutine(StartLevelAfterDelay(3f));

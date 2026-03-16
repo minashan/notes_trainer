@@ -115,14 +115,15 @@ public class GameManager : MonoBehaviour
     }
     
     public void SetCurrentNote(string note)
+{
+    _currentNote = note;
+    Debug.Log($"GameManager: Setting note {note} for clef {NoteData.Instance.GetCurrentClef()}");
+    
+    if (noteContainer != null)
     {
-        _currentNote = note;
-        
-        if (noteContainer != null)
-        {
-            ApplySavedPosition(note);
-        }
+        ApplySavedPosition(note);
     }
+}
     
     private void ApplySavedPosition(string noteName)
     {

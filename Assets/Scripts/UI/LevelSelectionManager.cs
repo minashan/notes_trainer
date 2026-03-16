@@ -38,6 +38,9 @@ public class LevelSelectionManager : MonoBehaviour
     private const string HIGHEST_LEVEL_KEY = "HighestLevel";
     private const string CURRENT_LEVEL_KEY = "CurrentLevel";
     private const string LEVEL_PROGRESS_KEY = "Level{0}_Progress";
+
+    private const string TREBLE_HIGHEST_KEY = "TrebleHighestLevel";
+    private const string BASS_HIGHEST_KEY = "BassHighestLevel";
     
     private readonly string[] _levelDescriptions = 
     {
@@ -78,30 +81,63 @@ public class LevelSelectionManager : MonoBehaviour
     }
     
     private void InitializeButtons()
+{
+    // Определяем текущий ключ
+    ClefType currentClef = SceneNavigator.Instance.LoadSelectedClef();
+    
+    // Выбираем нужный массив уровней
+    LevelData[] levelsToUse = currentClef == ClefType.Treble ? trebleLevels : bassLevels;
+    
+    // Сначала отключаем все кнопки
+    foreach (var btn in levelButtons)
     {
-        _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
-        
-        for (int i = 0; i < levelButtons.Count && i < TOTAL_LEVELS; i++)
-        {
-            int levelIndex = i + 1;
-            LevelButton levelButton = levelButtons[i];
-            
-            if (levelButton == null) continue;
-            
-            SetButtonTexts(levelButton, levelIndex, i);
-            
-            bool isUnlocked = levelIndex == 1 || levelIndex <= _highestLevel;
-            
-            if (isUnlocked)
-            {
-                SetupAvailableButton(levelButton, levelIndex);
-            }
-            else
-            {
-                SetupLockedButton(levelButton);
-            }
-        }
+        if (btn?.button != null)
+            btn.button.gameObject.SetActive(false);
     }
+    
+    // Включаем только те кнопки, для которых есть уровни
+    int levelsCount = Mathf.Min(levelButtons.Count, levelsToUse.Length);
+    for (int i = 0; i < levelsCount; i++)
+    {
+        int levelIndex = i + 1;
+        LevelButton levelButton = levelButtons[i];
+        LevelData levelData = levelsToUse[i];
+        
+        if (levelButton == null || levelData == null) continue;
+        
+        // Активируем кнопку
+        levelButton.button.gameObject.SetActive(true);
+        
+        // Устанавливаем текст из уровня
+        if (levelButton.numberText != null)
+            levelButton.numberText.text = levelData.levelName;
+        
+        if (levelButton.descriptionText != null)
+            levelButton.descriptionText.text = levelData.description;
+        
+        // Проверка доступности
+        bool isUnlocked = IsLevelUnlocked(currentClef, levelIndex);
+        
+        if (isUnlocked)
+            SetupAvailableButton(levelButton, levelData, levelIndex);
+        else
+            SetupLockedButton(levelButton);
+    }
+}
+
+private bool IsLevelUnlocked(ClefType clef, int levelIndex)
+{
+    // Для 1 уровня всегда доступен
+    if (levelIndex == 1) return true;
+    
+    // Для остальных проверяем прогресс для этого ключа
+    string key = clef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
+    int highestUnlocked = PlayerPrefs.GetInt(key, 1);
+    
+    return levelIndex <= highestUnlocked;
+}
+
+
     
     private void SetButtonTexts(LevelButton levelButton, int levelIndex, int arrayIndex)
     {
@@ -116,25 +152,33 @@ public class LevelSelectionManager : MonoBehaviour
         }
     }
     
-    private void SetupAvailableButton(LevelButton levelButton, int levelIndex)
-    {
-        levelButton.button.interactable = true;
-        
-        if (levelButton.lockIcon != null)
-        {
-            levelButton.lockIcon.gameObject.SetActive(false);
-        }
-        
-        levelButton.button.onClick.RemoveAllListeners();
-        levelButton.button.onClick.AddListener(() => LoadLevel(levelIndex));
-    }
+   private void SetupAvailableButton(LevelButton levelButton, LevelData levelData, int levelIndex)
+{
+    levelButton.button.interactable = true;
     
-    private void LoadLevel(int levelIndex)
-    {
-        PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
-        PlayerPrefs.Save();
-        SceneNavigator.Instance?.LoadGameWithLevel(levelIndex);
-    }
+    if (levelButton.lockIcon != null)
+        levelButton.lockIcon.gameObject.SetActive(false);
+    
+    levelButton.button.onClick.RemoveAllListeners();
+    
+    // 🔥 Передаём и уровень, и индекс
+    levelButton.button.onClick.AddListener(() => LoadLevel(levelData, levelIndex));
+}
+
+private void LoadLevel(LevelData levelData, int levelIndex)
+{
+    ClefType currentClef = SceneNavigator.Instance.LoadSelectedClef();
+    
+    // 🔥 СОХРАНЯЕМ ИМЯ УРОВНЯ (а не только индекс)
+    PlayerPrefs.SetString("SelectedLevelName", levelData.name);
+    PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
+    PlayerPrefs.Save();
+    
+    // Загружаем игру
+    SceneNavigator.Instance.LoadGameWithLevel(levelIndex, currentClef);
+}
+    
+   
     
     private void SetupLockedButton(LevelButton levelButton)
     {

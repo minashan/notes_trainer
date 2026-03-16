@@ -8,6 +8,7 @@ public class SmartNoteGenerator : MonoBehaviour
     private List<string> _noteBag = new();
     private string _lastGeneratedNote = "";
     private Dictionary<string, int> _noteGuesses = new();
+    private ClefType _currentClef;
     
     private const int NOTES_PER_LEVEL_MULTIPLIER = 2;
     private const int MAX_SELECTION_ATTEMPTS = 10;
@@ -21,11 +22,20 @@ public class SmartNoteGenerator : MonoBehaviour
     private void Start() => NotesGuessed = 0;
     
     public void SetLevel(LevelData level)
+{
+    _currentLevel = level;
+    _currentClef = SceneNavigator.Instance.LoadSelectedClef();
+    
+    // 🔥 Добавить лог
+    Debug.Log($"SetLevel: loading level '{level.name}' with {level.includedNotes.Length} notes");
+    foreach (var note in level.includedNotes)
     {
-        _currentLevel = level;
-        ResetProgress();
-        FillNoteBag();
+        Debug.Log($" - note: {note}");
     }
+    
+    ResetProgress();
+    FillNoteBag();
+}
     
     private void ResetProgress()
     {
@@ -36,19 +46,21 @@ public class SmartNoteGenerator : MonoBehaviour
     }
     
     private void FillNoteBag()
+{
+    if (_currentLevel?.includedNotes == null) return;
+    
+    Debug.Log($"Filling note bag with {_currentLevel.includedNotes.Length} notes:");
+    foreach (string note in _currentLevel.includedNotes)
     {
-        if (_currentLevel?.includedNotes == null) return;
-        
-        foreach (string note in _currentLevel.includedNotes)
-        {
-            _noteBag.Add(note);
-            _noteBag.Add(note);
-            _noteGuesses[note] = 0;
-        }
-        
-        ShuffleBag();
-        OnProgressUpdated?.Invoke(NotesGuessed, TotalNotes * NOTES_PER_LEVEL_MULTIPLIER);
+        Debug.Log($"Adding note: {note}");
+        _noteBag.Add(note);
+        _noteBag.Add(note);
+        _noteGuesses[note] = 0;
     }
+    
+    ShuffleBag();
+    OnProgressUpdated?.Invoke(NotesGuessed, TotalNotes * 2);
+}
     
     private void ShuffleBag()
     {
@@ -64,38 +76,41 @@ public class SmartNoteGenerator : MonoBehaviour
     }
     
     public string GenerateNote()
+{
+    if (_noteBag.Count == 0) return null;
+    
+    string selectedNote;
+    
+    if (_noteBag.Count == 1 && _noteBag[0] == _lastGeneratedNote)
     {
-        if (_noteBag.Count == 0) return null;
-        
-        string selectedNote;
-        
-        if (_noteBag.Count == 1 && _noteBag[0] == _lastGeneratedNote)
-        {
-            selectedNote = _noteBag[0];
-            _noteBag.RemoveAt(0);
-        }
-        else
-        {
-            int attempts = 0;
-            int randomIndex;
-            
-            do
-            {
-                randomIndex = Random.Range(0, _noteBag.Count);
-                attempts++;
-            } 
-            while (_noteBag[randomIndex] == _lastGeneratedNote && 
-                   _noteBag.Count > 1 && 
-                   attempts < MAX_SELECTION_ATTEMPTS);
-            
-            selectedNote = _noteBag[randomIndex];
-            _noteBag.RemoveAt(randomIndex);
-        }
-        
-        _lastGeneratedNote = selectedNote;
-        OnNoteGenerated?.Invoke(selectedNote);
-        return selectedNote;
+        selectedNote = _noteBag[0];
+        _noteBag.RemoveAt(0);
     }
+    else
+    {
+        int attempts = 0;
+        int randomIndex;
+        
+        do
+        {
+            randomIndex = Random.Range(0, _noteBag.Count);
+            attempts++;
+        } 
+        while (_noteBag[randomIndex] == _lastGeneratedNote && 
+               _noteBag.Count > 1 && 
+               attempts < MAX_SELECTION_ATTEMPTS);
+        
+        selectedNote = _noteBag[randomIndex];
+        _noteBag.RemoveAt(randomIndex);
+    }
+    
+    // 🔥 Добавляем лог для отладки
+    Debug.Log($"Generating note: {selectedNote} for clef {_currentClef}");
+    
+    _lastGeneratedNote = selectedNote;
+    OnNoteGenerated?.Invoke(selectedNote);
+    return selectedNote;
+}
     
     public void RegisterCorrectGuess(string note)
     {
