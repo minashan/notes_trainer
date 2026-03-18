@@ -3530,7 +3530,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: A1
+  noteName: A1B
 --- !u!82 &366920950
 AudioSource:
   m_ObjectHideFlags: 0
@@ -4691,7 +4691,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: F
+  noteName: FB
 --- !u!82 &502167770
 AudioSource:
   m_ObjectHideFlags: 0
@@ -6739,7 +6739,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: E
+  noteName: EB
 --- !u!82 &657504456
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8383,7 +8383,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: G
+  noteName: GB
 --- !u!82 &786578130
 AudioSource:
   m_ObjectHideFlags: 0
@@ -8656,7 +8656,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: Csharp
+  noteName: CsharpB
 --- !u!82 &819293543
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9279,7 +9279,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: A1sharp
+  noteName: A1sharpB
 --- !u!82 &921978454
 AudioSource:
   m_ObjectHideFlags: 0
@@ -9693,7 +9693,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: B1
+  noteName: B1B
 --- !u!82 &923448394
 AudioSource:
   m_ObjectHideFlags: 0
@@ -11812,7 +11812,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: Fsharp
+  noteName: FsharpB
 --- !u!82 &1141015076
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13388,7 +13388,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: F1sharp
+  noteName: F1sharpB
 --- !u!82 &1222178670
 AudioSource:
   m_ObjectHideFlags: 0
@@ -13854,7 +13854,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: G1
+  noteName: G1B
 --- !u!82 &1244640700
 AudioSource:
   m_ObjectHideFlags: 0
@@ -17266,7 +17266,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: C
+  noteName: CB
 --- !u!82 &1506563948
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18627,7 +18627,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: G1sharp
+  noteName: G1sharpB
 --- !u!82 &1714936105
 AudioSource:
   m_ObjectHideFlags: 0
@@ -18861,7 +18861,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: D
+  noteName: DB
 --- !u!82 &1724329279
 AudioSource:
   m_ObjectHideFlags: 0
@@ -22257,7 +22257,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: F1
+  noteName: F1B
 --- !u!82 &1902363789
 AudioSource:
   m_ObjectHideFlags: 0
@@ -24554,7 +24554,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: dfb34f93053d3194e9a86faaf7611c32, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  noteName: Dsharp
+  noteName: DsharpB
 --- !u!82 &2136617851
 AudioSource:
   m_ObjectHideFlags: 0

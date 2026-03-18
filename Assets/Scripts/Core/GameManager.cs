@@ -206,7 +206,10 @@ public class GameManager : MonoBehaviour
             "F1", "F1sharp", "G1flat", "G1", "G1sharp", "A1flat", "A1", "A1sharp", 
             "B1flat", "B1", "B1sharp", "Cflat", "C", "Csharp", "Dflat", "D", "Dsharp", 
             "Eflat", "E", "Esharp", "Fflat", "F", "Fsharp", "Gflat", "G", "Gsharp", 
-            "Aflat", "A", "Asharp" 
+            "Aflat", "A", "Asharp", "A_", "A_sharp", "B_flat", "B_", "B_sharp", "C0flat",
+            "C0", "C0sharp", "D0flat", "D0", "D0sharp", "E0flat", "E0", "E0sharp", "F0flat", 
+            "F0", "F0sharp", "G0flat", "G0", "G0sharp", "A0flat", "A0", "A0sharp", "B0flat", 
+            "B0", "B0sharp", "C1flat", "C1", "C1sharp",
         };
         return Array.Exists(upStemNotes, note => note == noteName);
     }
