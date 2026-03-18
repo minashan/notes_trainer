@@ -44,27 +44,44 @@ namespace NotesTrainer
             
             currentLevelIndex = Mathf.Clamp(selectedLevel - 1, 0, levels.Length - 1);
         }
+
+
+        private LevelData _displayLevel; // уровень для отображения (басовый)
+
+public void SetDisplayLevel(LevelData level)
+{
+    _displayLevel = level;
+    
+    // Сразу обновляем UI, если он уже инициализирован
+    if (_uiManager != null && _displayLevel != null)
+    {
+        _uiManager.UpdateLevelInfo(_displayLevel.levelName, _displayLevel.description);
+    }
+}
+
+
+
         
-        public void StartCurrentLevel()
-        {
-            ResetFirstNoteFlag();
-            _isLevelCompleting = false;
-            
-            if (CurrentLevel == null) return;
-            
-            if (_uiManager != null)
-            {
-                _uiManager.UpdateLevelInfo(CurrentLevel.levelName, CurrentLevel.description);
-                _uiManager.ShowLevelInfo(true, 1f);
-            }
-            
-            if (_smartNoteGenerator != null)
-            {
-                //_smartNoteGenerator.SetLevel(CurrentLevel);
-            }
-            
-            StartCoroutine(StartLevelAfterDelay(3f));
-        }
+       public void StartCurrentLevel()
+{
+    ResetFirstNoteFlag();
+    _isLevelCompleting = false;
+    
+    // Используем _displayLevel для UI, если он есть
+    LevelData levelForDisplay = _displayLevel ?? CurrentLevel;
+    
+    if (levelForDisplay != null && _uiManager != null)
+    {
+        _uiManager.UpdateLevelInfo(levelForDisplay.levelName, levelForDisplay.description);
+        _uiManager.ShowLevelInfo(true, 1f);
+    }
+    
+    // Для басового ключа _smartNoteGenerator уже установлен через LevelInitializer
+    // Поэтому НЕ вызываем SetLevel здесь
+    
+    StartCoroutine(StartLevelAfterDelay(3f));
+}
+
         
         private IEnumerator StartLevelAfterDelay(float delay)
         {

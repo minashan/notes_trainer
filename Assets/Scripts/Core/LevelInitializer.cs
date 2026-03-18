@@ -8,33 +8,29 @@ public class LevelInitializer : MonoBehaviour
     [SerializeField] private LevelData[] bassLevels;
     
     private void Awake()
+{
+    string levelName = PlayerPrefs.GetString("SelectedLevelName", "");
+    if (string.IsNullOrEmpty(levelName)) return;
+    
+    LevelData selectedLevel = FindLevelByName(levelName);
+    if (selectedLevel == null) return;
+    
+    // Передаём уровень в SmartNoteGenerator
+    SmartNoteGenerator generator = FindFirstObjectByType<SmartNoteGenerator>();
+    if (generator != null)
     {
-        // Загружаем имя уровня, которое сохранили при выборе
-        string levelName = PlayerPrefs.GetString("SelectedLevelName", "");
-        
-        if (string.IsNullOrEmpty(levelName))
-        {
-            Debug.LogError("No level name found in PlayerPrefs!");
-            return;
-        }
-        
-        // Ищем уровень по имени
-        LevelData selectedLevel = FindLevelByName(levelName);
-        
-        if (selectedLevel == null)
-        {
-            Debug.LogError($"Level '{levelName}' not found!");
-            return;
-        }
-        
-        // Передаём уровень напрямую в SmartNoteGenerator
-        SmartNoteGenerator generator = FindFirstObjectByType<SmartNoteGenerator>();
-        if (generator != null)
-        {
-            generator.SetLevel(selectedLevel);
-            Debug.Log($"LevelInitializer: set generator level to {selectedLevel.name}");
-        }
+        generator.SetLevel(selectedLevel);
+        Debug.Log($"LevelInitializer: set generator level to {selectedLevel.name}");
     }
+    
+    // 🔥 НОВОЕ: передаём уровень в LevelManager для отображения названия
+    LevelManager levelManager = FindFirstObjectByType<LevelManager>();
+    if (levelManager != null)
+    {
+        levelManager.SetDisplayLevel(selectedLevel);
+        Debug.Log($"LevelInitializer: set display level to {selectedLevel.name}");
+    }
+}
     
     private LevelData FindLevelByName(string name)
     {
