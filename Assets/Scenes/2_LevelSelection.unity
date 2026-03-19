@@ -770,6 +770,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 67fb493351e36e945a6c3f190a66000a, type: 2}
   bassLevels:
   - {fileID: 11400000, guid: 326e094d89362d54484296063eee534b, type: 2}
+  - {fileID: 11400000, guid: 99c4757b07610d74e8ecef1d9627a86d, type: 2}
 --- !u!1 &459727838
 GameObject:
   m_ObjectHideFlags: 0

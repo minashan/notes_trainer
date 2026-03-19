@@ -10,19 +10,19 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
-  m_Name: Bass_Level_1
+  m_Name: Bass_Level_2
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
-  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 1"
-  description: "\u0411\u043E\u043B\u044C\u0448\u0430\u044F \u043E\u043A\u0442\u0430\u0432\u0430"
+  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 2"
+  description: "\u041C\u0430\u043B\u0430\u044F \u043E\u043A\u0442\u0430\u0432\u0430"
   requiredScore: 140
   includedNotes:
-  - C0
-  - D0
-  - E0
-  - F0
-  - G0
-  - A0
-  - B0
+  - C1
+  - D1
+  - E1
+  - F1B
+  - G1B
+  - A1B
+  - B1B
   allowEnharmonic: 0
   timeLimit: 0
   levelColor: {r: 1, g: 1, b: 1, a: 1}

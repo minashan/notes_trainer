@@ -15,6 +15,7 @@ public class LevelSelectionManager : MonoBehaviour
         public Image lockIcon;
     }
     
+
     [Header("Level Buttons")]
     [SerializeField] private List<LevelButton> levelButtons = new();
     
@@ -41,6 +42,10 @@ public class LevelSelectionManager : MonoBehaviour
 
     private const string TREBLE_HIGHEST_KEY = "TrebleHighestLevel";
     private const string BASS_HIGHEST_KEY = "BassHighestLevel";
+    private const string TREBLE_CURRENT_KEY = "TrebleCurrentLevel"; // 🔥 добавить
+    private const string BASS_CURRENT_KEY = "BassCurrentLevel";     // 🔥 добавить
+    
+
     
     private readonly string[] _levelDescriptions = 
     {
@@ -64,7 +69,11 @@ public class LevelSelectionManager : MonoBehaviour
     _currentClef = SceneNavigator.Instance.LoadSelectedClef();
     _currentLevels = _currentClef == ClefType.Treble ? trebleLevels : bassLevels;
     
-    _highestLevel = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
+    string highestKey = _currentClef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
+    _highestLevel = PlayerPrefs.GetInt(highestKey, 1);
+    
+    Debug.Log($"LevelSelectionManager: {_currentClef}, highestLevel={_highestLevel}");
+    
     InitializeUI();
 }
     
@@ -127,14 +136,15 @@ public class LevelSelectionManager : MonoBehaviour
 
 private bool IsLevelUnlocked(ClefType clef, int levelIndex)
 {
-    // Для 1 уровня всегда доступен
     if (levelIndex == 1) return true;
     
-    // Для остальных проверяем прогресс для этого ключа
     string key = clef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
     int highestUnlocked = PlayerPrefs.GetInt(key, 1);
     
-    return levelIndex <= highestUnlocked;
+    bool unlocked = levelIndex <= highestUnlocked;
+    Debug.Log($"Level {levelIndex} unlocked: {unlocked} (highest={highestUnlocked})");
+    
+    return unlocked;
 }
 
 
@@ -236,20 +246,26 @@ private void LoadLevel(LevelData levelData, int levelIndex)
     }
     
     private void ResetAllProgress()
+{
+    string highestKey = _currentClef == ClefType.Treble ? TREBLE_HIGHEST_KEY : BASS_HIGHEST_KEY;
+    string currentKey = _currentClef == ClefType.Treble ? TREBLE_CURRENT_KEY : BASS_CURRENT_KEY;
+    
+    PlayerPrefs.DeleteKey(highestKey);
+    PlayerPrefs.DeleteKey(currentKey);
+    
+    // Сброс прогресса по уровням для текущего ключа
+    for (int i = 1; i <= 8; i++)
     {
-        PlayerPrefs.DeleteKey(HIGHEST_LEVEL_KEY);
-        PlayerPrefs.DeleteKey(CURRENT_LEVEL_KEY);
-        
-        for (int i = 1; i <= TOTAL_LEVELS; i++)
-        {
-            PlayerPrefs.DeleteKey(string.Format(LEVEL_PROGRESS_KEY, i));
-        }
-        
-        PlayerPrefs.Save();
-        
-        ShowResetConfirmation(false);
-        SceneNavigator.Instance?.LoadLevelSelection();
+        string progressKey = $"{_currentClef}_Level{i}_Progress";
+        PlayerPrefs.DeleteKey(progressKey);
     }
+    
+    PlayerPrefs.SetInt(highestKey, 1); // 1 уровень доступен
+    PlayerPrefs.Save();
+    
+    ShowResetConfirmation(false);
+    SceneNavigator.Instance?.LoadLevelSelection();
+}
     
     public void RefreshLevelButtons()
     {

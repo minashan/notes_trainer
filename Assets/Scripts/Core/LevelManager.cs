@@ -6,9 +6,10 @@ namespace NotesTrainer
 {
     public class LevelManager : MonoBehaviour
     {
-        [Header("Levels")]
-        [SerializeField] private LevelData[] levels;
-        
+        [Header("Level Lists")]
+        [SerializeField] private LevelData[] trebleLevels;
+        [SerializeField] private LevelData[] bassLevels;
+
         [Header("Current State")]
         [SerializeField] private int currentLevelIndex;
         [SerializeField] private int currentLevelScore;
@@ -20,68 +21,69 @@ namespace NotesTrainer
         private bool _isLevelCompleting;
         private bool _firstNote = true;
         
-        private const string HIGHEST_LEVEL_KEY = "HighestLevel";
-        private const string CURRENT_LEVEL_KEY = "CurrentLevel";
+        private LevelData[] _currentLevels;
+        private ClefType _currentClef;
+        
+        private const string TREBLE_HIGHEST_KEY = "TrebleHighestLevel";
+        private const string BASS_HIGHEST_KEY = "BassHighestLevel";
+        private const string TREBLE_CURRENT_KEY = "TrebleCurrentLevel";
+        private const string BASS_CURRENT_KEY = "BassCurrentLevel";
         
         public LevelData CurrentLevel => 
-            (levels != null && currentLevelIndex < levels.Length) ? levels[currentLevelIndex] : null;
+            _currentLevels != null && currentLevelIndex < _currentLevels.Length ? 
+            _currentLevels[currentLevelIndex] : null;
         
         public int CurrentLevelNumber => currentLevelIndex + 1;
-        public int TotalLevels => levels.Length;
+        public int TotalLevels => _currentLevels?.Length ?? 0;
         
         private void Start()
         {
             _gameManager = FindFirstObjectByType<GameManager>();
             _uiManager = FindFirstObjectByType<UIManager>();
             
-            int savedHighest = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 1);
-            int selectedLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 1);
+            _currentClef = SceneNavigator.Instance.LoadSelectedClef();
+            _currentLevels = _currentClef == ClefType.Treble ? trebleLevels : bassLevels;
             
-            if (selectedLevel > savedHighest)
+            int savedHighest = GetHighestLevel();
+            int selectedLevel = GetCurrentLevel();
+            
+            if (selectedLevel > savedHighest) selectedLevel = savedHighest;
+            
+            currentLevelIndex = Mathf.Clamp(selectedLevel - 1, 0, _currentLevels.Length - 1);
+        }
+        
+        private int GetHighestLevel()
+        {
+            string key = _currentClef == ClefType.Treble ? TREBLE_HIGHEST_KEY : BASS_HIGHEST_KEY;
+            return PlayerPrefs.GetInt(key, 1);
+        }
+        
+        private int GetCurrentLevel()
+        {
+            string key = _currentClef == ClefType.Treble ? TREBLE_CURRENT_KEY : BASS_CURRENT_KEY;
+            return PlayerPrefs.GetInt(key, 1);
+        }
+        
+        public void StartCurrentLevel()
+        {
+            ResetFirstNoteFlag();
+            _isLevelCompleting = false;
+            
+            if (CurrentLevel == null) return;
+            
+            if (_uiManager != null)
             {
-                selectedLevel = savedHighest;
+                _uiManager.UpdateLevelInfo(CurrentLevel.levelName, CurrentLevel.description);
+                _uiManager.ShowLevelInfo(true, 1f);
             }
             
-            currentLevelIndex = Mathf.Clamp(selectedLevel - 1, 0, levels.Length - 1);
+            if (_smartNoteGenerator != null)
+            {
+                _smartNoteGenerator.SetLevel(CurrentLevel);
+            }
+            
+            StartCoroutine(StartLevelAfterDelay(3f));
         }
-
-
-        private LevelData _displayLevel; // уровень для отображения (басовый)
-
-public void SetDisplayLevel(LevelData level)
-{
-    _displayLevel = level;
-    
-    // Сразу обновляем UI, если он уже инициализирован
-    if (_uiManager != null && _displayLevel != null)
-    {
-        _uiManager.UpdateLevelInfo(_displayLevel.levelName, _displayLevel.description);
-    }
-}
-
-
-
-        
-       public void StartCurrentLevel()
-{
-    ResetFirstNoteFlag();
-    _isLevelCompleting = false;
-    
-    // Используем _displayLevel для UI, если он есть
-    LevelData levelForDisplay = _displayLevel ?? CurrentLevel;
-    
-    if (levelForDisplay != null && _uiManager != null)
-    {
-        _uiManager.UpdateLevelInfo(levelForDisplay.levelName, levelForDisplay.description);
-        _uiManager.ShowLevelInfo(true, 1f);
-    }
-    
-    // Для басового ключа _smartNoteGenerator уже установлен через LevelInitializer
-    // Поэтому НЕ вызываем SetLevel здесь
-    
-    StartCoroutine(StartLevelAfterDelay(3f));
-}
-
         
         private IEnumerator StartLevelAfterDelay(float delay)
         {
@@ -134,32 +136,41 @@ public void SetDisplayLevel(LevelData level)
         }
         
         private void LevelComplete()
+{
+    if (_isLevelCompleting) return;
+    _isLevelCompleting = true;
+    
+    string highestKey = _currentClef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
+    string currentKey = _currentClef == ClefType.Treble ? "TrebleCurrentLevel" : "BassCurrentLevel";
+    
+    int oldHighest = PlayerPrefs.GetInt(highestKey, 0);
+    Debug.Log($"LevelComplete: CurrentLevel={CurrentLevelNumber}, oldHighest={oldHighest}");
+    
+    if (CurrentLevelNumber > oldHighest)
+    {
+        PlayerPrefs.SetInt(highestKey, CurrentLevelNumber);
+        Debug.Log($"Saving {highestKey} = {CurrentLevelNumber}");
+    }
+    
+    int nextLevel = CurrentLevelNumber + 1;
+    if (nextLevel <= TotalLevels)
+    {
+        PlayerPrefs.SetInt(currentKey, nextLevel);
+        Debug.Log($"Saving {currentKey} = {nextLevel}");
+        
+        // 🔥 ВАЖНО: также сохраняем следующий уровень в highestKey
+        if (nextLevel > oldHighest)
         {
-            if (_isLevelCompleting) return;
-            _isLevelCompleting = true;
-            
-            int oldHighest = PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 0);
-            
-            if (CurrentLevelNumber > oldHighest)
-            {
-                PlayerPrefs.SetInt(HIGHEST_LEVEL_KEY, CurrentLevelNumber);
-            }
-            
-            int nextLevel = CurrentLevelNumber + 1;
-            if (nextLevel <= TotalLevels)
-            {
-                PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, nextLevel);
-            }
-            
-            if (nextLevel > PlayerPrefs.GetInt(HIGHEST_LEVEL_KEY, 0))
-            {
-                PlayerPrefs.SetInt(HIGHEST_LEVEL_KEY, nextLevel);
-            }
-            
-            PlayerPrefs.Save();
-            
-            StartCoroutine(AutoNextLevel(3f));
+            PlayerPrefs.SetInt(highestKey, nextLevel);
+            Debug.Log($"Also saving {highestKey} = {nextLevel} (next level)");
         }
+    }
+    
+    PlayerPrefs.Save();
+    
+    StartCoroutine(AutoNextLevel(3f));
+}
+
         
         private IEnumerator AutoNextLevel(float delay)
         {
@@ -167,7 +178,7 @@ public void SetDisplayLevel(LevelData level)
             
             int nextLevelIndex = currentLevelIndex + 1;
             
-            if (nextLevelIndex < levels.Length)
+            if (nextLevelIndex < _currentLevels.Length)
             {
                 currentLevelIndex = nextLevelIndex;
                 currentLevelScore = 0;
@@ -179,7 +190,7 @@ public void SetDisplayLevel(LevelData level)
         {
             int nextLevelIndex = currentLevelIndex + 1;
             
-            if (nextLevelIndex < levels.Length)
+            if (nextLevelIndex < _currentLevels.Length)
             {
                 currentLevelIndex = nextLevelIndex;
                 currentLevelScore = 0;
@@ -189,7 +200,7 @@ public void SetDisplayLevel(LevelData level)
         
         public void GoToLevel(int levelIndex)
         {
-            if (levelIndex < 0 || levelIndex >= levels.Length) return;
+            if (levelIndex < 0 || levelIndex >= _currentLevels.Length) return;
             
             currentLevelIndex = levelIndex;
             currentLevelScore = 0;
@@ -198,23 +209,17 @@ public void SetDisplayLevel(LevelData level)
         
         public void ResetProgress()
         {
+            string currentKey = _currentClef == ClefType.Treble ? TREBLE_CURRENT_KEY : BASS_CURRENT_KEY;
+            string highestKey = _currentClef == ClefType.Treble ? TREBLE_HIGHEST_KEY : BASS_HIGHEST_KEY;
+            
             currentLevelIndex = 0;
             currentLevelScore = 0;
-            PlayerPrefs.DeleteKey(CURRENT_LEVEL_KEY);
+            
+            PlayerPrefs.DeleteKey(currentKey);
+            PlayerPrefs.SetInt(highestKey, 1); // Сбрасываем на 1 уровень
             PlayerPrefs.Save();
+            
             StartCurrentLevel();
-        }
-        
-        private void LoadProgress()
-        {
-            int savedLevel = PlayerPrefs.GetInt(CURRENT_LEVEL_KEY, 0);
-            currentLevelIndex = Mathf.Clamp(savedLevel, 0, levels.Length - 1);
-        }
-        
-        private void SaveProgress()
-        {
-            PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, currentLevelIndex);
-            PlayerPrefs.Save();
         }
         
         public string GetProgressInfo()

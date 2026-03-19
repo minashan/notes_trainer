@@ -14611,7 +14611,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 998afd0df77d3d141af081b1d99732ed, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelManager
-  levels:
+  trebleLevels:
   - {fileID: 11400000, guid: 7a1f05a821532e5478baae5503a3da2c, type: 2}
   - {fileID: 11400000, guid: bf44f378c163aff43b15784f2d7c4fe3, type: 2}
   - {fileID: 11400000, guid: 563b8f7ffd877f64ab48dfe863a41a10, type: 2}
@@ -14620,6 +14620,15 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 73831a59ab4a1304788f1c0256f9b00f, type: 2}
   - {fileID: 11400000, guid: 6469d9c73c4c4e042910565e4ec0d006, type: 2}
   - {fileID: 11400000, guid: 67fb493351e36e945a6c3f190a66000a, type: 2}
+  bassLevels:
+  - {fileID: 11400000, guid: 326e094d89362d54484296063eee534b, type: 2}
+  - {fileID: 11400000, guid: 99c4757b07610d74e8ecef1d9627a86d, type: 2}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
   currentLevelIndex: 0
   currentLevelScore: 0
 --- !u!4 &1281488795
