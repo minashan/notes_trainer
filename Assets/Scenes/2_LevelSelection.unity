@@ -771,6 +771,12 @@ MonoBehaviour:
   bassLevels:
   - {fileID: 11400000, guid: 326e094d89362d54484296063eee534b, type: 2}
   - {fileID: 11400000, guid: 99c4757b07610d74e8ecef1d9627a86d, type: 2}
+  - {fileID: 11400000, guid: 701060bc314bb3f46a197ada311ea98a, type: 2}
+  - {fileID: 11400000, guid: 071927ea18ac8ee42a195d78a0da71bf, type: 2}
+  - {fileID: 11400000, guid: d0b1a5a2913280c4e96ecc16cb4e1ca0, type: 2}
+  - {fileID: 11400000, guid: 6f8053a163241b94fbc85739ba6e349e, type: 2}
+  - {fileID: 11400000, guid: 099b9285091c9ec4e901a91d520144be, type: 2}
+  - {fileID: 11400000, guid: 949c9753e4001ce4f896d76af19dd7db, type: 2}
 --- !u!1 &459727838
 GameObject:
   m_ObjectHideFlags: 0

@@ -1,0 +1,84 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c7f8a7c60769ab94bb8b9a3e1410df8f, type: 3}
+  m_Name: Bass_Level_8
+  m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
+  levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 8"
+  description: "\u0412\u0441\u0435 \u043D\u043E\u0442\u044B"
+  requiredScore: 1220
+  includedNotes:
+  - A_
+  - A_sharp
+  - B_flat
+  - B_
+  - B_sharp
+  - C0flat
+  - C0
+  - C0sharp
+  - D0flat
+  - D0
+  - D0sharp
+  - E0flat
+  - E0
+  - E0sharp
+  - F0flat
+  - F0
+  - F0sharp
+  - G0flat
+  - G0
+  - G0sharp
+  - A0flat
+  - A0
+  - A0sharp
+  - B0flat
+  - B0
+  - B0sharp
+  - C1flat
+  - C1
+  - C1sharp
+  - D1flat
+  - D1
+  - D1sharp
+  - E1flat
+  - E1
+  - E1sharp
+  - F1flat
+  - F1B
+  - F1sharpB
+  - G1flatB
+  - G1B
+  - G1sharpB
+  - A1flatB
+  - A1B
+  - A1sharpB
+  - B1flatB
+  - B1B
+  - B1sharpB
+  - CB
+  - CflatB
+  - CsharpB
+  - DB
+  - DflatB
+  - DsharpB
+  - EflatB
+  - EB
+  - EsharpB
+  - FflatB
+  - FB
+  - FsharpB
+  - GflatB
+  - GB
+  allowEnharmonic: 0
+  timeLimit: 0
+  levelColor: {r: 1, g: 1, b: 1, a: 1}
+  levelIcon: {fileID: 0}
+  hintText: 

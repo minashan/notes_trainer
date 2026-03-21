@@ -13,8 +13,7 @@ MonoBehaviour:
   m_Name: Level3
   m_EditorClassIdentifier: Assembly-CSharp::NotesTrainer.LevelData
   levelName: "\u0423\u0440\u043E\u0432\u0435\u043D\u044C 3"
-  description: "(\u043F\u0435\u0440\u0432\u0430\u044F \u0438 \u0432\u0442\u043E\u0440\u0430\u044F
-    \u043E\u043A\u0442\u0430\u0432\u044B)"
+  description: "1 \u0438 2 \u043E\u043A\u0442\u0430\u0432\u044B"
   requiredScore: 280
   includedNotes:
   - C
