@@ -35,6 +35,10 @@ public class HintButton : MonoBehaviour
             hintBubble.SetActive(false);
         }
     }
+
+    
+
+
     
     public void StartPulsing()
     {
@@ -80,13 +84,25 @@ public class HintButton : MonoBehaviour
         }
     }
     
-    private void OnHintButtonClick()
+  private void OnHintButtonClick()
+{
+    StopPulsing();
+    
+    PianoInputHandler pianoInput = FindFirstObjectByType<PianoInputHandler>();
+    if (pianoInput != null)
     {
-        StopPulsing();
-        
-        string correctNoteName = GetCurrentCorrectNoteName();
-        ShowHintBubble(correctNoteName);
+        pianoInput.StopPulsing();
+        GameManager gameManager = FindFirstObjectByType<GameManager>();
+        if (gameManager != null)
+        {
+            string correctNote = gameManager.GetCurrentNoteName();
+            pianoInput.HighlightHintKey(correctNote); // ← тусклый
+        }
     }
+    
+    string correctNoteName = GetCurrentCorrectNoteName();
+    ShowHintBubble(correctNoteName);
+}
     
     private string GetCurrentCorrectNoteName()
     {

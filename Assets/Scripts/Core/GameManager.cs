@@ -22,6 +22,7 @@ public class GameManager : MonoBehaviour
     private string _currentNote;
     private bool _isWaitingForNextNote;
     private int _wrongAttempts;
+    private bool _hintGiven;
     
     private const string CURRENT_LEVEL_KEY = "CurrentLevel";
     
@@ -237,52 +238,78 @@ public class GameManager : MonoBehaviour
     }
     
     public void OnCorrectAnswer()
+{
+    _wrongAttempts = 0;
+    _hintGiven = false;
+    
+    HintButton hintButton = FindFirstObjectByType<HintButton>();
+    hintButton?.StopPulsing();
+    
+    if (_isWaitingForNextNote) return;
+    
+    _isWaitingForNextNote = true;
+    
+    if (uiManager != null)
     {
-        HintButton hintButton = FindFirstObjectByType<HintButton>();
-        hintButton?.StopPulsing();
-        
-        if (_isWaitingForNextNote) return;
-        
-        _isWaitingForNextNote = true;
-        
-        if (uiManager != null)
-        {
-            string russianNote = NoteData.Instance.GetTranslatedNoteName(_currentNote);
-            uiManager.ShowFeedback(russianNote, true);
-        }
-        
-        if (levelManager != null)
-        {
-            levelManager.AddScore(10);
-            _smartGenerator?.RegisterCorrectGuess(_currentNote);
-            
-            if (levelManager.IsLevelCompleted())
-            {
-                _isWaitingForNextNote = false;
-                return;
-            }
-        }
-        
-        Invoke(nameof(GenerateNextNote), noteDisplayDelay);
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(_currentNote);
+        uiManager.ShowFeedback(russianNote, true);
     }
     
-    public void OnIncorrectAnswer(string pressedNote)
+    if (levelManager != null)
     {
-        _wrongAttempts++;
+        levelManager.AddScore(10);
+        _smartGenerator?.RegisterCorrectGuess(_currentNote);
         
-        if (_wrongAttempts >= 3)
-        {
-            HintButton hintButton = FindFirstObjectByType<HintButton>();
-            hintButton?.StartPulsing();
-            _wrongAttempts = 0;
-        }
+        // Сброс цвета с задержкой
+        Invoke(nameof(ResetKeyColorAfterDelay), 1f);
         
-        if (uiManager != null)
+        if (levelManager.IsLevelCompleted())
         {
-            string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
-            uiManager.ShowFeedback(russianNote, false);
+            _isWaitingForNextNote = false;
+            return;
         }
     }
+    
+    Invoke(nameof(GenerateNextNote), noteDisplayDelay);
+}
+
+private void ResetKeyColorAfterDelay()
+{
+    if (pianoInputHandler != null)
+    {
+        GameObject correctKey = pianoInputHandler.FindKeyByNote(_currentNote);
+        if (correctKey != null)
+        {
+            pianoInputHandler.ResetKeyColor(correctKey);
+        }
+    }
+}
+
+
+    public void OnIncorrectAnswer(string pressedNote)
+{
+    _wrongAttempts++;
+    
+   if (_wrongAttempts >= 3 && !_hintGiven)
+{
+    if (pianoInputHandler != null)
+    {
+        pianoInputHandler.HighlightHintKey(_currentNote); // тусклый
+    }
+    
+    HintButton hintButton = FindFirstObjectByType<HintButton>();
+    hintButton?.StartPulsing();
+    
+    _hintGiven = true;
+}
+    
+    if (uiManager != null)
+    {
+        string russianNote = NoteData.Instance.GetTranslatedNoteName(pressedNote);
+        uiManager.ShowFeedback(russianNote, false);
+    }
+}
+
     
     public string GetCurrentNoteName()
     {

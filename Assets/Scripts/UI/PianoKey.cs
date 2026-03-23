@@ -8,6 +8,7 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler
     private PianoInputHandler _inputHandler;
     private GameManager _gameManager;
     
+    
     private void Start()
     {
         FindManagers();
@@ -43,4 +44,5 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler
             _gameManager.OnIncorrectAnswer(noteName);
         }
     }
+    public string GetNoteName() => noteName;
 }
