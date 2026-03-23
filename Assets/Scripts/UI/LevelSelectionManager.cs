@@ -72,10 +72,10 @@ public class LevelSelectionManager : MonoBehaviour
     string highestKey = _currentClef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
     _highestLevel = PlayerPrefs.GetInt(highestKey, 1);
     
-    Debug.Log($"LevelSelectionManager: {_currentClef}, highestLevel={_highestLevel}");
-    
     InitializeUI();
 }
+
+
     
     private void InitializeUI()
     {

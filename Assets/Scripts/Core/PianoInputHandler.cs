@@ -10,6 +10,8 @@ public class PianoInputHandler : MonoBehaviour
     [Header("Key Colors")]
     [SerializeField] private Color correctKeyColor = Color.green;
     [SerializeField] private Color incorrectKeyColor = Color.red;
+
+    private AudioSource _currentPlayingAudioSource;
     
     private const float COLOR_RESET_DELAY = 1f;
     
@@ -47,13 +49,24 @@ public class PianoInputHandler : MonoBehaviour
     }
     
     private void PlayKeySound(GameObject pressedKey)
+{
+    if (!enableSound) return;
+    
+    if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
     {
-        if (!enableSound) return;
-        
-        if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
+        AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
+        if (audioSource != null)
         {
-            AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-            audioSource?.Play();
+            // Останавливаем предыдущий звук, если он есть
+            if (_currentPlayingAudioSource != null && _currentPlayingAudioSource.isPlaying)
+            {
+                _currentPlayingAudioSource.Stop();
+            }
+            
+            // Запускаем новый звук
+            audioSource.Play();
+            _currentPlayingAudioSource = audioSource;
         }
     }
+}
 }

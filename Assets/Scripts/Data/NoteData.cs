@@ -46,7 +46,7 @@ public class NoteData : MonoBehaviour
     {
         NoteTranslations = new Dictionary<string, string>
         {
-            // 🔥 НОВЫЕ: Контр-октава
+        //Контр-октава
         { "A_", "Ля" },
         { "A_sharp", "Ля диез" },
         { "B_flat", "Си бемоль" },
@@ -88,18 +88,19 @@ public class NoteData : MonoBehaviour
         { "E1sharp", "Ми диез" },
         { "F1flat", "Фа бемоль" },
         
-        
-            { "F1", "Фа" },
-            { "F1sharp", "Фа диез" },
-            { "G1flat", "Соль бемоль" },
-            { "G1", "Соль" },
-            { "G1sharp", "Соль диез" },
-            { "A1flat", "Ля бемоль" },
-            { "A1", "Ля" },
-            { "A1sharp", "Ля диез" },
-            { "B1flat", "Си бемоль" },
-            { "B1", "Си" },
-            { "B1sharp", "Си диез"},
+        { "F1", "Фа" },
+        { "F1sharp", "Фа диез" },
+        { "G1flat", "Соль бемоль" },
+        { "G1", "Соль" },
+        { "G1sharp", "Соль диез" },
+        { "A1flat", "Ля бемоль" },
+        { "A1", "Ля" },
+        { "A1sharp", "Ля диез" },
+        { "B1flat", "Си бемоль" },
+        { "B1", "Си" },
+        { "B1sharp", "Си диез"},
+
+            //Для басового
             { "F1B", "Фа" },
             { "F1sharpB", "Фа диез" },
             { "G1flatB", "Соль бемоль" },
@@ -112,7 +113,7 @@ public class NoteData : MonoBehaviour
             { "B1B", "Си" },
             { "B1sharpB", "Си диез"},
             
-            // First octave
+            // 1 октава
             { "C", "До" },
             { "Cflat", "До бемоль"},
             { "Csharp", "До диез" },
@@ -127,7 +128,7 @@ public class NoteData : MonoBehaviour
             { "Fsharp", "Фа диез" },
             { "Gflat", "Соль бемоль" },
             { "G", "Соль" },
-
+            //Для басового
             { "CB", "До" },
             { "CflatB", "До бемоль"},
             { "CsharpB", "До диез" },
@@ -151,7 +152,7 @@ public class NoteData : MonoBehaviour
             { "B", "Си" },
             { "Bsharp", "Си диез"},
             
-            // Second octave
+            // 2 октава
             { "C2flat", "До бемоль"},
             { "C2", "До" },
             { "C2sharp", "До диез" },
@@ -174,7 +175,7 @@ public class NoteData : MonoBehaviour
             { "B2", "Си" },
             { "B2sharp", "Си диез"},
             
-            // Third octave
+            // 3 октава
             { "C3flat", "До бемоль"},
             { "C3", "До" },
             { "C3sharp", "До диез" },

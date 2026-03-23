@@ -28,12 +28,23 @@ public class SceneNavigator : MonoBehaviour
     public void LoadLevelSelection() => LoadScene("2_LevelSelection");
     public void LoadGameScene() => LoadScene("3_Game");
     
-    public void LoadGameWithLevel(int levelIndex, ClefType clef)
+   public void LoadGameWithLevel(int levelIndex, ClefType clef)
 {
     if (levelIndex < 1 || levelIndex > 8) return;
     
-    PlayerPrefs.SetInt(CURRENT_LEVEL_KEY, levelIndex);
-    SaveSelectedClef(clef); // 🔥 сохраняем ключ ещё раз
+    // Сохраняем выбранный уровень
+    string currentLevelKey = clef == ClefType.Treble ? "TrebleCurrentLevel" : "BassCurrentLevel";
+    PlayerPrefs.SetInt(currentLevelKey, levelIndex);
+    
+    // Сохраняем высший доступный уровень для этого ключа
+    string highestLevelKey = clef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
+    int currentHighest = PlayerPrefs.GetInt(highestLevelKey, 1);
+    if (levelIndex > currentHighest)
+    {
+        PlayerPrefs.SetInt(highestLevelKey, levelIndex);
+    }
+    
+    SaveSelectedClef(clef);
     PlayerPrefs.Save();
     
     LoadGameScene();
