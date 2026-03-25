@@ -109,9 +109,20 @@ public void HighlightHintKey(string correctNote)
     if (correctKey == null) return;
     
     Image keyImage = correctKey.GetComponent<Image>();
-    if (keyImage != null)
+    if (keyImage == null) return;
+    
+    bool isBlackKey = correctKey.name.Contains("#") || 
+                      correctKey.name.Contains("sharp") || 
+                      correctKey.name.Contains("flat") ||
+                      correctKey.name.Contains("b");
+    
+    if (isBlackKey)
     {
-        keyImage.color = hintKeyColor;
+        keyImage.color = new Color(0.2f, 1f, 0.2f, 1f); // ярко-зелёный для чёрных
+    }
+    else
+    {
+        keyImage.color = hintKeyColor; // твой цвет #9DEF9D
     }
 }
 
