@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b27a844b42e37fa4c88ceaa74f357f31
+guid: 7fa8a0f2cba5eea4eb1c7434b3f5afc1
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -511064497666699553
-    second: TrebleClefButton_0
+      213: -4420915867840723025
+    second: 9706459_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -126,13 +126,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: TrebleClefButton_0
+      name: 9706459_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 900
-        height: 200
+        x: 1
+        y: 1
+        width: 126
+        height: 126
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -141,8 +141,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: fde434f0c8558e8f0800000000000000
-      internalID: -511064497666699553
+      spriteID: fa74773f070c5a2c0800000000000000
+      internalID: -4420915867840723025
       vertices: []
       indices: 
       edges: []
@@ -161,7 +161,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      TrebleClefButton_0: -511064497666699553
+      9706459_0: -4420915867840723025
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
