@@ -9,6 +9,6 @@ public class ForceLandscape : MonoBehaviour
         Screen.autorotateToLandscapeLeft = true;
         Screen.autorotateToLandscapeRight = true;
         
-        Screen.orientation = ScreenOrientation.AutoRotation;
+       Screen.orientation = ScreenOrientation.LandscapeLeft;
     }
 }

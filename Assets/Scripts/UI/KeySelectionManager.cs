@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
-using NotesTrainer; // 🔥 Добавляем
+using NotesTrainer;
+using TMPro;
 
 public class KeySelectionManager : MonoBehaviour
 {
@@ -11,12 +12,31 @@ public class KeySelectionManager : MonoBehaviour
     
     [Header("Bass Clef Lock")]
     [SerializeField] private GameObject bassLockedPanel; // Можно будет удалить позже
+
+    public TextMeshProUGUI trebleProgressText;
+    public TextMeshProUGUI bassProgressText;
     
     private void Start()
     {
         InitializeButtons();
+        UpdateProgressTexts();
     }
     
+  private void UpdateProgressTexts()
+{
+    if (trebleProgressText != null)
+    {
+        int trebleHighest = PlayerPrefs.GetInt("TrebleHighestLevel", 1);
+        trebleProgressText.text = $"Уровни: {trebleHighest}/8"; // убрал -1
+    }
+    
+    if (bassProgressText != null)
+    {
+        int bassHighest = PlayerPrefs.GetInt("BassHighestLevel", 1);
+        bassProgressText.text = $"Уровни: {bassHighest}/8"; // убрал -1
+    }
+}
+
     private void InitializeButtons()
     {
         if (trebleClefButton != null)
