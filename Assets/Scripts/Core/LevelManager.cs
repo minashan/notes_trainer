@@ -146,6 +146,32 @@ namespace NotesTrainer
     int oldHighest = PlayerPrefs.GetInt(highestKey, 0);
     Debug.Log($"LevelComplete: CurrentLevel={CurrentLevelNumber}, oldHighest={oldHighest}");
     
+    // Проверка на последний уровень (8-й)
+    bool isLastLevel = (CurrentLevelNumber == TotalLevels);
+    
+    if (isLastLevel)
+    {
+        // Показываем поздравительное сообщение
+        if (_uiManager != null)
+        {
+            _uiManager.ShowCongratulations();
+        }
+        
+        // Сохраняем прогресс (последний уровень пройден)
+        if (CurrentLevelNumber > oldHighest)
+        {
+            PlayerPrefs.SetInt(highestKey, CurrentLevelNumber);
+            Debug.Log($"Saving {highestKey} = {CurrentLevelNumber}");
+        }
+        
+        PlayerPrefs.Save();
+        
+        // Выходим в меню через 3 секунды
+        StartCoroutine(ExitToMenuAfterDelay(3f));
+        return;
+    }
+    
+    // Обычная логика для не последних уровней
     if (CurrentLevelNumber > oldHighest)
     {
         PlayerPrefs.SetInt(highestKey, CurrentLevelNumber);
@@ -158,7 +184,6 @@ namespace NotesTrainer
         PlayerPrefs.SetInt(currentKey, nextLevel);
         Debug.Log($"Saving {currentKey} = {nextLevel}");
         
-        // 🔥 ВАЖНО: также сохраняем следующий уровень в highestKey
         if (nextLevel > oldHighest)
         {
             PlayerPrefs.SetInt(highestKey, nextLevel);
@@ -169,6 +194,12 @@ namespace NotesTrainer
     PlayerPrefs.Save();
     
     StartCoroutine(AutoNextLevel(3f));
+}
+
+private IEnumerator ExitToMenuAfterDelay(float delay)
+{
+    yield return new WaitForSeconds(delay);
+    SceneNavigator.Instance.LoadKeySelection();
 }
 
         

@@ -13,6 +13,7 @@ public class LevelSelectionManager : MonoBehaviour
         public TextMeshProUGUI numberText;
         public TextMeshProUGUI descriptionText;
         public Image lockIcon;
+        public GameObject checkmark;
     }
     
 
@@ -73,6 +74,7 @@ public class LevelSelectionManager : MonoBehaviour
     _highestLevel = PlayerPrefs.GetInt(highestKey, 1);
     
     InitializeUI();
+    UpdateCheckmarks();
 }
 
 
@@ -147,6 +149,29 @@ private bool IsLevelUnlocked(ClefType clef, int levelIndex)
     return unlocked;
 }
 
+
+private void UpdateCheckmarks()
+{
+    int highestLevel = GetHighestLevelForCurrentClef();
+    
+    for (int i = 0; i < levelButtons.Count; i++)
+    {
+        int levelNumber = i + 1;
+        bool isCompleted = levelNumber < highestLevel; // Уровень пройден, если следующий уже открыт
+        
+        if (levelButtons[i].checkmark != null)
+        {
+            levelButtons[i].checkmark.SetActive(isCompleted);
+        }
+    }
+}
+
+
+private int GetHighestLevelForCurrentClef()
+{
+    string key = _currentClef == ClefType.Treble ? "TrebleHighestLevel" : "BassHighestLevel";
+    return PlayerPrefs.GetInt(key, 1);
+}
 
     
     private void SetButtonTexts(LevelButton levelButton, int levelIndex, int arrayIndex)

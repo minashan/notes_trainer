@@ -159,4 +159,41 @@ public class UIManager : MonoBehaviour
             progressText.text = $"{guessed}/{total}";
         }
     }
+
+
+    public void ShowCongratulations()
+{
+    StartCoroutine(ShowCongratulationsCoroutine());
+}
+
+private IEnumerator ShowCongratulationsCoroutine()
+{
+    string message = "ПОЗДРАВЛЯЕМ! \nВсе 8 уровней пройдены!";
+    
+    if (feedbackText != null)
+    {
+        feedbackText.text = message;
+        feedbackText.color = new Color(1f, 0.8f, 0f, 1f); // Золотой цвет
+        feedbackText.fontSize = 68;
+        feedbackText.gameObject.SetActive(true);
+        
+        yield return new WaitForSeconds(4f);
+        
+        // Плавное исчезновение
+        float elapsedTime = 0f;
+        Color startColor = feedbackText.color;
+        Color targetColor = new(startColor.r, startColor.g, startColor.b, 0f);
+        
+        while (elapsedTime < feedbackFadeDuration)
+        {
+            elapsedTime += Time.deltaTime;
+            float t = elapsedTime / feedbackFadeDuration;
+            feedbackText.color = Color.Lerp(startColor, targetColor, t);
+            yield return null;
+        }
+        
+        feedbackText.fontSize = 24; // Вернуть обычный размер
+        ClearFeedback();
+    }
+}
 }

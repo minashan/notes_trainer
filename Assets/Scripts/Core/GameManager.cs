@@ -260,8 +260,7 @@ public class GameManager : MonoBehaviour
         levelManager.AddScore(10);
         _smartGenerator?.RegisterCorrectGuess(_currentNote);
         
-        // Сброс цвета с задержкой
-        Invoke(nameof(ResetKeyColorAfterDelay), 1f);
+        
         
         if (levelManager.IsLevelCompleted())
         {
@@ -273,17 +272,7 @@ public class GameManager : MonoBehaviour
     Invoke(nameof(GenerateNextNote), noteDisplayDelay);
 }
 
-private void ResetKeyColorAfterDelay()
-{
-    if (pianoInputHandler != null)
-    {
-        GameObject correctKey = pianoInputHandler.FindKeyByNote(_currentNote);
-        if (correctKey != null)
-        {
-            pianoInputHandler.ResetKeyColor(correctKey);
-        }
-    }
-}
+
 
 
     public void OnIncorrectAnswer(string pressedNote)
