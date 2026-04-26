@@ -37,10 +37,29 @@ public class PianoInputHandler : MonoBehaviour
         }
     }
     
-    public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
+   public void ProcessKeyPress(string pressedNote, GameObject pressedKey)
+{
+    PlayKeySound(pressedKey);
+    
+    GameManager gm = FindFirstObjectByType<GameManager>();
+    
+    if (gm != null)
     {
-        PlayKeySound(pressedKey);
+        // Игровой режим (скрипичный/басовый ключ)
+        bool isCorrect = gm.CheckNote(pressedNote);
+        SetKeyFinalColor(pressedKey, isCorrect);
+        
+        if (isCorrect)
+            gm.OnCorrectAnswer();
+        else
+            gm.OnIncorrectAnswer(pressedNote);
     }
+    else
+    {
+        // Режим пианино — серая подсветка
+        SetKeyPressedColor(pressedKey);
+    }
+}
     
     public void SetKeyFinalColor(GameObject keyObject, bool isCorrect)
     {
@@ -77,6 +96,20 @@ public class PianoInputHandler : MonoBehaviour
             keyImage.color = isBlackKey ? Color.black : Color.white;
         }
     }
+
+    public void SetKeyPressedColor(GameObject keyObject)
+{
+    Image keyImage = keyObject.GetComponent<Image>();
+    if (keyImage == null) return;
+    
+    // Временно меняем цвет на серый
+    keyImage.color = new Color(0.7f, 0.7f, 0.7f);
+    
+    // Через 0.2 секунды возвращаем исходный цвет
+    StartCoroutine(ResetKeyAfterDelay(keyObject, 0.2f));
+}
+
+
     
     private string GetNoteNameFromKey(GameObject keyObject)
     {
@@ -85,24 +118,32 @@ public class PianoInputHandler : MonoBehaviour
     }
     
     private void PlayKeySound(GameObject pressedKey)
+{
+     Debug.Log($"PlayKeySound called for {pressedKey.name}");
+
+    Debug.Log($"1. enableSound={enableSound}");
+    if (!enableSound) return;
+    
+    Debug.Log($"2. AudioManager.Instance={AudioManager.Instance}");
+    if (AudioManager.Instance == null) return;
+    
+    Debug.Log($"3. IsMuted={AudioManager.Instance.IsMuted}");
+    if (AudioManager.Instance.IsMuted) return;
+    
+    AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
+    Debug.Log($"4. audioSource={audioSource}, clip={audioSource?.clip}");
+    
+    if (audioSource != null && audioSource.clip != null)
     {
-        if (!enableSound) return;
-        
-        if (AudioManager.Instance != null && !AudioManager.Instance.IsMuted)
-        {
-            AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-            if (audioSource != null)
-            {
-                if (_currentPlayingAudioSource != null && _currentPlayingAudioSource.isPlaying)
-                {
-                    _currentPlayingAudioSource.Stop();
-                }
-                
-                audioSource.Play();
-                _currentPlayingAudioSource = audioSource;
-            }
-        }
+        audioSource.Play();
+        _currentPlayingAudioSource = audioSource;
+        Debug.Log($"5. Played clip: {audioSource.clip.name}");
     }
+    else
+    {
+        Debug.LogWarning($"6. No AudioClip on {pressedKey.name}");
+    }
+}
     
     public void StopPulsing()
     {

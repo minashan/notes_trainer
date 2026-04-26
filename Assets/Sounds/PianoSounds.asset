@@ -1,0 +1,191 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7146a6f8881691941afaa82b85349fe8, type: 3}
+  m_Name: PianoSounds
+  m_EditorClassIdentifier: Assembly-CSharp::PianoSoundDatabase
+  noteSounds:
+  - noteName: A__
+    clip: {fileID: 8300000, guid: 06cbd36ea7e39be4eaaea6aae7dc776d, type: 3}
+  - noteName: A__sharp
+    clip: {fileID: 8300000, guid: 735e1e76fc1a3c244af438ada23e56b9, type: 3}
+  - noteName: B__
+    clip: {fileID: 8300000, guid: 542cf1b84882e5948b32f96b68da25e2, type: 3}
+  - noteName: C_
+    clip: {fileID: 8300000, guid: ae5263d6f3d82804daecd40b63508fc6, type: 3}
+  - noteName: C_sharp
+    clip: {fileID: 8300000, guid: 4dcb53e5567dd70499b9eb86606a19f3, type: 3}
+  - noteName: D_
+    clip: {fileID: 8300000, guid: a10c9804975d1b34aa3834e69fec0284, type: 3}
+  - noteName: D_sharp
+    clip: {fileID: 8300000, guid: f23b95dc78f91cc40a3c3a09344325ab, type: 3}
+  - noteName: E_
+    clip: {fileID: 8300000, guid: 50f13aafcaa2eee40951f2a449c1099a, type: 3}
+  - noteName: F_
+    clip: {fileID: 8300000, guid: 8f5944af9ba02ce4bb8774369c221109, type: 3}
+  - noteName: F_sharp
+    clip: {fileID: 8300000, guid: 493807f37d103024a87041b56223a606, type: 3}
+  - noteName: G_
+    clip: {fileID: 8300000, guid: 6bc9107c838d60946aa6100838c58012, type: 3}
+  - noteName: G_sharp
+    clip: {fileID: 8300000, guid: d8d0879b7de5e8d46845b1f6036d54e1, type: 3}
+  - noteName: A_
+    clip: {fileID: 8300000, guid: 8468f31a27abcd5499de1ab9cc1bbab6, type: 3}
+  - noteName: A_sharp
+    clip: {fileID: 8300000, guid: c30c7cd16ceee694fb83aa69316f8a64, type: 3}
+  - noteName: B_
+    clip: {fileID: 8300000, guid: 069cf950a5ee7494181cc96651c36169, type: 3}
+  - noteName: C0
+    clip: {fileID: 8300000, guid: e97b9c49df700bf48b1c7c39bd66f8ec, type: 3}
+  - noteName: C0sharp
+    clip: {fileID: 8300000, guid: 4c6963d20bc20304aa8db7369f7fa09a, type: 3}
+  - noteName: D0
+    clip: {fileID: 8300000, guid: 8a2965e69d0ecb1479ae52e5857a222d, type: 3}
+  - noteName: D0sharp
+    clip: {fileID: 8300000, guid: a2606c8634d2f9c41a9ffeb4881ae2c9, type: 3}
+  - noteName: E0
+    clip: {fileID: 8300000, guid: 22bd29ae7a4b3ad44961a59e4e219575, type: 3}
+  - noteName: F0
+    clip: {fileID: 8300000, guid: b685216cb44ab3046973b31b0c6be6fc, type: 3}
+  - noteName: F0sharp
+    clip: {fileID: 8300000, guid: 2067b2afe9e95c844948102ccce2acb5, type: 3}
+  - noteName: G0
+    clip: {fileID: 8300000, guid: 528a649855f10554fa2874763d213e57, type: 3}
+  - noteName: G0sharp
+    clip: {fileID: 8300000, guid: c30d54cda19a3524f9464da199af4276, type: 3}
+  - noteName: A0
+    clip: {fileID: 8300000, guid: 08fa8e01a98281f4180c5a7aec558c24, type: 3}
+  - noteName: A0sharp
+    clip: {fileID: 8300000, guid: d4db27e4618c44941b2ab45382bbcabe, type: 3}
+  - noteName: B0
+    clip: {fileID: 8300000, guid: 03164720be969d5438318d8a08ed1a20, type: 3}
+  - noteName: C1
+    clip: {fileID: 8300000, guid: 810f2dd871653124e8450813841bb03a, type: 3}
+  - noteName: C1sharp
+    clip: {fileID: 8300000, guid: 7f902d2cd2f29f943a8580cb2ab65303, type: 3}
+  - noteName: D1
+    clip: {fileID: 8300000, guid: 658c3be7a5181524498af51dedcc079f, type: 3}
+  - noteName: D1sharp
+    clip: {fileID: 8300000, guid: 2cbb7cf07ac55fa47939040acef85f56, type: 3}
+  - noteName: E1
+    clip: {fileID: 8300000, guid: eb5fecd5805bd2d45b3a64a4fd38c7e7, type: 3}
+  - noteName: F1
+    clip: {fileID: 8300000, guid: e87fc190c404c604fb97a75abfcb6c07, type: 3}
+  - noteName: F1sharp
+    clip: {fileID: 8300000, guid: b09e63c9aadfdd04f996a626ae2892f9, type: 3}
+  - noteName: G1
+    clip: {fileID: 8300000, guid: d7a001392045252498f7d3a8b377e75c, type: 3}
+  - noteName: G1sharp
+    clip: {fileID: 8300000, guid: 5a23e043f78a6354fa7c88ea3b8ac179, type: 3}
+  - noteName: A1
+    clip: {fileID: 8300000, guid: 308b85f6f90a76143a96937cdf2ef0c6, type: 3}
+  - noteName: A1sharp
+    clip: {fileID: 8300000, guid: 74566c48bd94fe7479ddad6e5fab41b8, type: 3}
+  - noteName: B1
+    clip: {fileID: 8300000, guid: 126279551594aae4e8e781f37487bab9, type: 3}
+  - noteName: C
+    clip: {fileID: 8300000, guid: b681f1f4fab6d2048a9462577f16bec4, type: 3}
+  - noteName: Csharp
+    clip: {fileID: 8300000, guid: a90bbe030aa95934c8d0cec152be08c0, type: 3}
+  - noteName: D
+    clip: {fileID: 8300000, guid: fc973962a7707374199fa697b39a8aa9, type: 3}
+  - noteName: Dsharp
+    clip: {fileID: 8300000, guid: 17388f80480a1b04f9ff0b7bff6845dc, type: 3}
+  - noteName: E
+    clip: {fileID: 8300000, guid: 0abdf90be83586643bb9dc5ee5293e34, type: 3}
+  - noteName: F
+    clip: {fileID: 8300000, guid: 4eb01997e058ecc4e8665139973a249e, type: 3}
+  - noteName: Fsharp
+    clip: {fileID: 8300000, guid: 90ca81e5314fe784e903cb16fe6bd5b1, type: 3}
+  - noteName: G
+    clip: {fileID: 8300000, guid: b7eb441517ff1de46a95627f8801755d, type: 3}
+  - noteName: Gsharp
+    clip: {fileID: 8300000, guid: 87004330414acab4390a673efbc036c7, type: 3}
+  - noteName: A
+    clip: {fileID: 8300000, guid: 989ee700a8641774f93ef833d9e97ce9, type: 3}
+  - noteName: Asharp
+    clip: {fileID: 8300000, guid: cc8fc8084e573da42ae4f93bb23334b4, type: 3}
+  - noteName: B
+    clip: {fileID: 8300000, guid: 4d360c295b5e81b48bcfc1a0f3d0e7ae, type: 3}
+  - noteName: C2
+    clip: {fileID: 8300000, guid: 20f07c3eb1bee1947944caf42c2e8090, type: 3}
+  - noteName: C2sharp
+    clip: {fileID: 8300000, guid: f51c125930c69ff45b79b63df5b84cc2, type: 3}
+  - noteName: D2
+    clip: {fileID: 8300000, guid: a23e03a82ea9a094fac9879217e533df, type: 3}
+  - noteName: D2sharp
+    clip: {fileID: 8300000, guid: 13340da126c3f1c4c8b255e43feba4b1, type: 3}
+  - noteName: E2
+    clip: {fileID: 8300000, guid: 8b6fdb0b2964c0949851f8606d3e023c, type: 3}
+  - noteName: F2
+    clip: {fileID: 8300000, guid: d0ee54f53a845d04ab0d74ecdd7344e5, type: 3}
+  - noteName: F2sharp
+    clip: {fileID: 8300000, guid: 6cc50207e53f22f47a1bf0c18d703240, type: 3}
+  - noteName: G2
+    clip: {fileID: 8300000, guid: cf65240ddec9fea40a344cb13cbd4e5c, type: 3}
+  - noteName: G2sharp
+    clip: {fileID: 8300000, guid: f4995e4842e1c424e8c174aaa97623fd, type: 3}
+  - noteName: A2
+    clip: {fileID: 8300000, guid: ed1329c0250522c4b9aae5646731bc0c, type: 3}
+  - noteName: A2sharp
+    clip: {fileID: 8300000, guid: bc6cf3949ab346845a801a4db2c652e7, type: 3}
+  - noteName: B2
+    clip: {fileID: 8300000, guid: 2e1b9a075a0a0e340ae9104df432c450, type: 3}
+  - noteName: C3
+    clip: {fileID: 8300000, guid: e06387f429fe80446a231653eb529dad, type: 3}
+  - noteName: C3sharp
+    clip: {fileID: 8300000, guid: 0deef4413e3c8aa41aca3146ae5d1657, type: 3}
+  - noteName: D3
+    clip: {fileID: 8300000, guid: aaebbd75e96f853408f2c320fd8ff0b6, type: 3}
+  - noteName: D3sharp
+    clip: {fileID: 8300000, guid: 0958701529e9714468f17065034dd2e8, type: 3}
+  - noteName: E3
+    clip: {fileID: 8300000, guid: 23db5bf20103b4548b93aa9ebe03dad4, type: 3}
+  - noteName: F3
+    clip: {fileID: 8300000, guid: 6e1e8be3a992075419815c1962766505, type: 3}
+  - noteName: F3sharp
+    clip: {fileID: 8300000, guid: 2ff653112b915d147a762076c44e0148, type: 3}
+  - noteName: G3
+    clip: {fileID: 8300000, guid: c5fab5e0437e7954eac00c2f8953b7ad, type: 3}
+  - noteName: G3sharp
+    clip: {fileID: 8300000, guid: db89a49bea035544c99edb1135d1481f, type: 3}
+  - noteName: A3
+    clip: {fileID: 8300000, guid: 39c2b2aba8bfea04784b0744274ab612, type: 3}
+  - noteName: A3sharp
+    clip: {fileID: 8300000, guid: ca817bc0cc9260841a5399671f431d3f, type: 3}
+  - noteName: B3
+    clip: {fileID: 8300000, guid: e6f413ae26a13ba479f8845b24110cdc, type: 3}
+  - noteName: C4
+    clip: {fileID: 8300000, guid: 205de60ffe36ce94e8b5a1460e05ce2c, type: 3}
+  - noteName: C4sharp
+    clip: {fileID: 8300000, guid: 527f598a7723aa742a42370f70e4f039, type: 3}
+  - noteName: D4
+    clip: {fileID: 8300000, guid: bfc3f2a28b3dd9c429f2e6ace5e1d15b, type: 3}
+  - noteName: D4sharp
+    clip: {fileID: 8300000, guid: 49be3a36f86eb3349aa73e9fc7f99db4, type: 3}
+  - noteName: E4
+    clip: {fileID: 8300000, guid: 1200a6d6cbcc2324eb8f62a4f446a696, type: 3}
+  - noteName: F4
+    clip: {fileID: 8300000, guid: cad4fb3663ecd2c41bf38b1c77caa243, type: 3}
+  - noteName: F4sharp
+    clip: {fileID: 8300000, guid: 69104d5cd35bb5046b2a91ffa445a183, type: 3}
+  - noteName: G4
+    clip: {fileID: 8300000, guid: 9c57f72ebc93499488c7808dad3d9206, type: 3}
+  - noteName: G4sharp
+    clip: {fileID: 8300000, guid: 1223a7d5e8a465d4291eddf1f61783f4, type: 3}
+  - noteName: A4
+    clip: {fileID: 8300000, guid: 41fd8ecfe1172874c867644bb6f30da3, type: 3}
+  - noteName: A4sharp
+    clip: {fileID: 8300000, guid: a5ec6601fcac7904baaf8489aae9ab89, type: 3}
+  - noteName: B4
+    clip: {fileID: 8300000, guid: cc14ec77be64f6a4e9cb8d96da1063f9, type: 3}
+  - noteName: C5
+    clip: {fileID: 8300000, guid: 4398bd2c939c0fb4f83260398d943c04, type: 3}
