@@ -27,6 +27,15 @@ public class SceneNavigator : MonoBehaviour
     public void LoadKeySelection() => LoadScene("1_KeySelection");
     public void LoadLevelSelection() => LoadScene("2_LevelSelection");
     public void LoadGameScene() => LoadScene("3_Game");
+    public void LoadPianoScene() => LoadScene("4_PianoMode");
+
+
+    public void LoadPianoModeScene()
+{
+    SceneManager.LoadScene("4_PianoMode");
+}
+
+
     
    public void LoadGameWithLevel(int levelIndex, ClefType clef)
 {

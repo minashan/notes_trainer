@@ -930,6 +930,7 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   trebleClefButton: {fileID: 0}
   bassClefButton: {fileID: 0}
+  pianoButton: {fileID: 0}
   bassLockedPanel: {fileID: 0}
   trebleProgressText: {fileID: 0}
   bassProgressText: {fileID: 0}
@@ -1068,6 +1069,7 @@ MonoBehaviour:
   exitButton: {fileID: 0}
   trebleClefButton: {fileID: 2021372134}
   bassClefButton: {fileID: 1790098679}
+  pianoButton: {fileID: 189376817}
   bassLockedPanel: {fileID: 0}
   trebleProgressText: {fileID: 1961468238}
   bassProgressText: {fileID: 843934822}

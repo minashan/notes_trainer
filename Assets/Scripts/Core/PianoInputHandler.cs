@@ -117,31 +117,21 @@ public class PianoInputHandler : MonoBehaviour
         return pianoKey != null ? pianoKey.GetNoteName() : "";
     }
     
+
     private void PlayKeySound(GameObject pressedKey)
 {
-     Debug.Log($"PlayKeySound called for {pressedKey.name}");
-
-    Debug.Log($"1. enableSound={enableSound}");
     if (!enableSound) return;
     
-    Debug.Log($"2. AudioManager.Instance={AudioManager.Instance}");
-    if (AudioManager.Instance == null) return;
-    
-    Debug.Log($"3. IsMuted={AudioManager.Instance.IsMuted}");
-    if (AudioManager.Instance.IsMuted) return;
+    if (AudioManager.Instance == null || AudioManager.Instance.IsMuted) return;
     
     AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-    Debug.Log($"4. audioSource={audioSource}, clip={audioSource?.clip}");
-    
     if (audioSource != null && audioSource.clip != null)
     {
+        if (audioSource.isPlaying)
+        {
+            audioSource.Stop();
+        }
         audioSource.Play();
-        _currentPlayingAudioSource = audioSource;
-        Debug.Log($"5. Played clip: {audioSource.clip.name}");
-    }
-    else
-    {
-        Debug.LogWarning($"6. No AudioClip on {pressedKey.name}");
     }
 }
     

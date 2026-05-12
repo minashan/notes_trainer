@@ -9,6 +9,7 @@ public class KeySelectionManager : MonoBehaviour
     [SerializeField] private Button exitButton;
     [SerializeField] private Button trebleClefButton;
     [SerializeField] private Button bassClefButton;
+    [SerializeField] private Button pianoButton;
     
     [Header("Bass Clef Lock")]
     [SerializeField] private GameObject bassLockedPanel; // Можно будет удалить позже
@@ -61,6 +62,11 @@ public class KeySelectionManager : MonoBehaviour
         {
             exitButton.onClick.AddListener(OnExitButtonClicked);
         }
+
+        if (pianoButton != null)
+{
+    pianoButton.onClick.AddListener(OnPianoButtonClicked);
+}
     }
     
     private void OnTrebleClefClicked()
@@ -85,4 +91,10 @@ public class KeySelectionManager : MonoBehaviour
         UnityEditor.EditorApplication.isPlaying = false;
 #endif
     }
+
+    private void OnPianoButtonClicked()
+{
+    SceneNavigator.Instance?.LoadPianoModeScene();
+}
+
 }
