@@ -17,7 +17,7 @@ public class PianoInputHandler : MonoBehaviour
     [SerializeField] private float pulseDuration = 1.5f;
     [SerializeField] private float pulseSpeed = 1.5f;
 
-    private AudioSource _currentPlayingAudioSource;
+    
     private Coroutine _currentPulseCoroutine;
     
     private const float COLOR_RESET_DELAY = 1f;
@@ -118,22 +118,76 @@ public class PianoInputHandler : MonoBehaviour
     }
     
 
-    private void PlayKeySound(GameObject pressedKey)
+    
+
+private AudioSource _currentPlayingAudioSource;
+private float _fadeStartTime;
+private float _fadeDuration = 0.3f;
+private bool _isFading = false;
+
+private void Update()
 {
-    if (!enableSound) return;
-    
-    if (AudioManager.Instance == null || AudioManager.Instance.IsMuted) return;
-    
-    AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
-    if (audioSource != null && audioSource.clip != null)
+    if (_isFading && _currentPlayingAudioSource != null)
     {
-        if (audioSource.isPlaying)
+        float elapsed = Time.time - _fadeStartTime;
+        float t = Mathf.Clamp01(elapsed / _fadeDuration);
+        _currentPlayingAudioSource.volume = Mathf.Lerp(1f, 0f, t);
+        
+        if (t >= 1f)
         {
-            audioSource.Stop();
+            _currentPlayingAudioSource.Stop();
+            _currentPlayingAudioSource.volume = 1f;
+            _isFading = false;
         }
-        audioSource.Play();
     }
 }
+
+
+private float _legatoTime = 0.15f;
+
+private void PlayKeySound(GameObject pressedKey)
+{
+    if (!enableSound) return;
+    if (AudioManager.Instance == null || AudioManager.Instance.IsMuted) return;
+    
+    AudioSource newSource = pressedKey.GetComponent<AudioSource>();
+    if (newSource == null || newSource.clip == null) return;
+    
+    // Если это та же нота — обрываем и играем заново
+    if (_currentPlayingAudioSource == newSource)
+    {
+        newSource.Stop();
+        newSource.Play();
+        return;
+    }
+    
+    // Разные ноты — легато (затухание старой)
+    if (_currentPlayingAudioSource != null && _currentPlayingAudioSource.isPlaying)
+    {
+        StartCoroutine(FadeOut(_currentPlayingAudioSource, _legatoTime));
+    }
+    
+    newSource.volume = 1f;
+    newSource.Play();
+    _currentPlayingAudioSource = newSource;
+}
+
+private System.Collections.IEnumerator FadeOut(AudioSource source, float duration)
+{
+    float startVolume = source.volume;
+    float elapsed = 0f;
+    
+    while (elapsed < duration)
+    {
+        elapsed += Time.deltaTime;
+        source.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+        yield return null;
+    }
+    
+    source.Stop();
+    source.volume = startVolume;
+}
+
     
     public void StopPulsing()
     {
@@ -143,6 +197,7 @@ public class PianoInputHandler : MonoBehaviour
             _currentPulseCoroutine = null;
         }
     }
+
     
     public void HighlightHintKey(string correctNote)
     {
