@@ -18,7 +18,7 @@ GameObject:
   - component: {fileID: 7095303363447247153}
   m_Layer: 5
   m_Name: WhiteKey
-  m_TagString: PianoKey
+  m_TagString: WhiteKey
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0

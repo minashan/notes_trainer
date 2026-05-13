@@ -24,6 +24,29 @@ public class PianoKeyboardBuilder : MonoBehaviour
     [Header("Audio")]
     [SerializeField] private PianoSoundDatabase soundDatabase;
 
+    private float currentScale = 1f;
+    private float minScale = 0.5f;
+    private float maxScale = 1.5f;
+    private float zoomStep = 0.1f;
+
+
+    public void ZoomIn()
+{
+    currentScale = Mathf.Clamp(currentScale + zoomStep, minScale, maxScale);
+    whiteContent.localScale = Vector3.one * currentScale;
+    blackContent.localScale = Vector3.one * currentScale;
+}
+
+public void ZoomOut()
+{
+    currentScale = Mathf.Clamp(currentScale - zoomStep, minScale, maxScale);
+    whiteContent.localScale = Vector3.one * currentScale;
+    blackContent.localScale = Vector3.one * currentScale;
+}
+
+
+
+
    void SetNoteSound(GameObject key, string noteName)
 {
     Debug.Log($"SetNoteSound for {noteName}");
