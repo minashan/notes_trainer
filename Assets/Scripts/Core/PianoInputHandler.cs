@@ -77,7 +77,7 @@ public class PianoInputHandler : MonoBehaviour
         ResetKeyColor(keyObject);
     }
     
-    private void ResetKeyColor(GameObject keyObject)
+    public void ResetKeyColor(GameObject keyObject)
     {
         Image keyImage = keyObject.GetComponent<Image>();
         if (keyImage == null) return;
@@ -253,4 +253,82 @@ private void PlayKeySound(GameObject pressedKey)
         keyImage.color = hintKeyColor;
         _currentPulseCoroutine = null;
     }
+
+
+
+    private Dictionary<AudioSource, bool> _activeNotes = new Dictionary<AudioSource, bool>();
+
+public void NoteOn(AudioClip clip)
+{
+    if (AudioManager.Instance == null || AudioManager.Instance.IsMuted) return;
+    
+    // Если эта нота уже играет — останавливаем и удаляем
+    AudioSource existingSource = null;
+    foreach (var kvp in _activeNotes)
+    {
+        if (kvp.Key.clip == clip)
+        {
+            existingSource = kvp.Key;
+            break;
+        }
+    }
+    
+    if (existingSource != null)
+    {
+        existingSource.Stop();
+        _activeNotes.Remove(existingSource);
+        Destroy(existingSource.gameObject);
+    }
+    
+    AudioSource newSource = GetFreeAudioSource();
+    newSource.clip = clip;
+    newSource.Play();
+    _activeNotes[newSource] = true;
+}
+
+public void NoteOff(AudioClip clip)
+{
+    foreach (var kvp in _activeNotes)
+    {
+        if (kvp.Key.clip == clip)
+        {
+            StartCoroutine(FadeOutAndStop(kvp.Key, 0.5f));
+            break;
+        }
+    }
+}
+
+private System.Collections.IEnumerator FadeOutAndStop(AudioSource source, float duration)
+{
+    float startVolume = source.volume;
+    float elapsed = 0f;
+    
+    while (elapsed < duration && source != null)
+    {
+        elapsed += Time.deltaTime;
+        if (source != null)
+            source.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
+        yield return null;
+    }
+    
+    if (source != null)
+    {
+        source.Stop();
+        _activeNotes.Remove(source);
+        Destroy(source.gameObject);
+    }
+}
+
+
+private AudioSource GetFreeAudioSource()
+{
+    GameObject go = new GameObject("NoteSource");
+    go.transform.SetParent(AudioManager.Instance.transform);
+    AudioSource source = go.AddComponent<AudioSource>();
+    source.volume = 1f;
+    source.spatialBlend = 0f;
+    return source;
+}
+
+
 }

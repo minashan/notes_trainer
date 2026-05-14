@@ -1,17 +1,18 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 
-public class PianoKey : MonoBehaviour, IPointerDownHandler
+public class PianoKey : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 {
     [SerializeField] private string noteName;
     
     private PianoInputHandler _inputHandler;
     private GameManager _gameManager;
-    
+    private AudioSource audioSource;
     
     private void Start()
     {
         FindManagers();
+        audioSource = GetComponent<AudioSource>();
     }
     
     private void FindManagers()
@@ -25,22 +26,24 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler
         PressKey();
     }
     
-public void PressKey()
-{
-    Debug.Log($"PressKey called for {noteName}");
-    
-    // Если нет GameManager, всё равно пытаемся вызвать ProcessKeyPress
-    if (_inputHandler == null)
+    public void OnPointerUp(PointerEventData eventData)
     {
-        Debug.LogWarning("No InputHandler!");
-        return;
+        ReleaseKey();
     }
     
-    _inputHandler.ProcessKeyPress(noteName, gameObject);
+    public void OnPointerExit(PointerEventData eventData)
+    {
+        ReleaseKey();
+    }
     
-    // Остальной код только если есть GameManager
+    public void PressKey()
+{
+    if (_inputHandler == null) return;
+    
     if (_gameManager != null)
     {
+        // Игровой режим
+        _inputHandler.ProcessKeyPress(noteName, gameObject);
         bool isCorrect = _gameManager.CheckNote(noteName);
         _inputHandler.SetKeyFinalColor(gameObject, isCorrect);
         
@@ -49,10 +52,28 @@ public void PressKey()
     }
     else
     {
-        // Режим пианино: просто подсветка зелёным
-        _inputHandler.SetKeyFinalColor(gameObject, true);
+        // Режим пианино
+        if (audioSource != null && audioSource.clip != null)
+        {
+            // Останавливаем предыдущий звук этой же ноты
+            _inputHandler.NoteOff(audioSource.clip);
+            
+            _inputHandler.NoteOn(audioSource.clip);
+            _inputHandler.SetKeyPressedColor(gameObject);
+        }
     }
 }
-
+    
+    private void ReleaseKey()
+    {
+        if (_gameManager != null) return;
+        
+        if (audioSource != null && audioSource.clip != null)
+        {
+            _inputHandler.NoteOff(audioSource.clip);
+            _inputHandler.ResetKeyColor(gameObject);
+        }
+    }
+    
     public string GetNoteName() => noteName;
 }
