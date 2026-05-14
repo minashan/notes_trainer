@@ -19,6 +19,7 @@ public class PianoInputHandler : MonoBehaviour
 
     
     private Coroutine _currentPulseCoroutine;
+    private AudioSource _currentPlayingAudioSource;
     
     private const float COLOR_RESET_DELAY = 1f;
     
@@ -120,7 +121,7 @@ public class PianoInputHandler : MonoBehaviour
 
     
 
-private AudioSource _currentPlayingAudioSource;
+
 private float _fadeStartTime;
 private float _fadeDuration = 0.3f;
 private bool _isFading = false;
@@ -143,49 +144,24 @@ private void Update()
 }
 
 
-private float _legatoTime = 0.15f;
+
 
 private void PlayKeySound(GameObject pressedKey)
 {
     if (!enableSound) return;
     if (AudioManager.Instance == null || AudioManager.Instance.IsMuted) return;
     
-    AudioSource newSource = pressedKey.GetComponent<AudioSource>();
-    if (newSource == null || newSource.clip == null) return;
-    
-    // Если это та же нота — обрываем и играем заново
-    if (_currentPlayingAudioSource == newSource)
+    AudioSource audioSource = pressedKey.GetComponent<AudioSource>();
+    if (audioSource != null && audioSource.clip != null)
     {
-        newSource.Stop();
-        newSource.Play();
-        return;
+        if (_currentPlayingAudioSource != null && _currentPlayingAudioSource.isPlaying)
+        {
+            _currentPlayingAudioSource.Stop();
+        }
+        
+        audioSource.Play();
+        _currentPlayingAudioSource = audioSource;
     }
-    
-    // Разные ноты — легато (затухание старой)
-    if (_currentPlayingAudioSource != null && _currentPlayingAudioSource.isPlaying)
-    {
-        StartCoroutine(FadeOut(_currentPlayingAudioSource, _legatoTime));
-    }
-    
-    newSource.volume = 1f;
-    newSource.Play();
-    _currentPlayingAudioSource = newSource;
-}
-
-private System.Collections.IEnumerator FadeOut(AudioSource source, float duration)
-{
-    float startVolume = source.volume;
-    float elapsed = 0f;
-    
-    while (elapsed < duration)
-    {
-        elapsed += Time.deltaTime;
-        source.volume = Mathf.Lerp(startVolume, 0f, elapsed / duration);
-        yield return null;
-    }
-    
-    source.Stop();
-    source.volume = startVolume;
 }
 
     
