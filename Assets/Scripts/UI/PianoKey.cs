@@ -55,6 +55,13 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         // Режим пианино
         if (audioSource != null && audioSource.clip != null)
         {
+            // Уведомляем рекордер о нажатии
+            PianoRecorder recorder = FindFirstObjectByType<PianoRecorder>();
+            if (recorder != null)
+            {
+                recorder.NotePlayed(noteName);
+            }
+            
             // Останавливаем предыдущий звук этой же ноты
             _inputHandler.NoteOff(audioSource.clip);
             
@@ -65,15 +72,18 @@ public class PianoKey : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 }
     
     private void ReleaseKey()
+{
+    if (_gameManager != null) return;
+    
+    if (audioSource != null && audioSource.clip != null)
     {
-        if (_gameManager != null) return;
+        PianoRecorder recorder = FindFirstObjectByType<PianoRecorder>();
+        recorder?.NoteReleased(noteName);
         
-        if (audioSource != null && audioSource.clip != null)
-        {
-            _inputHandler.NoteOff(audioSource.clip);
-            _inputHandler.ResetKeyColor(gameObject);
-        }
+        _inputHandler.NoteOff(audioSource.clip);
+        _inputHandler.ResetKeyColor(gameObject);
     }
+}
     
     public string GetNoteName() => noteName;
 }
